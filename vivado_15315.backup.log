@@ -1,0 +1,300 @@
+#-----------------------------------------------------------
+# Vivado v2017.4 (64-bit)
+# SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
+# IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+# Start of session at: Thu Dec  6 16:48:38 2018
+# Process ID: 15315
+# Current directory: /home/tansei/pro/vivado/ethane
+# Command line: vivado
+# Log file: /home/tansei/pro/vivado/ethane/vivado.log
+# Journal file: /home/tansei/pro/vivado/ethane/vivado.jou
+#-----------------------------------------------------------
+Sourcing tcl script '/home/tansei/.Xilinx/Vivado/Vivado_init.tcl'
+start_gui
+open_project /home/tansei/pro/vivado/methane/methane.xpr
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/opt/Xilinx/Vivado/2017.4/data/ip'.
+open_project: Time (s): cpu = 00:00:18 ; elapsed = 00:00:17 . Memory (MB): peak = 6144.715 ; gain = 109.895 ; free physical = 10523 ; free virtual = 30198
+update_compile_order -fileset sources_1
+generate_target Simulation [get_files /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/simulation2.bd]
+WARNING: [BD 41-927] Following properties on pin /uart_wrapper_0/clk have been updated from connected ip. They may not be synchronized with cell properties. You can set property on pin directly to confirm the value and resolve the warning.
+	CLK_DOMAIN=simulation2_sim_clk_gen_1_0_clk 
+WARNING: [BD 41-927] Following properties on pin /map_wrapper_0/clk have been updated from connected ip. They may not be synchronized with cell properties. You can set property on pin directly to confirm the value and resolve the warning.
+	CLK_DOMAIN=simulation2_sim_clk_gen_1_0_clk 
+WARNING: [BD 41-927] Following properties on pin /core_wrapper_0/clk have been updated from connected ip. They may not be synchronized with cell properties. You can set property on pin directly to confirm the value and resolve the warning.
+	CLK_DOMAIN=simulation2_sim_clk_gen_1_0_clk 
+Wrote  : </home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/simulation2.bd> 
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/synth/simulation2.v
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/sim/simulation2.v
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hdl/simulation2_wrapper.v
+INFO: [BD 41-1029] Generation completed for the IP Integrator block blk_mem_gen_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block blk_mem_gen_1 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block core_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block map_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block proc_sys_reset_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block uart_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block xlconstant_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block sim_clk_gen_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block sim_clk_gen_1 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_uartlite_0 .
+Exporting to file /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hw_handoff/simulation2.hwh
+Generated Block Design Tcl file /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hw_handoff/simulation2_bd.tcl
+Generated Hardware Definition File /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/synth/simulation2.hwdef
+generate_target: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 6283.512 ; gain = 74.656 ; free physical = 10386 ; free virtual = 30068
+export_ip_user_files -of_objects [get_files /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/simulation2.bd] -no_script -sync -force -quiet
+export_simulation -of_objects [get_files /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/simulation2.bd] -directory /home/tansei/pro/vivado/methane/methane.ip_user_files/sim_scripts -ip_user_files_dir /home/tansei/pro/vivado/methane/methane.ip_user_files -ipstatic_source_dir /home/tansei/pro/vivado/methane/methane.ip_user_files/ipstatic -lib_map_path [list {modelsim=/home/tansei/pro/vivado/methane/methane.cache/compile_simlib/modelsim} {questa=/home/tansei/pro/vivado/methane/methane.cache/compile_simlib/questa} {ies=/home/tansei/pro/vivado/methane/methane.cache/compile_simlib/ies} {vcs=/home/tansei/pro/vivado/methane/methane.cache/compile_simlib/vcs} {riviera=/home/tansei/pro/vivado/methane/methane.cache/compile_simlib/riviera}] -use_ip_compiled_libs -force -quiet
+launch_simulation
+INFO: [Vivado 12-5698] Checking validity of IPs in the design for the 'XSim' simulator...
+INFO: [BD 41-1662] The design 'simulation2.bd' is already validated. Therefore parameter propagation will not be re-run.
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/synth/simulation2.v
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/sim/simulation2.v
+VHDL Output written to : /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hdl/simulation2_wrapper.v
+INFO: [BD 41-1029] Generation completed for the IP Integrator block blk_mem_gen_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block blk_mem_gen_1 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block core_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block map_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block proc_sys_reset_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block uart_wrapper_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block xlconstant_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block sim_clk_gen_0 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block sim_clk_gen_1 .
+INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_uartlite_0 .
+Exporting to file /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hw_handoff/simulation2.hwh
+Generated Block Design Tcl file /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hw_handoff/simulation2_bd.tcl
+Generated Hardware Definition File /home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/synth/simulation2.hwdef
+WARNING: [Runs 36-53] Possible issues detected after target generation. Generation state is unexpected for target 'Simulation'. Expected 'Generated', got 'Stale' for source '/home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/simulation2.bd'
+INFO: [Vivado 12-5682] Launching behavioral simulation in '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim'
+INFO: [Vivado 12-4795] Using compiled simulation libraries for IPs
+INFO: [SIM-utils-51] Simulation object is 'sim_1'
+INFO: [USF-XSim-7] Finding pre-compiled libraries...
+INFO: [USF-XSim-11] File '/opt/Xilinx/Vivado/2017.4/data/xsim/ip/xsim_ip.ini' copied to run dir:'/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim'
+INFO: [SIM-utils-54] Inspecting design source files for 'simulation2_wrapper' in fileset 'sim_1'...
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/methane_blk_mem_gen_0_1.mif'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/a.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/methane_blk_mem_gen_1_0.mif'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/simulation2_blk_mem_gen_0_0.mif'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/debug.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/simulation2_blk_mem_gen_1_0.mif'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/simulation_design_blk_mem_gen_1_2.mif'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/kori_fib.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/mandel.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/float.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/flt.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/fle.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/minrt.coe'
+INFO: [SIM-utils-43] Exported '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/first.coe'
+INFO: [USF-XSim-97] Finding global include files...
+INFO: [USF-XSim-98] Fetching design files from 'sim_1'...
+INFO: [USF-XSim-2] XSim::Compile design
+INFO: [USF-XSim-61] Executing 'COMPILE and ANALYZE' step in '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim'
+xvlog --incr --relax -L xil_defaultlib -prj simulation2_wrapper_vlog.prj
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/core.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module decoder
+INFO: [VRFC 10-311] analyzing module register
+INFO: [VRFC 10-311] analyzing module fregister
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-311] analyzing module core
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fadd.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fadd
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fcomp.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module feq
+INFO: [VRFC 10-311] analyzing module flt
+INFO: [VRFC 10-311] analyzing module fle
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fdiv.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module finv
+INFO: [VRFC 10-311] analyzing module fdiv
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fmul.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fmul
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fneg.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fsgnj
+INFO: [VRFC 10-311] analyzing module fsgnjn
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fpu.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fpu
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/fsub.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module fsub
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/new/uart.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_wrapper
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_blk_mem_gen_0_0/sim/simulation2_blk_mem_gen_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_blk_mem_gen_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_blk_mem_gen_1_0/sim/simulation2_blk_mem_gen_1_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_blk_mem_gen_1_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_core_wrapper_0_0/sim/simulation2_core_wrapper_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_core_wrapper_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_map_wrapper_0_0/sim/simulation2_map_wrapper_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_map_wrapper_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_uart_wrapper_0_0/sim/simulation2_uart_wrapper_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_uart_wrapper_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_xlconstant_0_0/sim/simulation2_xlconstant_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_xlconstant_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/sim/simulation2.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ipshared/68f7/hdl/sim_clk_gen.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module sim_clk_gen
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_sim_clk_gen_0_0/sim/simulation2_sim_clk_gen_0_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_sim_clk_gen_0_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.ip_user_files/bd/simulation2/ip/simulation2_sim_clk_gen_1_0/sim/simulation2_sim_clk_gen_1_0.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_sim_clk_gen_1_0
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/methane/methane.srcs/sources_1/bd/simulation2/hdl/simulation2_wrapper.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module simulation2_wrapper
+xvhdl --incr --relax -prj simulation2_wrapper_vhdl.prj
+INFO: [USF-XSim-69] 'compile' step finished in '3' seconds
+INFO: [USF-XSim-3] XSim::Elaborate design
+INFO: [USF-XSim-61] Executing 'ELABORATE' step in '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim'
+Vivado Simulator 2017.4
+Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
+Running: /opt/Xilinx/Vivado/2017.4/bin/unwrapped/lnx64.o/xelab -wto c8107d5865e441c4afa1aa61f37ba115 --incr --debug typical --relax --mt 8 -L xil_defaultlib -L blk_mem_gen_v8_4_1 -L lib_cdc_v1_0_2 -L proc_sys_reset_v5_0_12 -L xlconstant_v1_1_3 -L axi_lite_ipif_v3_0_4 -L lib_pkg_v1_0_2 -L lib_srl_fifo_v1_0_2 -L axi_uartlite_v2_0_19 -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot simulation2_wrapper_behav xil_defaultlib.simulation2_wrapper xil_defaultlib.glbl -log elaborate.log 
+Using 8 slave threads.
+Starting static elaboration
+WARNING: [VRFC 10-1783] select index 62 into current_contents is out of bounds [/wrk/2017.4/nightly/2017_12_15_2086221/packages/customer/vivado/data/ip/xilinx/blk_mem_gen_v8_4/simulation/blk_mem_gen_v8_4.v:2420]
+Completed static elaboration
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling package std.standard
+Compiling package std.textio
+Compiling package ieee.std_logic_1164
+Compiling package ieee.numeric_std
+Compiling package ieee.std_logic_arith
+Compiling package ieee.std_logic_unsigned
+Compiling package axi_lite_ipif_v3_0_4.ipif_pkg
+Compiling package synopsys.attributes
+Compiling package ieee.std_logic_misc
+Compiling package unisim.vcomponents
+Compiling package ieee.vital_timing
+Compiling package ieee.vital_primitives
+Compiling package unisim.vpkg
+Compiling package lib_pkg_v1_0_2.lib_pkg
+Compiling architecture rtl of entity axi_uartlite_v2_0_19.baudrate [\baudrate(c_ratio=651)\]
+Compiling architecture fdre_v of entity unisim.FDRE [fdre_default]
+Compiling architecture fdr_v of entity unisim.FDR [fdr_default]
+Compiling architecture implementation of entity lib_cdc_v1_0_2.cdc_sync [\cdc_sync(c_mtbf_stages=4)\]
+Compiling architecture behavioral of entity axi_uartlite_v2_0_19.dynshreg_i_f [\dynshreg_i_f(c_depth=16,c_famil...]
+Compiling architecture imp of entity lib_srl_fifo_v1_0_2.cntr_incr_decr_addn_f [\cntr_incr_decr_addn_f(c_size=5,...]
+Compiling architecture behavioral of entity lib_srl_fifo_v1_0_2.dynshreg_f [\dynshreg_f(c_depth=16,c_dwidth=...]
+Compiling architecture imp of entity lib_srl_fifo_v1_0_2.srl_fifo_rbu_f [\srl_fifo_rbu_f(c_dwidth=8,c_fam...]
+Compiling architecture imp of entity lib_srl_fifo_v1_0_2.srl_fifo_f [\srl_fifo_f(c_dwidth=8,c_family=...]
+Compiling architecture rtl of entity axi_uartlite_v2_0_19.uartlite_rx [\uartlite_rx(c_family="kintexu")...]
+Compiling architecture behavioral of entity axi_uartlite_v2_0_19.dynshreg_i_f [\dynshreg_i_f(c_depth=16,c_init_...]
+Compiling architecture rtl of entity axi_uartlite_v2_0_19.uartlite_tx [\uartlite_tx(c_family="kintexu")...]
+Compiling architecture rtl of entity axi_uartlite_v2_0_19.uartlite_core [\uartlite_core(c_family="kintexu...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.pselect_f [\pselect_f(c_ab=2,c_aw=2,c_bar="...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.pselect_f [\pselect_f(c_ab=2,c_aw=2,c_bar="...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.pselect_f [\pselect_f(c_ab=2,c_aw=2,c_bar="...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.pselect_f [\pselect_f(c_ab=2,c_aw=2,c_bar="...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.address_decoder [\address_decoder(c_bus_awidth=4,...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.slave_attachment [\slave_attachment(c_ard_addr_ran...]
+Compiling architecture imp of entity axi_lite_ipif_v3_0_4.axi_lite_ipif [\axi_lite_ipif(c_s_axi_addr_widt...]
+Compiling architecture rtl of entity axi_uartlite_v2_0_19.axi_uartlite [\axi_uartlite(c_family="kintexu"...]
+Compiling architecture simulation2_axi_uartlite_0_0_arch of entity xil_defaultlib.simulation2_axi_uartlite_0_0 [simulation2_axi_uartlite_0_0_def...]
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_output_stage(...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_output_stage(...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_softecc_outpu...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_mem_module(C_...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1(C_FAMILY="kin...
+Compiling module xil_defaultlib.simulation2_blk_mem_gen_0_0
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_mem_module(C_...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1(C_FAMILY="kin...
+Compiling module xil_defaultlib.simulation2_blk_mem_gen_1_0
+Compiling module xil_defaultlib.instif
+Compiling module xil_defaultlib.decoder
+Compiling module xil_defaultlib.register
+Compiling module xil_defaultlib.fregister
+Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.fadd
+Compiling module xil_defaultlib.fsub
+Compiling module xil_defaultlib.fmul
+Compiling module xil_defaultlib.finv
+Compiling module xil_defaultlib.fdiv
+Compiling module xil_defaultlib.feq
+Compiling module xil_defaultlib.flt
+Compiling module xil_defaultlib.fle
+Compiling module xil_defaultlib.fsgnj
+Compiling module xil_defaultlib.fsgnjn
+Compiling module xil_defaultlib.fpu
+Compiling module xil_defaultlib.core
+Compiling module xil_defaultlib.core_wrapper
+Compiling module xil_defaultlib.simulation2_core_wrapper_0_0
+Compiling module xil_defaultlib.map
+Compiling module xil_defaultlib.map_wrapper
+Compiling module xil_defaultlib.simulation2_map_wrapper_0_0
+Compiling architecture fdre_v of entity unisim.FDRE [\FDRE(init='1')\]
+Compiling architecture implementation of entity lib_cdc_v1_0_2.cdc_sync [\cdc_sync(c_vector_width=2,c_mtb...]
+Compiling architecture srl16e_v of entity unisim.SRL16E [\SRL16E(init="1111111111111111")...]
+Compiling architecture srl16_v of entity unisim.SRL16 [\SRL16(init="1111111111111111")(...]
+Compiling architecture imp of entity proc_sys_reset_v5_0_12.lpf [\lpf(c_ext_rst_width=4,c_aux_rst...]
+Compiling architecture imp of entity proc_sys_reset_v5_0_12.upcnt_n [\upcnt_n(c_size=6)\]
+Compiling architecture imp of entity proc_sys_reset_v5_0_12.sequence_psr [sequence_psr_default]
+Compiling architecture imp of entity proc_sys_reset_v5_0_12.proc_sys_reset [\proc_sys_reset(c_family="kintex...]
+Compiling architecture simulation2_proc_sys_reset_0_0_arch of entity xil_defaultlib.simulation2_proc_sys_reset_0_0 [simulation2_proc_sys_reset_0_0_d...]
+Compiling module xil_defaultlib.sim_clk_gen(CLOCK_PERIOD=10,RESE...
+Compiling module xil_defaultlib.simulation2_sim_clk_gen_0_0
+Compiling module xil_defaultlib.sim_clk_gen(CLOCK_PERIOD=10)
+Compiling module xil_defaultlib.simulation2_sim_clk_gen_1_0
+Compiling module xil_defaultlib.uart
+Compiling module xil_defaultlib.uart_wrapper
+Compiling module xil_defaultlib.simulation2_uart_wrapper_0_0
+Compiling module xlconstant_v1_1_3.xlconstant_v1_1_3_xlconstant(CON...
+Compiling module xil_defaultlib.simulation2_xlconstant_0_0
+Compiling module xil_defaultlib.simulation2
+Compiling module xil_defaultlib.simulation2_wrapper
+Compiling module xil_defaultlib.glbl
+Compiling package xil_defaultlib.$unit_1
+Compiling package xil_defaultlib.$unit_2
+Compiling package xil_defaultlib.$unit_3
+Built simulation snapshot simulation2_wrapper_behav
+
+****** Webtalk v2017.4 (64-bit)
+  **** SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
+  **** IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
+    ** Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
+
+source /home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/xsim.dir/simulation2_wrapper_behav/webtalk/xsim_webtalk.tcl -notrace
+INFO: [Common 17-186] '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim/xsim.dir/simulation2_wrapper_behav/webtalk/usage_statistics_ext_xsim.xml' has been successfully sent to Xilinx on Thu Dec  6 16:52:05 2018. For additional details about this file, please refer to the WebTalk help file at /opt/Xilinx/Vivado/2017.4/doc/webtalk_introduction.html.
+INFO: [Common 17-206] Exiting Webtalk at Thu Dec  6 16:52:05 2018...
+run_program: Time (s): cpu = 00:00:05 ; elapsed = 00:00:09 . Memory (MB): peak = 6352.160 ; gain = 0.000 ; free physical = 10217 ; free virtual = 30021
+INFO: [USF-XSim-69] 'elaborate' step finished in '9' seconds
+INFO: [USF-XSim-4] XSim::Simulate design
+INFO: [USF-XSim-61] Executing 'SIMULATE' step in '/home/tansei/pro/vivado/methane/methane.sim/sim_1/behav/xsim'
+INFO: [USF-XSim-98] *** Running xsim
+   with args "simulation2_wrapper_behav -key {Behavioral:sim_1:Functional:simulation2_wrapper} -tclbatch {simulation2_wrapper.tcl} -view {/home/tansei/pro/vivado/methane/simulation2_wrapper_behav.wcfg} -log {simulate.log}"
+INFO: [USF-XSim-8] Loading simulator feature
+Vivado Simulator 2017.4
+Time resolution is 1 ps
+open_wave_config /home/tansei/pro/vivado/methane/simulation2_wrapper_behav.wcfg
+source simulation2_wrapper.tcl
+# set curr_wave [current_wave_config]
+# if { [string length $curr_wave] == 0 } {
+#   if { [llength [get_objects]] > 0} {
+#     add_wave /
+#     set_property needs_save false [current_wave_config]
+#   } else {
+#      send_msg_id Add_Wave-1 WARNING "No top level signals found. Simulator will start without a wave window. If you want to open a wave window go to 'File->New Waveform Configuration' or type 'create_wave_config' in the TCL console."
+#   }
+# }
+# run 1000ns
+ Block Memory Generator module loading initial data...
+ Block Memory Generator data initialization complete.
+Block Memory Generator module simulation2_wrapper.simulation2_i.blk_mem_gen_0.inst.native_mem_mapped_module.blk_mem_gen_v8_4_1_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+ Block Memory Generator module loading initial data...
+ Block Memory Generator data initialization complete.
+Block Memory Generator module simulation2_wrapper.simulation2_i.blk_mem_gen_1.inst.native_mem_mapped_module.blk_mem_gen_v8_4_1_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+INFO: [USF-XSim-96] XSim completed. Design snapshot 'simulation2_wrapper_behav' loaded.
+INFO: [USF-XSim-97] XSim simulation ran for 1000ns
+launch_simulation: Time (s): cpu = 00:00:35 ; elapsed = 00:00:39 . Memory (MB): peak = 6551.625 ; gain = 238.996 ; free physical = 10114 ; free virtual = 29930
+run 10000 ns
+restart
+INFO: [Simtcl 6-17] Simulation restarted
+run 10000 ns
+ Block Memory Generator module loading initial data...
+ Block Memory Generator data initialization complete.
+Block Memory Generator module simulation2_wrapper.simulation2_i.blk_mem_gen_0.inst.native_mem_mapped_module.blk_mem_gen_v8_4_1_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+ Block Memory Generator module loading initial data...
+ Block Memory Generator data initialization complete.
+Block Memory Generator module simulation2_wrapper.simulation2_i.blk_mem_gen_1.inst.native_mem_mapped_module.blk_mem_gen_v8_4_1_inst is using a behavioral model for simulation which will not precisely model memory collision behavior.
+close_sim
+INFO: [Simtcl 6-16] Simulation closed
+exit
+INFO: [Common 17-206] Exiting Vivado at Fri Dec  7 15:52:25 2018...
