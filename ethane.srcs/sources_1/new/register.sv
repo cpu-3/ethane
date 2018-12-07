@@ -21,7 +21,7 @@
 
 
 module register
-    (
+    ( 
         input wire clk,
         input wire rstn,
         
@@ -30,14 +30,17 @@ module register
         input wire [31:0] data,
         
         input wire [4:0] rs1_idx,
-        output reg [31:0] rs1,
+        output wire [31:0] rs1,
         input wire [4:0] rs2_idx,
-        output reg [31:0] rs2
+        output wire [31:0] rs2
     );
     reg [31:0] iregs[32];
     
-    assign rs1 = rs1_idx == 0 ? 32'd0 : iregs[rs1_idx];
-    assign rs2 = rs2_idx == 0 ? 32'd0 : iregs[rs2_idx];
+    // if write enabled and rd_idx == rs1_idx then returns the input
+    assign rs1 = rd_enable && (rd_idx == rs1_idx) ? data :
+                 rs1_idx == 0 ? 32'd0 : iregs[rs1_idx];
+    assign rs2 = rd_enable && (rd_idx == rs2_idx) ? data :
+                 rs2_idx == 0 ? 32'd0 : iregs[rs2_idx];
     
     assign iregs[0] = 32'd0;
     
@@ -74,8 +77,10 @@ module fregister
     );
     reg [31:0] fregs[32];
     
-    assign rs1 = fregs[rs1_idx];
-    assign rs2 = fregs[rs2_idx];
+    assign rs1 = rd_enable && (rd_idx == rs1_idx) ? data :
+                 fregs[rs1_idx];
+    assign rs2 = rd_enable && (rd_idx == rs2_idx) ? data :
+                  fregs[rs2_idx];
     
     generate
         genvar i;

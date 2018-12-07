@@ -34,22 +34,23 @@ module decode_stage(
     instif ist,
     output wire [5:0] rd,
     output wire [5:0] rs1,
-    output wire [5:0] rs2
+    output wire [5:0] rs2,
+    controlif ctrl
     );
 endmodule
 
 module exec_stage(
-    instif ist,
+    instif inst,
     input wire [31:0] ex_mem_forwarded,
     input wire [31:0] mem_wb_forwarded,
-    input wire [31:0] src1,
-    input wire [31:0] src2,
-    input wire [31:0] forwarded_src1_ctrl,
-    input wire [31:0] forwarded_src2_ctrl,
+    input wire [31:0] int_src1,
+    input wire [31:0] int_src2,
+    input wire [31:0] forwarded_int_src1_ctrl,
+    input wire [31:0] forwarded_int_src2_ctrl,
     controlif ctrl,
     output wire [31:0] alu_result,
     output wire [31:0] store_data,
-    output wire [6:0] register_destination    
+    output wire [5:0] register_destination    
     );
 endmodule
 
@@ -88,7 +89,8 @@ module write_stage(
     controlif ctrl,
     input wire [31:0] load_result,
     input wire [31:0] alu_result,
-    output wire [31:0] result
+    output wire [31:0] int_result,
+    output wire [31:0] float_result
     );
 endmodule
 
@@ -96,7 +98,7 @@ module core(
     input wire clk,
     input wire rstn,
     input wire [31:0]instr,
-    output wire fetch_pc,
+    output wire fetch_pc
     );
     // ID/EX registers
     instif id_ex_inst();
@@ -122,10 +124,12 @@ module core(
     // MEM/WB registers
     controlif mem_wb_wb_ctrl();
     reg [6:0] mem_wb_register_rd;
+    reg [31:0] mem_wb_load_result;
+    reg [31:0] mem_wb_alu_result;
     
     // fetch stage components
     reg [31:0]pc;
-    assign pc_fetch = pc;
+    assign fetch_pc = pc;
     wire [31:0]pc_next;
     fetch_stage FS(
                 .pc(pc), 
@@ -136,19 +140,24 @@ module core(
     wire [5:0] decoded_rd;
     wire [5:0] decoded_rs;
     wire [5:0] decoded_rt;
+    instif decoded_inst();
+    controlif decoded_ctrl();
     decode_stage DS(
         .pc(pc), 
         .inst(instr),
-        .ist(id_ex_inst),
+        .ist(decoded_inst),
         .rd(decoded_rd),
         .rs1(decoded_rs),
-        .rs2(decoded_rt)
+        .rs2(decoded_rt),
+        .ctrl(decoded_ctrl)
     );
     wire [31:0] decode_stage_int_src1;
     wire [31:0] decode_stage_int_src2;
     wire [31:0] decode_stage_float_src1;
     wire [31:0] decode_stage_float_src2;
     register REGISTER(
+        .clk(clk),
+        .rstn(rstn),
         .rd_idx(rd), // TBD
         .rd_enable(rd_enable), // TBD
         .data(result),  // TBD
@@ -158,8 +167,10 @@ module core(
         .rs2(decode_stage_int_src2)
     );
     fregister FREGISTER(
+        .clk(clk),
+        .rstn(rstn),
         .rd_idx(rd), // TBD
-        .rd_enable(frd_enable), // TBD
+        //.rd_enable(frd_enable), // TBD
         .data(result), // TBD 
         .rs1_idx(decoded_rs),
         .rs2_idx(decoded_rt), 
@@ -167,6 +178,29 @@ module core(
         .rs2(decode_stage_float_src2)
      );
     
+    // exec stage
+    exec_stage(
+        .inst(id_ex_inst),
+        .ex_mem_forwarded(0), // TBD
+        .mem_wb_forwarded(0), // TBD
+        .int_src1(id_ex_int_src1),
+        .int_src2(id_ex_int_src2),
+        // TBD .forwarded_int_src1_ctrl(
+        // TBD .forwarded_int_src2_ctrl(
+        .ctrl(id_ex_ex_ctrl)
+    );
+    
+    // memory stage
+    memory_stage(
+        
+    );
+    
+    // write stage
+    write_stage(
+        .load_result(mem_wb_load_result),
+        .alu_result
+    );
+        
     
     always @(posedge clk) begin
         if (~rstn) begin
@@ -183,7 +217,8 @@ module core(
             id_ex_int_src2 <= decode_stage_int_src2;
             id_ex_float_src1 <= decode_stage_float_src1;
             id_ex_float_src2 <= decode_stage_float_src2;
-            
+            id_ex_inst <= decoded_inst;
+            id_ex_ex_ctrl <= decoded_ctrl;  
         end
     end 
     
