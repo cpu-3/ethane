@@ -52,7 +52,13 @@ typedef struct packed{
 } instif;
 
 typedef struct packed{
-    logic alu_inst;
+    logic reg_dst;
+    logic reg_write;
+    logic alu_src;
+    logic pc_src;
+    logic mem_read;
+    logic [3:0] mem_write; // write enable
+    logic mem_to_reg;
 } controlif;
 
 module decoder
@@ -157,4 +163,23 @@ module decoder
     
     assign inst.fsw = opcode == 7'b0100111;
     assign inst.flw = opcode == 7'b0000111;
+    
+    assign ctrl.alu_src = ~(
+        inst.add | 
+        inst.sub | 
+        inst.sll | 
+        inst.slt | 
+        inst.sltu | 
+        inst.xor_ | 
+        inst.srl | 
+        inst.sra  | 
+        inst.or_  | 
+        inst.and_);
+
+    assign ctrl.mem_write = 
+        inst.sb ? 4'b0001 :
+        inst.sh ? 4'b0011 :
+        inst.sw ? 4'b1111 :
+        inst.fsw ? 4'b1111 : 4'b0;
+
 endmodule
