@@ -1,0 +1,40 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/ethane/ethane.sim/sim_1/synth/func/xsim/ethane_wrapper_func_synth.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module dbg_hub_CV
+INFO: [VRFC 10-311] analyzing module u_ila_0_CV
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-311] analyzing module core
+INFO: [VRFC 10-311] analyzing module core_wrapper
+INFO: [VRFC 10-311] analyzing module exec_stage
+INFO: [VRFC 10-311] analyzing module forwarding_unit
+INFO: [VRFC 10-311] analyzing module glbl
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+WARNING: [VRFC 10-1195] overwriting previous definition of module alu [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:87]
+INFO: [VRFC 10-311] analyzing module decoder
+INFO: [VRFC 10-311] analyzing module fetch_stage
+INFO: [VRFC 10-311] analyzing module decode_stage
+INFO: [VRFC 10-311] analyzing module exec_stage
+WARNING: [VRFC 10-1195] overwriting previous definition of module exec_stage [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:294]
+INFO: [VRFC 10-311] analyzing module forwarding_unit
+WARNING: [VRFC 10-1195] overwriting previous definition of module forwarding_unit [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:331]
+INFO: [VRFC 10-311] analyzing module hazard_unit
+INFO: [VRFC 10-311] analyzing module memory_stage
+INFO: [VRFC 10-311] analyzing module write_stage
+INFO: [VRFC 10-311] analyzing module core
+WARNING: [VRFC 10-1195] overwriting previous definition of module core [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:375]
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/register.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module register
+INFO: [VRFC 10-311] analyzing module fregister
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core_wrapper.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module core_wrapper
+WARNING: [VRFC 10-1195] overwriting previous definition of module core_wrapper [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core_wrapper.v:22]
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/imports/new/map.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module map
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/imports/new/map.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module map_wrapper
+INFO: [VRFC 10-2263] Analyzing SystemVerilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/imports/new/uart.sv" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/imports/new/uart.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module uart_wrapper
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/hdl/ethane_wrapper.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module ethane_wrapper

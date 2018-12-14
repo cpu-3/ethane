@@ -75,13 +75,10 @@ typedef struct packed{
 } instif;
 
 typedef struct packed{
-    logic reg_dst;
+    logic alu;
     logic reg_write;
-    logic alu_src;
-    logic pc_src;
     logic mem_read;
     logic [3:0] mem_write; // write enable
-    logic mem_to_reg;
 } controlif;
 
 module alu 
@@ -217,7 +214,7 @@ module decoder
     assign inst.fsw = opcode == 7'b0100111;
     assign inst.flw = opcode == 7'b0000111;
     
-    assign ctrl.alu_src = ~(
+    assign ctrl.alu = ~(
         inst.add | 
         inst.sub | 
         inst.sll | 
@@ -234,6 +231,10 @@ module decoder
         inst.sh ? 4'b0011 :
         inst.sw ? 4'b1111 :
         inst.fsw ? 4'b1111 : 4'b0;
+    assign ctrl.mem_read = inst.flw | inst.lw | inst.lh | inst.lb
+                            | inst.lhu | inst.lbu;
+    
+    assign ctrl.reg_write =  r_type | i_type | u_type | j_type;
 
 endmodule
 
@@ -313,7 +314,7 @@ module exec_stage(
                   write_forwarded;
     
     assign src2 = 
-        (forwarded_src2_ctrl == 2'b00) && ctrl.alu_src ? immediate :
+        (forwarded_src2_ctrl == 2'b00) && ctrl.alu ? immediate :
         forwarded_src2_ctrl == 2'b00 ? int_src2 :
         forwarded_src1_ctrl == 2'b01 ? mem_forwarded :
         write_forwarded;
@@ -331,21 +332,23 @@ endmodule
 module forwarding_unit(
     input controlif ex_mem_ctrl,
     input controlif mem_wb_ctrl,
-    input wire [6:0]id_ex_reg_rs1,
-    input wire [6:0]id_ex_reg_rs2,
-    input wire [6:0]ex_mem_reg_rd,
-    input wire [6:0]mem_wb_reg_rd,
+    input wire [4:0]id_ex_reg_rs1,
+    input wire [4:0]id_ex_reg_rs2,
+    input wire [4:0]ex_mem_reg_rd,
+    input wire [4:0]mem_wb_reg_rd,
     output wire [1:0]forwarded_src1_ctrl,
     output wire [1:0]forwarded_src2_ctrl
     );
+    assign forwarded_src1_ctrl = 2'b0;
+    assign forwarded_src2_ctrl = 2'b0;
 endmodule
 
 module hazard_unit(
     input controlif mem_ctrl,
     input controlif dec_ctrl,
-    input wire [5:0]rs1,
-    input wire [5:0]rs2,
-    input wire [5:0]rd,
+    input wire [4:0]rs1,
+    input wire [4:0]rs2,
+    input wire [4:0]rd,
     output wire stall
     );
 endmodule
@@ -355,7 +358,7 @@ module memory_stage(
     input wire [31:0] data,
     input wire [31:0] addr,
     input wire [31:0] alu_result,
-    input wire [6:0] rd,
+    input wire [4:0] rd,
     output wire [31:0] load_result
     );
     //nop
@@ -369,28 +372,36 @@ module write_stage(
     output wire reg_write
     );
     assign int_result = ctrl.mem_read ? load_result : alu_result;
-    assign reg_write = ctrl.mem_to_reg;
+    assign reg_write = ctrl.reg_write;
 endmodule
 
 module core(
     input wire clk,
     input wire rstn,
-    input wire [31:0]instr,
+    input wire [31:0]_instr,
     output wire [31:0]fetch_pc,
     
     // data memory
-    output wire [31:0] port_data_mem_din,
+    output wire [31:0] _port_data_mem_din,
     output wire [31:0] port_data_mem_addr,
-    input  wire [31:0] port_data_mem_dout,
+    input  wire [31:0] _port_data_mem_dout,
     output wire [3:0]  port_data_mem_data_we
     );
     
+    wire [31:0] instr = {_instr[7:0], _instr[15:8], _instr[23:16], _instr[31:24]};
+    wire [31:0] port_data_mem_din;
+    assign _port_data_mem_din = {port_data_mem_din[7:0],
+                                 port_data_mem_din[15:8],
+                                 port_data_mem_din[23:16],
+                                 port_data_mem_din[31:24]};
+    wire [31:0] port_data_mem_dout = {_port_data_mem_dout[7:0],
+                                      _port_data_mem_dout[15:8],
+                                      _port_data_mem_dout[23:16],
+                                      _port_data_mem_dout[31:24]};
 
     // ID/EX registers
     instif id_ex_inst;
-    controlif id_ex_wb_ctrl;
-    controlif id_ex_m_ctrl;
-    controlif id_ex_ex_ctrl;
+    controlif id_ex_ctrl;
     reg [31:0] id_ex_int_src1;
     reg [31:0] id_ex_int_src2;
     reg [31:0] id_ex_float_src1;
@@ -403,15 +414,14 @@ module core(
     reg [31:0] id_ex_immediate;
     
     // EX/MEM registers
-    controlif ex_mem_wb_ctrl;
-    controlif ex_mem_m_ctrl;
+    controlif ex_mem_ctrl;
     reg [4:0] ex_mem_register_rd;
     reg [31:0] ex_mem_alu_result;
     reg [31:0] ex_mem_store_data;
 
 
     // MEM/WB registers
-    controlif mem_wb_wb_ctrl;
+    controlif mem_wb_ctrl;
     reg [5:0] mem_wb_register_rd;
     reg [31:0] mem_wb_load_result;
     reg [31:0] mem_wb_alu_result;
@@ -465,8 +475,8 @@ module core(
         .data(write_int_result),
         .rs1_idx(decoded_rs1), 
         .rs2_idx(decoded_rs2), 
-        .rs1(decode_stage_float_src1), 
-        .rs2(decode_stage_float_src2)
+        .rs1(decode_stage_int_src1), 
+        .rs2(decode_stage_int_src2)
     );
     wire [31:0] write_float_result; 
     fregister FREGISTER(
@@ -482,7 +492,7 @@ module core(
      );
      wire stall;
      hazard_unit HAZARD(
-        .mem_ctrl(id_ex_m_ctrl),
+        .mem_ctrl(id_ex_ctrl),
         .dec_ctrl(decoded_ctrl),
         .rs1(decoded_rs1),
         .rs2(decoded_rs2),
@@ -514,7 +524,7 @@ module core(
         .mem_forwarded(ex_mem_alu_result),
         .write_forwarded(write_int_result),
         .immediate(id_ex_immediate),
-        .ctrl(id_ex_ex_ctrl),
+        .ctrl(id_ex_ctrl),
         .alu_result(ex_alu_result),
         .store_data(ex_store_data),
         .forwarded_src1_ctrl,
@@ -524,13 +534,13 @@ module core(
     // memory stage
     wire [31:0] mem_load_result;
     assign port_data_mem_addr = ex_mem_alu_result;
-    assign port_data_mem_data_we = ex_mem_m_ctrl.mem_write;
+    assign port_data_mem_data_we = ex_mem_ctrl.mem_write;
     assign port_data_mem_din = ex_mem_store_data;
     assign mem_load_result = port_data_mem_dout;
     
     // write stage
     write_stage WS(
-        .ctrl(mem_wb_wb_ctrl),
+        .ctrl(mem_wb_ctrl),
         .load_result(mem_wb_load_result),
         .alu_result(mem_wb_alu_result),
         .int_result(write_int_result),
@@ -550,16 +560,22 @@ module core(
             id_ex_float_src1 <= 32'd0;
             id_ex_float_src2 <= 32'd0;
             id_ex_inst <= 32'd0;
-            id_ex_ex_ctrl <= 32'd0; 
+            id_ex_ctrl <= 32'd0; 
             id_ex_immediate <= 32'd0;
             
             // exec stage
             ex_mem_alu_result <= 32'd0;
             ex_mem_store_data <= 32'd0;
+            ex_mem_register_rd <= 5'd0;
             
             // memory stage
             mem_wb_load_result <= 32'd0;
             mem_wb_alu_result <= 32'd0;
+            mem_wb_register_rd <= 5'd0;
+            
+            id_ex_ctrl <= 0;
+            ex_mem_ctrl <= 0;
+            mem_wb_ctrl <= 0;
         end else begin
             // fetch stage
             pc <= pc_next;
@@ -573,16 +589,20 @@ module core(
             id_ex_float_src1 <= decode_stage_float_src1;
             id_ex_float_src2 <= decode_stage_float_src2;
             id_ex_inst <= decoded_inst;
-            id_ex_ex_ctrl <= decoded_ctrl; 
+            id_ex_ctrl <= decoded_ctrl; 
             id_ex_immediate <= decoded_immediate;
             
             // exec stage
             ex_mem_alu_result <= ex_alu_result;
             ex_mem_store_data <= ex_store_data;
+            ex_mem_register_rd <= id_ex_register_rd;
+            ex_mem_ctrl <= id_ex_ctrl;
             
             // memory stage
             mem_wb_load_result <= mem_load_result;
             mem_wb_alu_result <= ex_mem_alu_result;
+            mem_wb_register_rd <= ex_mem_register_rd;
+            mem_wb_ctrl <= ex_mem_ctrl;
         end
     end 
     

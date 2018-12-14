@@ -4,10 +4,20 @@ vlib questa_lib/msim
 vlib questa_lib/msim/xil_defaultlib
 vlib questa_lib/msim/blk_mem_gen_v8_4_1
 vlib questa_lib/msim/xlconstant_v1_1_3
+vlib questa_lib/msim/axi_lite_ipif_v3_0_4
+vlib questa_lib/msim/lib_pkg_v1_0_2
+vlib questa_lib/msim/lib_srl_fifo_v1_0_2
+vlib questa_lib/msim/lib_cdc_v1_0_2
+vlib questa_lib/msim/axi_uartlite_v2_0_19
 
 vmap xil_defaultlib questa_lib/msim/xil_defaultlib
 vmap blk_mem_gen_v8_4_1 questa_lib/msim/blk_mem_gen_v8_4_1
 vmap xlconstant_v1_1_3 questa_lib/msim/xlconstant_v1_1_3
+vmap axi_lite_ipif_v3_0_4 questa_lib/msim/axi_lite_ipif_v3_0_4
+vmap lib_pkg_v1_0_2 questa_lib/msim/lib_pkg_v1_0_2
+vmap lib_srl_fifo_v1_0_2 questa_lib/msim/lib_srl_fifo_v1_0_2
+vmap lib_cdc_v1_0_2 questa_lib/msim/lib_cdc_v1_0_2
+vmap axi_uartlite_v2_0_19 questa_lib/msim/axi_uartlite_v2_0_19
 
 vlog -work xil_defaultlib -64 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_core_wrapper_0_0/sim/ethane_core_wrapper_0_0.v" \
@@ -28,6 +38,27 @@ vlog -work xil_defaultlib -64 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_map_wrapper_0_0/sim/ethane_map_wrapper_0_0.v" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_0/sim/ethane_uart_wrapper_0_0.v" \
 "../../../../ethane.srcs/sources_1/bd/ethane/sim/ethane.v" \
+
+vcom -work axi_lite_ipif_v3_0_4 -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/cced/hdl/axi_lite_ipif_v3_0_vh_rfs.vhd" \
+
+vcom -work lib_pkg_v1_0_2 -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/0513/hdl/lib_pkg_v1_0_rfs.vhd" \
+
+vcom -work lib_srl_fifo_v1_0_2 -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/51ce/hdl/lib_srl_fifo_v1_0_rfs.vhd" \
+
+vcom -work lib_cdc_v1_0_2 -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/ef1e/hdl/lib_cdc_v1_0_rfs.vhd" \
+
+vcom -work axi_uartlite_v2_0_19 -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/c778/hdl/axi_uartlite_v2_0_vh_rfs.vhd" \
+
+vcom -work xil_defaultlib -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_0/sim/ethane_axi_uartlite_0_0.vhd" \
+
+vlog -work xil_defaultlib -64 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_1_0/sim/ethane_blk_mem_gen_1_0.v" \
 
 vlog -work xil_defaultlib \
 "glbl.v"

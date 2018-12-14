@@ -1,4 +1,4 @@
-Running: xsim.dir/ethane_wrapper_behav/xsimk -simmode gui -wdb ethane_wrapper_behav.wdb -simrunnum 0 -socket 47960
+Running: xsim.dir/ethane_wrapper_behav/xsimk -simmode gui -wdb ethane_wrapper_behav.wdb -simrunnum 0 -socket 55743
 Design successfully loaded
-Design Loading Memory Usage: 51856 KB (Peak: 51856 KB)
-Design Loading CPU Usage: 30 ms
+Design Loading Memory Usage: 56664 KB (Peak: 56664 KB)
+Design Loading CPU Usage: 20 ms

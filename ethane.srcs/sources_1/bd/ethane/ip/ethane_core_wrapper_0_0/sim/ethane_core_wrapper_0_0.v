@@ -56,11 +56,11 @@
 module ethane_core_wrapper_0_0 (
   clk,
   rstn,
-  instr,
+  _instr,
   fetch_pc,
-  port_data_mem_din,
+  _port_data_mem_din,
   port_data_mem_addr,
-  port_data_mem_dout,
+  _port_data_mem_dout,
   port_data_mem_data_we
 );
 
@@ -70,21 +70,21 @@ input wire clk;
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME rstn, POLARITY ACTIVE_LOW" *)
 (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rstn RST" *)
 input wire rstn;
-input wire [31 : 0] instr;
+input wire [31 : 0] _instr;
 output wire [31 : 0] fetch_pc;
-output wire [31 : 0] port_data_mem_din;
+output wire [31 : 0] _port_data_mem_din;
 output wire [31 : 0] port_data_mem_addr;
-input wire [31 : 0] port_data_mem_dout;
+input wire [31 : 0] _port_data_mem_dout;
 output wire [3 : 0] port_data_mem_data_we;
 
   core_wrapper inst (
     .clk(clk),
     .rstn(rstn),
-    .instr(instr),
+    ._instr(_instr),
     .fetch_pc(fetch_pc),
-    .port_data_mem_din(port_data_mem_din),
+    ._port_data_mem_din(_port_data_mem_din),
     .port_data_mem_addr(port_data_mem_addr),
-    .port_data_mem_dout(port_data_mem_dout),
+    ._port_data_mem_dout(_port_data_mem_dout),
     .port_data_mem_data_we(port_data_mem_data_we)
   );
 endmodule

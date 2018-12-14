@@ -2,10 +2,10 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="ethane" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1544787865"/>
-    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1544787865"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1544787866"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1544787866"/>
+    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1544806409"/>
+    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1544806409"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1544806409"/>
+    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1544806409"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/ethane_core_wrapper_0_0/ethane_core_wrapper_0_0.xci" Type="IP">
         <Instance HierarchyPath="core_wrapper_0"/>
@@ -64,6 +64,22 @@
       <File Name="sim/ethane.v" Type="Verilog">
         <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="false" IsStatusTracked="false"/>
         <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/ethane_axi_uartlite_0_0/ethane_axi_uartlite_0_0.xci" Type="IP">
+        <Instance HierarchyPath="axi_uartlite_0"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
+        <UsedIn Val="SIMULATION"/>
+      </File>
+      <File Name="ip/ethane_blk_mem_gen_1_0/ethane_blk_mem_gen_1_0.xci" Type="IP">
+        <Instance HierarchyPath="blk_mem_gen_1"/>
+        <Properties IsEditable="false" IsVisible="true" Timestamp="0" IsTrackable="true" IsStatusTracked="true"/>
+        <Library Name="xil_defaultlib"/>
+        <UsedIn Val="SYNTHESIS"/>
+        <UsedIn Val="IMPLEMENTATION"/>
         <UsedIn Val="SIMULATION"/>
       </File>
       <File Name="ethane_ooc.xdc" Type="XDC">

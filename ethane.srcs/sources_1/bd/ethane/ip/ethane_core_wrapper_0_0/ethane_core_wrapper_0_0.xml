@@ -96,7 +96,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d2f8c40f</spirit:value>
+            <spirit:value>7:47bb6039</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -111,11 +111,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Dec 14 11:44:25 UTC 2018</spirit:value>
+            <spirit:value>Fri Dec 14 16:21:55 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d2f8c40f</spirit:value>
+            <spirit:value>7:47bb6039</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -146,7 +146,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>instr</spirit:name>
+        <spirit:name>_instr</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
@@ -178,7 +178,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>port_data_mem_din</spirit:name>
+        <spirit:name>_port_data_mem_din</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
@@ -210,7 +210,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>port_data_mem_dout</spirit:name>
+        <spirit:name>_port_data_mem_dout</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>

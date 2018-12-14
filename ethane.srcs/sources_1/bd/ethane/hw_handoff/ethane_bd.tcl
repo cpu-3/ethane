@@ -165,24 +165,43 @@ proc create_root_design { parentCell } {
   # Create interface ports
 
   # Create ports
+  set USB_UART_RX [ create_bd_port -dir I -from 0 -to 0 -type data USB_UART_RX ]
+  set USB_UART_TX [ create_bd_port -dir O -from 0 -to 0 USB_UART_TX ]
+  set led [ create_bd_port -dir O -from 7 -to 0 -type data led ]
+
+  # Create instance: axi_uartlite_0, and set properties
+  set axi_uartlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0 ]
 
   # Create instance: blk_mem_gen_0, and set properties
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0 ]
   set_property -dict [ list \
-   CONFIG.Byte_Size {9} \
-   CONFIG.Coe_File {../../../../../../../../../ダウンロード/a.coe} \
+   CONFIG.Byte_Size {8} \
+   CONFIG.Coe_File {../../../../../../../../../ダウンロード/small.coe} \
    CONFIG.EN_SAFETY_CKT {false} \
-   CONFIG.Enable_32bit_Address {false} \
+   CONFIG.Enable_32bit_Address {true} \
    CONFIG.Load_Init_File {true} \
    CONFIG.Memory_Type {Single_Port_ROM} \
    CONFIG.Operating_Mode_A {WRITE_FIRST} \
    CONFIG.Port_A_Write_Rate {0} \
-   CONFIG.Register_PortA_Output_of_Memory_Primitives {true} \
+   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
    CONFIG.Use_Byte_Write_Enable {false} \
    CONFIG.Use_RSTA_Pin {false} \
    CONFIG.Write_Depth_A {262144} \
    CONFIG.use_bram_block {Stand_Alone} \
  ] $blk_mem_gen_0
+
+  # Create instance: blk_mem_gen_1, and set properties
+  set blk_mem_gen_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_1 ]
+  set_property -dict [ list \
+   CONFIG.Byte_Size {8} \
+   CONFIG.EN_SAFETY_CKT {false} \
+   CONFIG.Enable_32bit_Address {true} \
+   CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
+   CONFIG.Use_Byte_Write_Enable {true} \
+   CONFIG.Use_RSTA_Pin {false} \
+   CONFIG.Write_Depth_A {262144} \
+   CONFIG.use_bram_block {Stand_Alone} \
+ ] $blk_mem_gen_1
 
   # Create instance: core_wrapper_0, and set properties
   set block_name core_wrapper
@@ -230,19 +249,33 @@ proc create_root_design { parentCell } {
   # Create instance: xlconstant_0, and set properties
   set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
 
+  # Create interface connections
+  connect_bd_intf_net -intf_net uart_wrapper_0_axi [get_bd_intf_pins axi_uartlite_0/S_AXI] [get_bd_intf_pins uart_wrapper_0/axi]
+
   # Create port connections
-  connect_bd_net -net blk_mem_gen_0_douta [get_bd_pins blk_mem_gen_0/douta] [get_bd_pins core_wrapper_0/instr]
+  connect_bd_net -net USB_UART_RX_1 [get_bd_ports USB_UART_RX] [get_bd_pins axi_uartlite_0/rx]
+  connect_bd_net -net axi_uartlite_0_tx [get_bd_ports USB_UART_TX] [get_bd_pins axi_uartlite_0/tx]
+  connect_bd_net -net blk_mem_gen_0_douta [get_bd_pins blk_mem_gen_0/douta] [get_bd_pins core_wrapper_0/_instr]
+  connect_bd_net -net blk_mem_gen_1_douta [get_bd_pins blk_mem_gen_1/douta] [get_bd_pins map_wrapper_0/dout]
   connect_bd_net -net core_wrapper_0_fetch_pc [get_bd_pins blk_mem_gen_0/addra] [get_bd_pins core_wrapper_0/fetch_pc]
+  connect_bd_net -net core_wrapper_0_port_data_mem_addr [get_bd_pins core_wrapper_0/port_data_mem_addr] [get_bd_pins map_wrapper_0/c_addr]
+  connect_bd_net -net core_wrapper_0_port_data_mem_data_we [get_bd_pins core_wrapper_0/port_data_mem_data_we] [get_bd_pins map_wrapper_0/c_write_enable]
+  connect_bd_net -net core_wrapper_0_port_data_mem_din [get_bd_pins core_wrapper_0/_port_data_mem_din] [get_bd_pins map_wrapper_0/c_din]
+  connect_bd_net -net map_wrapper_0_addr [get_bd_pins blk_mem_gen_1/addra] [get_bd_pins map_wrapper_0/addr]
+  connect_bd_net -net map_wrapper_0_c_dout [get_bd_pins core_wrapper_0/_port_data_mem_dout] [get_bd_pins map_wrapper_0/c_dout]
+  connect_bd_net -net map_wrapper_0_din [get_bd_pins blk_mem_gen_1/dina] [get_bd_pins map_wrapper_0/din]
+  connect_bd_net -net map_wrapper_0_led [get_bd_ports led] [get_bd_pins map_wrapper_0/led]
   connect_bd_net -net map_wrapper_0_r_valid [get_bd_pins map_wrapper_0/r_valid] [get_bd_pins uart_wrapper_0/r_valid]
   connect_bd_net -net map_wrapper_0_t_data [get_bd_pins map_wrapper_0/t_data] [get_bd_pins uart_wrapper_0/t_data]
   connect_bd_net -net map_wrapper_0_t_valid [get_bd_pins map_wrapper_0/t_valid] [get_bd_pins uart_wrapper_0/t_valid]
-  connect_bd_net -net sim_clk_gen_0_clk [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins core_wrapper_0/clk] [get_bd_pins map_wrapper_0/clk] [get_bd_pins sim_clk_gen_0/clk] [get_bd_pins uart_wrapper_0/clk]
-  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_wrapper_0/rstn]
+  connect_bd_net -net map_wrapper_0_write_enable [get_bd_pins blk_mem_gen_1/wea] [get_bd_pins map_wrapper_0/write_enable]
+  connect_bd_net -net sim_clk_gen_0_clk [get_bd_pins axi_uartlite_0/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_1/clka] [get_bd_pins core_wrapper_0/clk] [get_bd_pins map_wrapper_0/clk] [get_bd_pins sim_clk_gen_0/clk] [get_bd_pins uart_wrapper_0/clk]
+  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_wrapper_0/rstn]
   connect_bd_net -net uart_wrapper_0_r_data [get_bd_pins map_wrapper_0/r_data] [get_bd_pins uart_wrapper_0/r_data]
   connect_bd_net -net uart_wrapper_0_rx_done [get_bd_pins map_wrapper_0/rx_done] [get_bd_pins uart_wrapper_0/rx_done]
   connect_bd_net -net uart_wrapper_0_tx_done [get_bd_pins map_wrapper_0/tx_done] [get_bd_pins uart_wrapper_0/tx_done]
   connect_bd_net -net uart_wrapper_0_u_ready [get_bd_pins map_wrapper_0/ready] [get_bd_pins uart_wrapper_0/u_ready]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins xlconstant_0/dout]
+  connect_bd_net -net xlconstant_0_dout [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins blk_mem_gen_1/ena] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
 

@@ -61,7 +61,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>76c8cc80</spirit:value>
+            <spirit:value>37bd96f2</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -74,7 +74,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>76c8cc80</spirit:value>
+            <spirit:value>37bd96f2</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -115,7 +115,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>instr</spirit:name>
+        <spirit:name>_instr</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
@@ -149,7 +149,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>port_data_mem_din</spirit:name>
+        <spirit:name>_port_data_mem_din</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
           <spirit:vector>
@@ -183,7 +183,7 @@
         </spirit:wire>
       </spirit:port>
       <spirit:port>
-        <spirit:name>port_data_mem_dout</spirit:name>
+        <spirit:name>_port_data_mem_dout</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
@@ -258,7 +258,7 @@
         <xilinx:designToolContext>IPI</xilinx:designToolContext>
       </xilinx:designToolContexts>
       <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2018-12-14T11:44:15Z</xilinx:coreCreationDateTime>
+      <xilinx:coreCreationDateTime>2018-12-14T16:20:54Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2017.4</xilinx:xilinxVersion>

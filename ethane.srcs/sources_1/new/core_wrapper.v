@@ -22,22 +22,23 @@
 module core_wrapper(
     input wire clk,
     input wire rstn,
-    input wire [31:0]instr,
+    input wire [31:0]_instr,
     output wire [31:0]fetch_pc,
 
     // data memory
-    output wire [31:0] port_data_mem_din,
+    output wire [31:0] _port_data_mem_din,
     output wire [31:0] port_data_mem_addr,
-    input  wire [31:0] port_data_mem_dout,
+    input  wire [31:0] _port_data_mem_dout,
     output wire [3:0]  port_data_mem_data_we
 
     );
     core C(
          .clk(clk),
          .rstn(rstn),
-         .instr(instr),
+         ._instr(_instr),
          .fetch_pc(fetch_pc),
-         .port_data_mem_din(port_data_mem_din),
+         ._port_data_mem_din(_port_data_mem_din),
+         ._port_data_mem_dout(_port_data_mem_dout),
          .port_data_mem_addr(port_data_mem_addr),
          .port_data_mem_data_we(port_data_mem_data_we));
 endmodule
