@@ -2,7 +2,25 @@
    ExpandedHierarchyInLayout: "",
    guistr: "# # String gsaved with Nlview 6.6.11  2017-06-12 bk=1.3860 VDI=40 GEI=35 GUI=JA:1.6
 #  -string -flagsOSRD
-levelinfo -pg 1 0 10 -top 0 -bot 10
+preplace inst uart_wrapper_0 -pg 1 -lvl 3 -y 630 -defaultsOSRD
+preplace inst core_wrapper_0 -pg 1 -lvl 3 -y 120 -defaultsOSRD
+preplace inst xlconstant_0 -pg 1 -lvl 1 -y -40 -defaultsOSRD
+preplace inst map_wrapper_0 -pg 1 -lvl 3 -y 380 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 2 -y -70 -defaultsOSRD
+preplace inst sim_clk_gen_0 -pg 1 -lvl 1 -y 160 -defaultsOSRD
+preplace netloc uart_wrapper_0_tx_done 1 2 2 810 230 1350
+preplace netloc sim_clk_gen_0_sync_rst 1 1 2 N 170 760
+preplace netloc map_wrapper_0_t_valid 1 2 2 780 210 1320
+preplace netloc uart_wrapper_0_rx_done 1 2 2 800 540 1310
+preplace netloc xlconstant_0_dout 1 1 1 210
+preplace netloc sim_clk_gen_0_clk 1 1 2 220 90 750
+preplace netloc uart_wrapper_0_r_data 1 2 2 800 220 1340
+preplace netloc blk_mem_gen_0_douta 1 1 2 230 130 N
+preplace netloc map_wrapper_0_t_data 1 2 2 810 530 1310
+preplace netloc uart_wrapper_0_u_ready 1 2 2 790 40 1360
+preplace netloc map_wrapper_0_r_valid 1 2 2 770 200 1330
+preplace netloc core_wrapper_0_fetch_pc 1 1 3 230J -160 NJ -160 1310
+levelinfo -pg 1 -30 110 640 1060 1380 -top -180 -bot 720
 ",
 }
-
+0

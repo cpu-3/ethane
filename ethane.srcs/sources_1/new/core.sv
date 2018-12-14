@@ -20,6 +20,224 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
+typedef struct packed{
+  logic lui;
+  logic auipc;
+  logic jal;
+  logic jalr;
+  logic beq;
+  logic bne;
+  logic blt;
+  logic bge;
+  logic bltu;
+  logic bgeu;
+  logic lb;
+  logic lh;
+  logic lw;
+  logic lbu;
+  logic lhu;
+  logic sb;
+  logic sh;
+  logic sw;
+  logic addi;
+  logic slti;
+  logic sltiu;
+  logic xori;
+  logic ori;
+  logic andi;
+  logic slli;
+  logic srli;
+  logic srai;
+  logic add;
+  logic sub;
+  logic sll;
+  logic slt;
+  logic sltu;
+  logic xor_;
+  logic srl;
+  logic sra;
+  logic or_;
+  logic and_;
+  
+  logic fadd;
+  logic fsub;
+  logic fmul;
+  logic fdiv;
+  logic fsw;
+  logic flw;
+  logic feq;
+  logic flt;
+  logic fle;
+  
+  
+  logic fsgnj;
+  logic fsgnjn;
+} instif;
+
+typedef struct packed{
+    logic reg_dst;
+    logic reg_write;
+    logic alu_src;
+    logic pc_src;
+    logic mem_read;
+    logic [3:0] mem_write; // write enable
+    logic mem_to_reg;
+} controlif;
+
+module alu 
+ (
+    input wire [31:0] src1,
+    input wire [31:0] src2,
+    output wire [31:0] result,
+    input instif inst
+ );
+    assign result = 
+         (inst.add | inst.addi | inst.lb | inst.lh | inst.lw |
+          inst.lbu | inst.lhu | inst.sb | inst.sh | inst.sw |
+          inst.flw | inst.fsw) ? src1 + src2 : 
+         (inst.sub)             ? src1 - src2 :
+         (inst.slti | inst.slt) ? $signed(src1) < $signed(src2) :
+         (inst.sltiu | inst.sltu) ? src1 < src2 :
+         (inst.xori | inst.xor_) ? src1 ^ src2:
+         (inst.ori | inst.or_) ? src1 | src2:
+         (inst.andi | inst.and_) ? src1 & src2:
+         (inst.slli | inst.sll) ? src1 << src2:
+         (inst.srli | inst.srl) ? src1 >> src2:
+         (inst.srai | inst.sra) ? $signed(src1) >>> $signed(src2):
+         (inst.beq) ? src1 == src2:
+         (inst.bne) ? src1 != src2:
+         (inst.blt) ? $signed(src1) < $signed(src2):
+         (inst.bge) ? $signed(src1) >= $signed(src2):
+         (inst.bltu) ? src1 < src2:
+         (inst.bgeu) ? src1 >= src2:
+         32'd0;
+endmodule
+
+
+module decoder
+ (
+     output wire [4:0] rd,
+     output wire [4:0] rs1,
+     output wire [4:0] rs2,
+     output wire [31:0] imm,
+
+     instif inst,
+     controlif ctrl,
+     
+     input wire [31:0] inst_code
+ );
+    wire r_type;
+    wire [6:0] opcode;
+    assign opcode = inst_code[6:0];
+    wire [2:0] funct3;
+    assign funct3 = inst_code[14:12];
+    wire [6:0] funct7;
+    assign funct7 = inst_code[31:25];
+
+    assign r_type = ((inst_code[6:5] == 2'b01) || inst_code[6:5] == 2'b10) && (inst_code[4:2] == 3'b100);
+    wire i_type;
+    assign i_type = ((inst_code[6:5] == 2'b00) &&
+                        ((inst_code[4:2] == 3'b000) ||
+                         (inst_code[4:2] == 3'b100) ||
+                         (inst_code[4:2] == 3'b001)))||
+                    ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b001));
+    wire s_type;
+    assign s_type = (inst_code[6:5] == 2'b01) && ((inst_code[4:2] == 3'b000) || (inst_code[4:2] == 3'b001));
+    wire b_type;
+    assign b_type = (inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b000);
+    wire u_type;
+    assign u_type = ((inst_code[6:5] == 2'b01) || (inst_code[6:5] == 2'b00)) && (inst_code[4:2] == 3'b101);
+    wire j_type;
+    assign j_type = ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b011));
+    assign rd = (r_type | i_type | u_type | j_type) ? inst_code[11:7] : 5'd0;
+
+    assign rs1 = (r_type | i_type | s_type | b_type) ? inst_code[19:15] : 5'd0;
+    assign rs2 = (r_type | s_type | b_type) ? inst_code[24:20] : 5'd0;
+
+    assign imm = i_type ? {{21{inst_code[31]}}, inst_code[30:20]} :
+         s_type ? {{21{inst_code[31]}}, inst_code[30:25], inst_code[11:7]} :
+         b_type ? {{20{inst_code[31]}}, inst_code[7], inst_code[30:25], inst_code[11:8], 1'b0} :
+         u_type ? {inst_code[31:12], 12'd0} :
+         j_type ? {{12{inst_code[31]}}, inst_code[19:12], inst_code[20], inst_code[30:21], 1'b0} : 32'd0;
+
+    assign inst.lui   = opcode == 7'b0110111;
+    assign inst.auipc = opcode == 7'b0010111;
+    assign inst.jal   = opcode == 7'b1101111;
+    assign inst.jalr  = opcode == 7'b1100111;
+
+    assign inst.beq  = (opcode == 7'b1100011) && (funct3 == 3'b000);
+    assign inst.bne  = (opcode == 7'b1100011) && (funct3 == 3'b001);
+    assign inst.blt  = (opcode == 7'b1100011) && (funct3 == 3'b100);
+    assign inst.bge  = (opcode == 7'b1100011) && (funct3 == 3'b101);
+    assign inst.bltu = (opcode == 7'b1100011) && (funct3 == 3'b110);
+    assign inst.bgeu = (opcode == 7'b1100011) && (funct3 == 3'b111);
+
+    assign inst.lb  = (opcode == 7'b0000011) && (funct3 == 3'b000);
+    assign inst.lh  = (opcode == 7'b0000011) && (funct3 == 3'b001);
+    assign inst.lw  = (opcode == 7'b0000011) && (funct3 == 3'b010);
+    assign inst.lbu = (opcode == 7'b0000011) && (funct3 == 3'b100);
+    assign inst.lhu = (opcode == 7'b0000011) && (funct3 == 3'b101);
+
+    assign inst.sb  = (opcode == 7'b0100011) && (funct3 == 3'b000);
+    assign inst.sh  = (opcode == 7'b0100011) && (funct3 == 3'b001);
+    assign inst.sw  = (opcode == 7'b0100011) && (funct3 == 3'b010);
+
+    assign inst.addi  = (opcode == 7'b0010011) && (funct3 == 3'b000);
+    assign inst.slti  = (opcode == 7'b0010011) && (funct3 == 3'b010);
+    assign inst.sltiu = (opcode == 7'b0010011) && (funct3 == 3'b011);
+    assign inst.xori  = (opcode == 7'b0010011) && (funct3 == 3'b100);
+    assign inst.ori   = (opcode == 7'b0010011) && (funct3 == 3'b110);
+    assign inst.andi  = (opcode == 7'b0010011) && (funct3 == 3'b111);
+
+    assign inst.slli = (opcode == 7'b0010011) && (funct3 == 3'b001);
+    assign inst.srli = (opcode == 7'b0010011) && (funct3 == 3'b101) && (funct7 == 7'b0000000);
+    assign inst.srai = (opcode == 7'b0010011) && (funct3 == 3'b101) && (funct7 == 7'b0100000);
+
+    assign inst.add  = (opcode == 7'b0110011) && (funct3 == 3'b000) && (funct7 == 7'b0000000);
+    assign inst.sub  = (opcode == 7'b0110011) && (funct3 == 3'b000) && (funct7 == 7'b0100000);
+    assign inst.sll  = (opcode == 7'b0110011) && (funct3 == 3'b001);
+    assign inst.slt  = (opcode == 7'b0110011) && (funct3 == 3'b010);
+    assign inst.sltu = (opcode == 7'b0110011) && (funct3 == 3'b011);
+    assign inst.xor_ = (opcode == 7'b0110011) && (funct3 == 3'b100);
+    assign inst.srl  = (opcode == 7'b0110011) && (funct3 == 3'b101) && (funct7 == 7'b0000000);
+    assign inst.sra  = (opcode == 7'b0110011) && (funct3 == 3'b101) && (funct7 == 7'b0000000);
+    assign inst.or_  = (opcode == 7'b0110011) && (funct3 == 3'b110);
+    assign inst.and_ = (opcode == 7'b0110011) && (funct3 == 3'b111);
+    
+    assign inst.fadd = (opcode == 7'b1010011) && (funct7 == 7'b0000000);
+    assign inst.fsub = (opcode == 7'b1010011) && (funct7 == 7'b0000100);
+    assign inst.fmul = (opcode == 7'b1010011) && (funct7 == 7'b0001000);
+    assign inst.fdiv = (opcode == 7'b1010011) && (funct7 == 7'b0001100);
+    assign inst.feq  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b010);
+    assign inst.flt  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b001);
+    assign inst.fle  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b000);
+    assign inst.fsgnj  = (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b000);
+    assign inst.fsgnjn = (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b001);
+    
+    assign inst.fsw = opcode == 7'b0100111;
+    assign inst.flw = opcode == 7'b0000111;
+    
+    assign ctrl.alu_src = ~(
+        inst.add | 
+        inst.sub | 
+        inst.sll | 
+        inst.slt | 
+        inst.sltu | 
+        inst.xor_ | 
+        inst.srl | 
+        inst.sra  | 
+        inst.or_  | 
+        inst.and_);
+
+    assign ctrl.mem_write = 
+        inst.sb ? 4'b0001 :
+        inst.sh ? 4'b0011 :
+        inst.sw ? 4'b1111 :
+        inst.fsw ? 4'b1111 : 4'b0;
+
+endmodule
+
+
 module fetch_stage(
     input wire [31:0] pc,
     output wire [31:0] pc_next
@@ -30,18 +248,18 @@ endmodule
 module decode_stage(
     input wire [31:0] inst,
     input wire [31:0] pc,
-    instif ist,
-    output wire [5:0] rd,
-    output wire [5:0] rs1,
-    output wire [5:0] rs2,
+    output instif ist,
+    output wire [4:0] rd,
+    output wire [4:0] rs1,
+    output wire [4:0] rs2,
     output wire [31:0] imm,
     output wire [31:0] branch_pc,
     output wire branch_control,
     input wire [31:0] src1,
     input wire [31:0] src2,
-    controlif ctrl
+    output controlif ctrl
     );
-    decoder(
+    decoder D(
         .rd,
         .rs1,
         .rs2,
@@ -58,29 +276,29 @@ module decode_stage(
     wire ltu = src1 < src2;
     wire geu = src1 >= src2;
     
-    wire branch = (inst.beq & eq) | 
-            (inst.bne & ne) | 
-            (inst.blt & lt) |
-            (inst.bge & ge) | 
-            (inst.bltu & ltu) |
-            (inst.bgeu & geu);
+    wire branch = (ist.beq & eq) | 
+            (ist.bne & ne) | 
+            (ist.blt & lt) |
+            (ist.bge & ge) | 
+            (ist.bltu & ltu) |
+            (ist.bgeu & geu);
     // handle branch instructions
     assign branch_pc = 
-        inst.jal  ? src1 + imm :
-        inst.jalr ? pc + imm :
+        ist.jal  ? src1 + imm :
+        ist.jalr ? pc + imm :
         branch ? pc + imm : pc; 
-    assign branch_control = inst.jal | inst.jalr | branch;
+    assign branch_control = ist.jal | ist.jalr | branch;
     
 endmodule
 
 module exec_stage(
-    instif inst,
+    input instif inst,
     input wire [31:0] int_src1,
     input wire [31:0] mem_forwarded,
     input wire [31:0] write_forwarded,
     input wire [31:0] immediate,
     input wire [31:0] int_src2,
-    controlif ctrl,
+    input controlif ctrl,
     input wire [1:0] forwarded_src1_ctrl,
     input wire [1:0] forwarded_src2_ctrl,    
     output wire [31:0] alu_result,
@@ -111,8 +329,8 @@ module exec_stage(
 endmodule
 
 module forwarding_unit(
-    controlif ex_mem_ctrl,
-    controlif mem_wb_ctrl,
+    input controlif ex_mem_ctrl,
+    input controlif mem_wb_ctrl,
     input wire [6:0]id_ex_reg_rs1,
     input wire [6:0]id_ex_reg_rs2,
     input wire [6:0]ex_mem_reg_rd,
@@ -123,8 +341,8 @@ module forwarding_unit(
 endmodule
 
 module hazard_unit(
-    controlif mem_ctrl,
-    controlif dec_ctrl,
+    input controlif mem_ctrl,
+    input controlif dec_ctrl,
     input wire [5:0]rs1,
     input wire [5:0]rs2,
     input wire [5:0]rd,
@@ -133,7 +351,7 @@ module hazard_unit(
 endmodule
 
 module memory_stage(
-    controlif ctrl,
+    input controlif ctrl,
     input wire [31:0] data,
     input wire [31:0] addr,
     input wire [31:0] alu_result,
@@ -144,7 +362,7 @@ module memory_stage(
 endmodule
 
 module write_stage(
-    controlif ctrl,
+    input controlif ctrl,
     input wire [31:0] load_result,
     input wire [31:0] alu_result,
     output wire [31:0] int_result,
@@ -233,7 +451,6 @@ module core(
         .ctrl(decoded_ctrl),
         .src1(decode_stage_int_src1),
         .src2(decode_stage_int_src2),
-        .ctrl(decoded_ctrl),
         .imm(decoded_immediate),
         .branch_pc,
         .branch_control
@@ -277,8 +494,8 @@ module core(
     wire [1:0] forwarded_src2_ctrl;
     
     forwarding_unit FORWARDING(
-        .ctrl(ex_mem_m_ctrl),
-        .addr(ex_mem_alu_result),
+        /*.ctrl(ex_mem_m_ctrl),
+        .addr(ex_mem_alu_result),*/
         .id_ex_reg_rs1(id_ex_int_src1),
         .id_ex_reg_rs2(id_ex_int_src2),
         .ex_mem_reg_rd(ex_mem_register_rd),
@@ -297,7 +514,6 @@ module core(
         .mem_forwarded(ex_mem_alu_result),
         .write_forwarded(write_int_result),
         .immediate(id_ex_immediate),
-        .forwarding_ctrl_src1,
         .ctrl(id_ex_ex_ctrl),
         .alu_result(ex_alu_result),
         .store_data(ex_store_data),
