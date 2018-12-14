@@ -376,7 +376,7 @@ module core(
     input wire clk,
     input wire rstn,
     input wire [31:0]instr,
-    output wire fetch_pc,
+    output wire [31:0]fetch_pc,
     
     // data memory
     output wire [31:0] port_data_mem_din,
@@ -421,8 +421,8 @@ module core(
     assign fetch_pc = pc;
     wire [31:0]pc_next;
     fetch_stage FS(
-                .pc(pc), 
-                .pc_next(pc_next)
+                .pc, 
+                .pc_next
                 );
                 
     // decode stage components   
@@ -541,6 +541,25 @@ module core(
     always @(posedge clk) begin
         if (~rstn) begin
             // flush registers
+            pc <= 32'd0;
+            id_ex_register_rd <= 32'd0;
+            id_ex_register_rs1 <= 32'd0;
+            id_ex_register_rs2 <= 32'd0;
+            id_ex_int_src1 <= 32'd0;
+            id_ex_int_src2 <= 32'd0;
+            id_ex_float_src1 <= 32'd0;
+            id_ex_float_src2 <= 32'd0;
+            id_ex_inst <= 32'd0;
+            id_ex_ex_ctrl <= 32'd0; 
+            id_ex_immediate <= 32'd0;
+            
+            // exec stage
+            ex_mem_alu_result <= 32'd0;
+            ex_mem_store_data <= 32'd0;
+            
+            // memory stage
+            mem_wb_load_result <= 32'd0;
+            mem_wb_alu_result <= 32'd0;
         end else begin
             // fetch stage
             pc <= pc_next;

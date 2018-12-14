@@ -2,8 +2,8 @@
 # Vivado v2017.4 (64-bit)
 # SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
 # IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Fri Dec 14 17:52:47 2018
-# Process ID: 15846
+# Start of session at: Fri Dec 14 18:38:40 2018
+# Process ID: 19254
 # Current directory: /home/tansei/pro/vivado/ethane
 # Command line: vivado
 # Log file: /home/tansei/pro/vivado/ethane/vivado.log
@@ -12,22 +12,17 @@
 start_gui
 open_project /home/tansei/pro/vivado/ethane/ethane.xpr
 launch_simulation
-launch_simulation
-launch_simulation
-launch_simulation
-launch_simulation
-launch_simulation
-launch_simulation
 source ethane_wrapper.tcl
+open_bd_design {/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ethane.bd}
 close_sim
 launch_simulation
 source ethane_wrapper.tcl
+open_bd_design {/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ethane.bd}
 close_sim
 launch_simulation
 source ethane_wrapper.tcl
-add_wave {{/ethane_wrapper/ethane_i/map_wrapper_0_r_valid}} 
-restart
-run 10000 ns
-run 10000 ns
-run 10000 ns
+add_wave {{/ethane_wrapper/ethane_i/core_wrapper_0/inst/C}} 
+save_wave_config {/home/tansei/pro/vivado/ethane/ethane_wrapper_behav1.wcfg}
+add_files -fileset sim_1 -norecurse /home/tansei/pro/vivado/ethane/ethane_wrapper_behav1.wcfg
+set_property xsim.view /home/tansei/pro/vivado/ethane/ethane_wrapper_behav1.wcfg [get_filesets sim_1]
 git add .
