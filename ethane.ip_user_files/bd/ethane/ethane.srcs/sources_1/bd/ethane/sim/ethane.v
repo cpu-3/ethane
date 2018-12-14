@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
-//Date        : Fri Dec 14 17:48:27 2018
+//Date        : Fri Dec 14 20:44:25 2018
 //Host        : ispc2016 running 64-bit Ubuntu 16.04.4 LTS
 //Command     : generate_target ethane.bd
 //Design      : ethane
@@ -14,7 +14,7 @@ module ethane
    ();
 
   wire [31:0]blk_mem_gen_0_douta;
-  wire core_wrapper_0_fetch_pc;
+  wire [31:0]core_wrapper_0_fetch_pc;
   wire map_wrapper_0_r_valid;
   wire [7:0]map_wrapper_0_t_data;
   wire map_wrapper_0_t_valid;
@@ -27,7 +27,7 @@ module ethane
   wire [0:0]xlconstant_0_dout;
 
   ethane_blk_mem_gen_0_0 blk_mem_gen_0
-       (.addra({core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc,core_wrapper_0_fetch_pc}),
+       (.addra(core_wrapper_0_fetch_pc[17:0]),
         .clka(sim_clk_gen_0_clk),
         .douta(blk_mem_gen_0_douta),
         .ena(xlconstant_0_dout));

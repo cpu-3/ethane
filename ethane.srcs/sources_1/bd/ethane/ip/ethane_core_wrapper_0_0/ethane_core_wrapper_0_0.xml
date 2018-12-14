@@ -96,7 +96,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d7fe13fb</spirit:value>
+            <spirit:value>7:d2f8c40f</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -111,11 +111,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Dec 14 08:48:28 UTC 2018</spirit:value>
+            <spirit:value>Fri Dec 14 11:44:25 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:d7fe13fb</spirit:value>
+            <spirit:value>7:d2f8c40f</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -165,6 +165,10 @@
         <spirit:name>fetch_pc</spirit:name>
         <spirit:wire>
           <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
               <spirit:typeName>wire</spirit:typeName>

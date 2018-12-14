@@ -71,7 +71,7 @@ input wire clk;
 (* X_INTERFACE_INFO = "xilinx.com:signal:reset:1.0 rstn RST" *)
 input wire rstn;
 input wire [31 : 0] instr;
-output wire fetch_pc;
+output wire [31 : 0] fetch_pc;
 output wire [31 : 0] port_data_mem_din;
 output wire [31 : 0] port_data_mem_addr;
 input wire [31 : 0] port_data_mem_dout;

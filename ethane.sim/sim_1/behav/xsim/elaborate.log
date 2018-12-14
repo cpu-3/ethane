@@ -3,20 +3,51 @@ Copyright 1986-1999, 2001-2016 Xilinx, Inc. All Rights Reserved.
 Running: /opt/Xilinx/Vivado/2017.4/bin/unwrapped/lnx64.o/xelab -wto 587bfad416d648a8a1a9b118490fe802 --incr --debug typical --relax --mt 8 -L xil_defaultlib -L blk_mem_gen_v8_4_1 -L xlconstant_v1_1_3 -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot ethane_wrapper_behav xil_defaultlib.ethane_wrapper xil_defaultlib.glbl -log elaborate.log 
 Using 8 slave threads.
 Starting static elaboration
-WARNING: [VRFC 10-278] actual bit length 1 differs from formal bit length 32 for port fetch_pc [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core_wrapper.v:39]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rd [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:448]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs1 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:449]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs2 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:450]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rd_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:463]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs1_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:466]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs2_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:467]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rd_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:475]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs1_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:478]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 5 for port rs2_idx [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:479]
+WARNING: [VRFC 10-278] actual bit length 5 differs from formal bit length 6 for port rs1 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:487]
+WARNING: [VRFC 10-278] actual bit length 5 differs from formal bit length 6 for port rs2 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:488]
+WARNING: [VRFC 10-278] actual bit length 5 differs from formal bit length 6 for port rd [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:489]
 WARNING: [VRFC 10-278] actual bit length 32 differs from formal bit length 7 for port id_ex_reg_rs1 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:499]
 WARNING: [VRFC 10-278] actual bit length 32 differs from formal bit length 7 for port id_ex_reg_rs2 [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:500]
-WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 7 for port ex_mem_reg_rd [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:501]
+WARNING: [VRFC 10-278] actual bit length 5 differs from formal bit length 7 for port ex_mem_reg_rd [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:501]
 WARNING: [VRFC 10-278] actual bit length 6 differs from formal bit length 7 for port mem_wb_reg_rd [/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/new/core.sv:502]
 WARNING: [VRFC 10-1783] select index 62 into current_contents is out of bounds [/wrk/2017.4/nightly/2017_12_15_2086221/packages/customer/vivado/data/ip/xilinx/blk_mem_gen_v8_4/simulation/blk_mem_gen_v8_4.v:2420]
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_output_stage(...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_output_stage(...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_softecc_outpu...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1_mem_module(C_...
+Compiling module blk_mem_gen_v8_4_1.blk_mem_gen_v8_4_1(C_FAMILY="kin...
+Compiling module xil_defaultlib.ethane_blk_mem_gen_0_0
+Compiling module xil_defaultlib.fetch_stage
+Compiling module xil_defaultlib.decoder
+Compiling module xil_defaultlib.decode_stage
+Compiling module xil_defaultlib.register
+Compiling module xil_defaultlib.fregister
+Compiling module xil_defaultlib.hazard_unit
+Compiling module xil_defaultlib.forwarding_unit
+Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.exec_stage
+Compiling module xil_defaultlib.write_stage
+Compiling module xil_defaultlib.core
+Compiling module xil_defaultlib.core_wrapper
+Compiling module xil_defaultlib.ethane_core_wrapper_0_0
+Compiling module xil_defaultlib.map
+Compiling module xil_defaultlib.map_wrapper
+Compiling module xil_defaultlib.ethane_map_wrapper_0_0
+Compiling module xil_defaultlib.sim_clk_gen(CLOCK_PERIOD=10,RESE...
+Compiling module xil_defaultlib.ethane_sim_clk_gen_0_0
+Compiling module xil_defaultlib.uart
+Compiling module xil_defaultlib.uart_wrapper
+Compiling module xil_defaultlib.ethane_uart_wrapper_0_0
+Compiling module xlconstant_v1_1_3.xlconstant_v1_1_3_xlconstant(CON...
+Compiling module xil_defaultlib.ethane_xlconstant_0_0
+Compiling module xil_defaultlib.ethane
+Compiling module xil_defaultlib.ethane_wrapper
+Compiling module xil_defaultlib.glbl
+Compiling package xil_defaultlib.$unit_1
+Compiling package xil_defaultlib.$unit_2
+Compiling package xil_defaultlib.$unit_3
+Built simulation snapshot ethane_wrapper_behav

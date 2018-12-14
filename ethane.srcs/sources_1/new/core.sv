@@ -397,15 +397,15 @@ module core(
     reg [31:0] id_ex_float_src2;
     wire id_ex_mem_read;
     assign id_ex_mem_read = id_ex_inst.lb | id_ex_inst.lh | id_ex_inst.lw | id_ex_inst.flw;
-    reg [5:0]id_ex_register_rs2; // id_ex_register_rt[6] -> is float or int register?
-    reg [5:0]id_ex_register_rs1;
-    reg [5:0]id_ex_register_rd;
+    reg [4:0]id_ex_register_rs2; // id_ex_register_rt[6] -> is float or int register?
+    reg [4:0]id_ex_register_rs1;
+    reg [4:0]id_ex_register_rd;
     reg [31:0] id_ex_immediate;
     
     // EX/MEM registers
     controlif ex_mem_wb_ctrl;
     controlif ex_mem_m_ctrl;
-    reg [5:0] ex_mem_register_rd;
+    reg [4:0] ex_mem_register_rd;
     reg [31:0] ex_mem_alu_result;
     reg [31:0] ex_mem_store_data;
 
@@ -426,9 +426,9 @@ module core(
                 );
                 
     // decode stage components   
-    wire [5:0] decoded_rd;
-    wire [5:0] decoded_rs1;
-    wire [5:0] decoded_rs2;
+    wire [4:0] decoded_rd;
+    wire [4:0] decoded_rs1;
+    wire [4:0] decoded_rs2;
     wire [31:0] decoded_immediate;
     instif decoded_inst;
     controlif decoded_ctrl;
@@ -456,7 +456,7 @@ module core(
         .branch_control
     );
     wire write_back_enable;
-    wire [5:0]write_back_rd;
+    wire [4:0]write_back_rd;
     register REGISTER(
         .clk(clk),
         .rstn(rstn),

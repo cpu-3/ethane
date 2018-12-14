@@ -23,7 +23,7 @@ module core_wrapper(
     input wire clk,
     input wire rstn,
     input wire [31:0]instr,
-    output wire fetch_pc,
+    output wire [31:0]fetch_pc,
 
     // data memory
     output wire [31:0] port_data_mem_din,
