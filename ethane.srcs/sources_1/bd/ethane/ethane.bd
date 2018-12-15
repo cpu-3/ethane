@@ -138,17 +138,10 @@
           <spirit:configurableElementValue spirit:referenceId="Write_Depth_A">262144</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Register_PortA_Output_of_Memory_Primitives">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Load_Init_File">true</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../../../../ダウンロード/small.coe</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../../../../ダウンロード/forward.coe</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_A_Write_Rate">0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="use_bram_block">Stand_Alone</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
-        <spirit:instanceName>xlconstant_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="ip" spirit:name="xlconstant" spirit:vendor="xilinx.com" spirit:version="1.1"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_xlconstant_0_0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -229,6 +222,8 @@
         <spirit:internalPortReference spirit:componentRef="uart_wrapper_0" spirit:portRef="rstn"/>
         <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="rstn"/>
+        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="ena"/>
+        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_1" spirit:portRef="ena"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>core_wrapper_0_fetch_pc</spirit:name>
@@ -239,12 +234,6 @@
         <spirit:name>blk_mem_gen_0_douta</spirit:name>
         <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="douta"/>
         <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="_instr"/>
-      </spirit:adHocConnection>
-      <spirit:adHocConnection>
-        <spirit:name>xlconstant_0_dout</spirit:name>
-        <spirit:internalPortReference spirit:componentRef="xlconstant_0" spirit:portRef="dout"/>
-        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="ena"/>
-        <spirit:internalPortReference spirit:componentRef="blk_mem_gen_1" spirit:portRef="ena"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>map_wrapper_0_t_valid</spirit:name>

@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
-//Date        : Sat Dec 15 01:53:29 2018
+//Date        : Sat Dec 15 14:47:58 2018
 //Host        : ispc2016 running 64-bit Ubuntu 16.04.4 LTS
 //Command     : generate_target ethane.bd
 //Design      : ethane
@@ -9,7 +9,7 @@
 //--------------------------------------------------------------------------------
 `timescale 1 ps / 1 ps
 
-(* CORE_GENERATION_INFO = "ethane,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=ethane,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=8,numReposBlks=8,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=3,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}" *) (* HW_HANDOFF = "ethane.hwdef" *) 
+(* CORE_GENERATION_INFO = "ethane,IP_Integrator,{x_ipVendor=xilinx.com,x_ipLibrary=BlockDiagram,x_ipName=ethane,x_ipVersion=1.00.a,x_ipLanguage=VERILOG,numBlks=7,numReposBlks=7,numNonXlnxBlks=0,numHierBlks=0,maxHierDepth=0,numSysgenBlks=0,numHlsBlks=0,numHdlrefBlks=3,numPkgbdBlks=0,bdsource=USER,synth_mode=OOC_per_IP}" *) (* HW_HANDOFF = "ethane.hwdef" *) 
 module ethane
    (USB_UART_RX,
     USB_UART_TX,
@@ -57,7 +57,6 @@ module ethane
   wire uart_wrapper_0_rx_done;
   wire uart_wrapper_0_tx_done;
   wire uart_wrapper_0_u_ready;
-  wire [0:0]xlconstant_0_dout;
 
   assign USB_UART_RX_1 = USB_UART_RX[0];
   assign USB_UART_TX[0] = axi_uartlite_0_tx;
@@ -88,13 +87,13 @@ module ethane
        (.addra(core_wrapper_0_fetch_pc),
         .clka(sim_clk_gen_0_clk),
         .douta(blk_mem_gen_0_douta),
-        .ena(xlconstant_0_dout));
+        .ena(sim_clk_gen_0_sync_rst));
   ethane_blk_mem_gen_1_0 blk_mem_gen_1
        (.addra(map_wrapper_0_addr),
         .clka(sim_clk_gen_0_clk),
         .dina(map_wrapper_0_din),
         .douta(blk_mem_gen_1_douta),
-        .ena(xlconstant_0_dout),
+        .ena(sim_clk_gen_0_sync_rst),
         .wea(map_wrapper_0_write_enable));
   ethane_core_wrapper_0_0 core_wrapper_0
        (._instr(blk_mem_gen_0_douta),
@@ -155,6 +154,4 @@ module ethane
         .t_valid(map_wrapper_0_t_valid),
         .tx_done(uart_wrapper_0_tx_done),
         .u_ready(uart_wrapper_0_u_ready));
-  ethane_xlconstant_0_0 xlconstant_0
-       (.dout(xlconstant_0_dout));
 endmodule

@@ -310,13 +310,13 @@ module exec_stage(
     wire [31:0] src2;
     
     assign src1 = forwarded_src1_ctrl == 2'b00 ? int_src1 :
-                  forwarded_src1_ctrl == 2'b01 ? mem_forwarded :
+                  forwarded_src1_ctrl == 2'b10 ? mem_forwarded :
                   write_forwarded;
     
     assign src2 = 
         (forwarded_src2_ctrl == 2'b00) && ctrl.alu ? immediate :
         forwarded_src2_ctrl == 2'b00 ? int_src2 :
-        forwarded_src1_ctrl == 2'b01 ? mem_forwarded :
+        forwarded_src2_ctrl == 2'b10 ? mem_forwarded :
         write_forwarded;
    
     alu ALU(
@@ -339,8 +339,19 @@ module forwarding_unit(
     output wire [1:0]forwarded_src1_ctrl,
     output wire [1:0]forwarded_src2_ctrl
     );
-    assign forwarded_src1_ctrl = 2'b0;
-    assign forwarded_src2_ctrl = 2'b0;
+    /* TODO divide assignment of 1 bit/ 0bit */
+    assign forwarded_src1_ctrl = ex_mem_ctrl.reg_write &
+                                 (ex_mem_reg_rd != 5'd0) &
+                                 (ex_mem_reg_rd == id_ex_reg_rs1) ? 2'b10 :
+                                 mem_wb_ctrl.reg_write &
+                                 (mem_wb_reg_rd != 5'd0) &
+                                 (mem_wb_reg_rd == id_ex_reg_rs1) ? 2'b01 : 2'b00;
+    assign forwarded_src2_ctrl = ex_mem_ctrl.reg_write &
+                                 (ex_mem_reg_rd != 5'd0) &
+                                 (ex_mem_reg_rd == id_ex_reg_rs2) ? 2'b10 :
+                                 mem_wb_ctrl.reg_write &
+                                 (mem_wb_reg_rd != 5'd0) &
+                                 (mem_wb_reg_rd == id_ex_reg_rs2) ? 2'b01 : 2'b00;
 endmodule
 
 module hazard_unit(
@@ -504,10 +515,10 @@ module core(
     wire [1:0] forwarded_src2_ctrl;
     
     forwarding_unit FORWARDING(
-        /*.ctrl(ex_mem_m_ctrl),
-        .addr(ex_mem_alu_result),*/
-        .id_ex_reg_rs1(id_ex_int_src1),
-        .id_ex_reg_rs2(id_ex_int_src2),
+        .ex_mem_ctrl,
+        .mem_wb_ctrl,
+        .id_ex_reg_rs1(id_ex_register_rs1),
+        .id_ex_reg_rs2(id_ex_register_rs2),
         .ex_mem_reg_rd(ex_mem_register_rd),
         .mem_wb_reg_rd(mem_wb_register_rd),
         .forwarded_src1_ctrl,

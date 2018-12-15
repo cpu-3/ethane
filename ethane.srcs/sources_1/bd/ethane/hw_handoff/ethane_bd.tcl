@@ -176,7 +176,7 @@ proc create_root_design { parentCell } {
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0 ]
   set_property -dict [ list \
    CONFIG.Byte_Size {8} \
-   CONFIG.Coe_File {../../../../../../../../../ダウンロード/small.coe} \
+   CONFIG.Coe_File {../../../../../../../../../ダウンロード/forward.coe} \
    CONFIG.EN_SAFETY_CKT {false} \
    CONFIG.Enable_32bit_Address {true} \
    CONFIG.Load_Init_File {true} \
@@ -246,9 +246,6 @@ proc create_root_design { parentCell } {
    CONFIG.MAX_BURST_LENGTH {1} \
  ] [get_bd_intf_pins /uart_wrapper_0/axi]
 
-  # Create instance: xlconstant_0, and set properties
-  set xlconstant_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 xlconstant_0 ]
-
   # Create interface connections
   connect_bd_intf_net -intf_net uart_wrapper_0_axi [get_bd_intf_pins axi_uartlite_0/S_AXI] [get_bd_intf_pins uart_wrapper_0/axi]
 
@@ -270,12 +267,11 @@ proc create_root_design { parentCell } {
   connect_bd_net -net map_wrapper_0_t_valid [get_bd_pins map_wrapper_0/t_valid] [get_bd_pins uart_wrapper_0/t_valid]
   connect_bd_net -net map_wrapper_0_write_enable [get_bd_pins blk_mem_gen_1/wea] [get_bd_pins map_wrapper_0/write_enable]
   connect_bd_net -net sim_clk_gen_0_clk [get_bd_pins axi_uartlite_0/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_1/clka] [get_bd_pins core_wrapper_0/clk] [get_bd_pins map_wrapper_0/clk] [get_bd_pins sim_clk_gen_0/clk] [get_bd_pins uart_wrapper_0/clk]
-  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_wrapper_0/rstn]
+  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins blk_mem_gen_1/ena] [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_wrapper_0/rstn]
   connect_bd_net -net uart_wrapper_0_r_data [get_bd_pins map_wrapper_0/r_data] [get_bd_pins uart_wrapper_0/r_data]
   connect_bd_net -net uart_wrapper_0_rx_done [get_bd_pins map_wrapper_0/rx_done] [get_bd_pins uart_wrapper_0/rx_done]
   connect_bd_net -net uart_wrapper_0_tx_done [get_bd_pins map_wrapper_0/tx_done] [get_bd_pins uart_wrapper_0/tx_done]
   connect_bd_net -net uart_wrapper_0_u_ready [get_bd_pins map_wrapper_0/ready] [get_bd_pins uart_wrapper_0/u_ready]
-  connect_bd_net -net xlconstant_0_dout [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins blk_mem_gen_1/ena] [get_bd_pins xlconstant_0/dout]
 
   # Create address segments
 

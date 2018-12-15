@@ -7,37 +7,35 @@ preplace portBus USB_UART_TX -pg 1 -y 290 -defaultsOSRD
 preplace portBus USB_UART_RX -pg 1 -y 320 -defaultsOSRD -right
 preplace inst uart_wrapper_0 -pg 1 -lvl 3 -y 530 -defaultsOSRD
 preplace inst core_wrapper_0 -pg 1 -lvl 2 -y 540 -defaultsOSRD
-preplace inst xlconstant_0 -pg 1 -lvl 2 -y 670 -defaultsOSRD
 preplace inst map_wrapper_0 -pg 1 -lvl 2 -y 160 -defaultsOSRD
 preplace inst blk_mem_gen_0 -pg 1 -lvl 3 -y 720 -defaultsOSRD
 preplace inst blk_mem_gen_1 -pg 1 -lvl 3 -y 180 -defaultsOSRD
 preplace inst sim_clk_gen_0 -pg 1 -lvl 1 -y 70 -defaultsOSRD
 preplace inst axi_uartlite_0 -pg 1 -lvl 4 -y 170 -defaultsOSRD
-preplace netloc blk_mem_gen_1_douta 1 1 2 80 -20 700
-preplace netloc uart_wrapper_0_tx_done 1 1 3 60 -40 NJ -40 1010
-preplace netloc sim_clk_gen_0_sync_rst 1 1 3 20 -10 670J 290 1060
-preplace netloc uart_wrapper_0_axi 1 3 1 1040
-preplace netloc core_wrapper_0_port_data_mem_addr 1 1 2 70 310 610
-preplace netloc map_wrapper_0_t_valid 1 2 1 640
-preplace netloc map_wrapper_0_addr 1 2 1 680
-preplace netloc map_wrapper_0_din 1 2 1 690
+preplace netloc blk_mem_gen_1_douta 1 1 2 80 -20 760
+preplace netloc uart_wrapper_0_tx_done 1 1 3 60 -40 NJ -40 1070
+preplace netloc sim_clk_gen_0_sync_rst 1 1 3 20 -10 720J 290 1120
+preplace netloc uart_wrapper_0_axi 1 3 1 1100
+preplace netloc core_wrapper_0_port_data_mem_addr 1 1 2 70 310 660
+preplace netloc map_wrapper_0_t_valid 1 2 1 690
+preplace netloc map_wrapper_0_addr 1 2 1 740
+preplace netloc map_wrapper_0_din 1 2 1 750
 preplace netloc axi_uartlite_0_tx 1 4 1 1430
-preplace netloc uart_wrapper_0_rx_done 1 1 3 40 -50 NJ -50 1020
-preplace netloc xlconstant_0_dout 1 2 1 690J
-preplace netloc sim_clk_gen_0_clk 1 1 3 30 10 650 300 1050
-preplace netloc uart_wrapper_0_r_data 1 1 3 50 -70 NJ -70 1030
-preplace netloc map_wrapper_0_write_enable 1 2 1 660
-preplace netloc map_wrapper_0_led 1 2 3 660J 70 N 70 1440
+preplace netloc uart_wrapper_0_rx_done 1 1 3 40 -50 NJ -50 1080
+preplace netloc sim_clk_gen_0_clk 1 1 3 30 10 710 300 1110
+preplace netloc uart_wrapper_0_r_data 1 1 3 50 -70 NJ -70 1090
+preplace netloc map_wrapper_0_write_enable 1 2 1 730
+preplace netloc map_wrapper_0_led 1 2 3 750J 70 N 70 1440
 preplace netloc blk_mem_gen_0_douta 1 1 2 80 740 NJ
-preplace netloc core_wrapper_0_port_data_mem_data_we 1 1 2 80 320 600
-preplace netloc core_wrapper_0_port_data_mem_din 1 1 2 60 330 580
-preplace netloc map_wrapper_0_t_data 1 2 1 620
-preplace netloc uart_wrapper_0_u_ready 1 1 3 70 -30 NJ -30 1000
-preplace netloc map_wrapper_0_c_dout 1 1 2 70 340 590
-preplace netloc map_wrapper_0_r_valid 1 2 1 630
-preplace netloc core_wrapper_0_fetch_pc 1 2 1 620
+preplace netloc core_wrapper_0_port_data_mem_data_we 1 1 2 80 320 650
+preplace netloc core_wrapper_0_port_data_mem_din 1 1 2 60 330 630
+preplace netloc map_wrapper_0_t_data 1 2 1 700
+preplace netloc uart_wrapper_0_u_ready 1 1 3 70 -30 NJ -30 1060
+preplace netloc map_wrapper_0_c_dout 1 1 2 70 340 640
+preplace netloc map_wrapper_0_r_valid 1 2 1 680
+preplace netloc core_wrapper_0_fetch_pc 1 2 1 670
 preplace netloc USB_UART_RX_1 1 4 1 1440
-levelinfo -pg 1 -190 -80 330 850 1320 1470 -top -110 -bot 810
+levelinfo -pg 1 -240 -80 380 910 1320 1470 -top -110 -bot 810
 ",
 }
 0

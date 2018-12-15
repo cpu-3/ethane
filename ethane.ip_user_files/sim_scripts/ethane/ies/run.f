@@ -8,12 +8,6 @@
 -endlib
 -makelib ies_lib/xil_defaultlib \
   "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_0_0/sim/ethane_blk_mem_gen_0_0.v" \
--endlib
--makelib ies_lib/xlconstant_v1_1_3 \
-  "../../../../ethane.srcs/sources_1/bd/ethane/ipshared/0750/hdl/xlconstant_v1_1_vl_rfs.v" \
--endlib
--makelib ies_lib/xil_defaultlib \
-  "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_xlconstant_0_0/sim/ethane_xlconstant_0_0.v" \
   "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_map_wrapper_0_0/sim/ethane_map_wrapper_0_0.v" \
   "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_0/sim/ethane_uart_wrapper_0_0.v" \
   "../../../../ethane.srcs/sources_1/bd/ethane/sim/ethane.v" \

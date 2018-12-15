@@ -3,7 +3,6 @@ vlib riviera
 
 vlib riviera/xil_defaultlib
 vlib riviera/blk_mem_gen_v8_4_1
-vlib riviera/xlconstant_v1_1_3
 vlib riviera/axi_lite_ipif_v3_0_4
 vlib riviera/lib_pkg_v1_0_2
 vlib riviera/lib_srl_fifo_v1_0_2
@@ -12,7 +11,6 @@ vlib riviera/axi_uartlite_v2_0_19
 
 vmap xil_defaultlib riviera/xil_defaultlib
 vmap blk_mem_gen_v8_4_1 riviera/blk_mem_gen_v8_4_1
-vmap xlconstant_v1_1_3 riviera/xlconstant_v1_1_3
 vmap axi_lite_ipif_v3_0_4 riviera/axi_lite_ipif_v3_0_4
 vmap lib_pkg_v1_0_2 riviera/lib_pkg_v1_0_2
 vmap lib_srl_fifo_v1_0_2 riviera/lib_srl_fifo_v1_0_2
@@ -29,12 +27,6 @@ vlog -work blk_mem_gen_v8_4_1  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xil
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_0_0/sim/ethane_blk_mem_gen_0_0.v" \
-
-vlog -work xlconstant_v1_1_3  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
-"../../../../ethane.srcs/sources_1/bd/ethane/ipshared/0750/hdl/xlconstant_v1_1_vl_rfs.v" \
-
-vlog -work xil_defaultlib  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
-"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_xlconstant_0_0/sim/ethane_xlconstant_0_0.v" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_map_wrapper_0_0/sim/ethane_map_wrapper_0_0.v" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_0/sim/ethane_uart_wrapper_0_0.v" \
 "../../../../ethane.srcs/sources_1/bd/ethane/sim/ethane.v" \
