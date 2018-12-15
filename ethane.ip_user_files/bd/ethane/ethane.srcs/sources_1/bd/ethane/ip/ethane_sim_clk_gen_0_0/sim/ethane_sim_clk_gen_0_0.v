@@ -67,7 +67,7 @@ output wire sync_rst;
 
   sim_clk_gen #(
     .CLOCK_PERIOD(10),
-    .INITIAL_RESET_CLOCK_CYCLES(100),
+    .INITIAL_RESET_CLOCK_CYCLES(5),
     .RESET_POLARITY(0)
   ) inst (
     .clk(clk),

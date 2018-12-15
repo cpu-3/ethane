@@ -79,6 +79,12 @@ typedef struct packed{
     logic reg_write;
     logic mem_read;
     logic [3:0] mem_write; // write enable
+    /*
+    TODO: make hazard/stall more precise 
+    logic use_rs1;
+    logic use_rs2;
+    logic use_rd;
+    */ 
 } controlif;
 
 module alu 
@@ -241,9 +247,10 @@ endmodule
 
 module fetch_stage(
     input wire [31:0] pc,
+    input wire stall,
     output wire [31:0] pc_next
     );
-    assign pc_next = pc + 32'd4;
+    assign pc_next = stall ? pc : pc + 32'd4;
 endmodule
 
 module decode_stage(
@@ -258,8 +265,12 @@ module decode_stage(
     output wire branch_control,
     input wire [31:0] src1,
     input wire [31:0] src2,
+    input wire stall,
     output controlif ctrl
     );
+    
+    controlif decoded_ctrl;
+    
     decoder D(
         .rd,
         .rs1,
@@ -267,8 +278,10 @@ module decode_stage(
         .imm,
         .inst(ist),
         .inst_code(inst),
-        .ctrl
+        .ctrl(decoded_ctrl)
     );
+    
+    assign ctrl = stall ? 0 : decoded_ctrl;
     
     wire eq = src1 == src2;
     wire ne = src1 != src2;
@@ -313,11 +326,12 @@ module exec_stage(
                   forwarded_src1_ctrl == 2'b10 ? mem_forwarded :
                   write_forwarded;
     
-    assign src2 = 
-        (forwarded_src2_ctrl == 2'b00) && ctrl.alu ? immediate :
+    wire [31:0] _src2 = 
         forwarded_src2_ctrl == 2'b00 ? int_src2 :
         forwarded_src2_ctrl == 2'b10 ? mem_forwarded :
         write_forwarded;
+    
+    assign src2 = ctrl.alu ? immediate : _src2;
    
     alu ALU(
         .src1,
@@ -326,7 +340,7 @@ module exec_stage(
         .inst
     );
     // TODO: is int / float?
-    assign store_data = int_src2;
+    assign store_data = _src2;
 endmodule
 
 module forwarding_unit(
@@ -355,13 +369,15 @@ module forwarding_unit(
 endmodule
 
 module hazard_unit(
-    input controlif mem_ctrl,
-    input controlif dec_ctrl,
-    input wire [4:0]rs1,
-    input wire [4:0]rs2,
-    input wire [4:0]rd,
+    input controlif id_ex_ctrl,
+    input wire [4:0]id_ex_reg_rd,
+    input wire [4:0]decoded_rs1,
+    input wire [4:0]decoded_rs2,
     output wire stall
     );
+    assign stall = id_ex_ctrl.mem_read & 
+                   ((id_ex_reg_rd == decoded_rs1) |
+                    (id_ex_reg_rd == decoded_rs2)); 
 endmodule
 
 module memory_stage(
@@ -433,7 +449,7 @@ module core(
 
     // MEM/WB registers
     controlif mem_wb_ctrl;
-    reg [5:0] mem_wb_register_rd;
+    reg [4:0] mem_wb_register_rd;
     reg [31:0] mem_wb_load_result;
     reg [31:0] mem_wb_alu_result;
     
@@ -443,7 +459,8 @@ module core(
     wire [31:0]pc_next;
     fetch_stage FS(
                 .pc, 
-                .pc_next
+                .pc_next,
+                .stall
                 );
                 
     // decode stage components   
@@ -461,6 +478,7 @@ module core(
     wire [31:0] branch_pc;
     wire branch_control;
     wire [31:0] write_int_result; 
+    wire stall;
 
     decode_stage DS(
         .pc, 
@@ -473,6 +491,7 @@ module core(
         .src1(decode_stage_int_src1),
         .src2(decode_stage_int_src2),
         .imm(decoded_immediate),
+        .stall,
         .branch_pc,
         .branch_control
     );
@@ -501,13 +520,11 @@ module core(
         .rs1(decode_stage_float_src1), 
         .rs2(decode_stage_float_src2)
      );
-     wire stall;
      hazard_unit HAZARD(
-        .mem_ctrl(id_ex_ctrl),
-        .dec_ctrl(decoded_ctrl),
-        .rs1(decoded_rs1),
-        .rs2(decoded_rs2),
-        .rd(decoded_rd),
+        .id_ex_ctrl,
+        .decoded_rs1,
+        .decoded_rs2,
+        .id_ex_reg_rd(id_ex_register_rd),
         .stall
     );
     

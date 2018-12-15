@@ -176,7 +176,7 @@ proc create_root_design { parentCell } {
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0 ]
   set_property -dict [ list \
    CONFIG.Byte_Size {8} \
-   CONFIG.Coe_File {../../../../../../../../../ダウンロード/forward.coe} \
+   CONFIG.Coe_File {../../../../../../../../../ダウンロード/stall.coe} \
    CONFIG.EN_SAFETY_CKT {false} \
    CONFIG.Enable_32bit_Address {true} \
    CONFIG.Load_Init_File {true} \
@@ -227,6 +227,9 @@ proc create_root_design { parentCell } {
   
   # Create instance: sim_clk_gen_0, and set properties
   set sim_clk_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:sim_clk_gen:1.0 sim_clk_gen_0 ]
+  set_property -dict [ list \
+   CONFIG.INITIAL_RESET_CLOCK_CYCLES {5} \
+ ] $sim_clk_gen_0
 
   # Create instance: uart_wrapper_0, and set properties
   set block_name uart_wrapper

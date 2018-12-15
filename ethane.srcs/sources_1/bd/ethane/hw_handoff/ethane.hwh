@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sat Dec 15 14:47:58 2018" VIVADOVERSION="2017.4">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sat Dec 15 16:13:26 2018" VIVADOVERSION="2017.4">
 
   <SYSTEMINFO ARCH="kintexu" BOARD="xilinx.com:kcu105:part0:1.3" DEVICE="xcku040" NAME="ethane" PACKAGE="ffva1156" SPEEDGRADE="-2"/>
 
@@ -334,7 +334,7 @@
         <PARAMETER NAME="register_portb_output_of_softecc" VALUE="false"/>
         <PARAMETER NAME="Pipeline_Stages" VALUE="0"/>
         <PARAMETER NAME="Load_Init_File" VALUE="true"/>
-        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/forward.coe"/>
+        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/stall.coe"/>
         <PARAMETER NAME="Fill_Remaining_Memory_Locations" VALUE="false"/>
         <PARAMETER NAME="Remaining_Memory_Locations" VALUE="0"/>
         <PARAMETER NAME="Use_RSTA_Pin" VALUE="false"/>
@@ -758,7 +758,7 @@
       </DOCUMENTS>
       <PARAMETERS>
         <PARAMETER NAME="CLOCK_PERIOD" VALUE="10"/>
-        <PARAMETER NAME="INITIAL_RESET_CLOCK_CYCLES" VALUE="100"/>
+        <PARAMETER NAME="INITIAL_RESET_CLOCK_CYCLES" VALUE="5"/>
         <PARAMETER NAME="RESET_POLARITY" VALUE="0"/>
         <PARAMETER NAME="Component_Name" VALUE="ethane_sim_clk_gen_0_0"/>
         <PARAMETER NAME="CLOCK_TYPE" VALUE="Single_Ended"/>
@@ -781,9 +781,9 @@
             <CONNECTION INSTANCE="map_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="uart_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="axi_uartlite_0" PORT="s_axi_aresetn"/>
-            <CONNECTION INSTANCE="core_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="blk_mem_gen_0" PORT="ena"/>
             <CONNECTION INSTANCE="blk_mem_gen_1" PORT="ena"/>
+            <CONNECTION INSTANCE="core_wrapper_0" PORT="rstn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>

@@ -173,7 +173,7 @@
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:33003a4a</spirit:value>
+            <spirit:value>7:ee3b1d5a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -188,11 +188,11 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>GENtimestamp</spirit:name>
-            <spirit:value>Fri Dec 14 07:56:53 UTC 2018</spirit:value>
+            <spirit:value>Sat Dec 15 07:12:16 UTC 2018</spirit:value>
           </spirit:parameter>
           <spirit:parameter>
             <spirit:name>outputProductCRC</spirit:name>
-            <spirit:value>7:33003a4a</spirit:value>
+            <spirit:value>7:ee3b1d5a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -284,7 +284,7 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>INITIAL_RESET_CLOCK_CYCLES</spirit:name>
         <spirit:displayName>Initial Reset Clock Cycles</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.INITIAL_RESET_CLOCK_CYCLES">100</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.INITIAL_RESET_CLOCK_CYCLES">5</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>RESET_POLARITY</spirit:name>
@@ -328,7 +328,7 @@
     <spirit:parameter>
       <spirit:name>INITIAL_RESET_CLOCK_CYCLES</spirit:name>
       <spirit:displayName>Initial Reset Clock Cycles</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.INITIAL_RESET_CLOCK_CYCLES" spirit:order="1200" spirit:configGroups="0 UnGrouped textEdit">100</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.INITIAL_RESET_CLOCK_CYCLES" spirit:order="1200" spirit:configGroups="0 UnGrouped textEdit">5</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
@@ -361,6 +361,7 @@
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.CLK.PHASE" xilinx:valuePermission="bd"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.SYNC_RST.POLARITY" xilinx:valueSource="user" xilinx:valuePermission="bd"/>
         <xilinx:configElementInfo xilinx:referenceId="BUSIFPARAM_VALUE.clk.ASSOCIATED_RESET" xilinx:valuePermission="bd"/>
+        <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.INITIAL_RESET_CLOCK_CYCLES" xilinx:valueSource="user"/>
       </xilinx:configElementInfos>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
