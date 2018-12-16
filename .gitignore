@@ -5,3 +5,4 @@ vivado_project/*
 *.coe
 vivado.log
 *.btree
+ethane.sim/*
