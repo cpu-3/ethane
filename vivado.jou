@@ -269,3 +269,4 @@ run 10000 ns
 run 10000 ns
 run 10000 ns
 git add .
+open_bd_design {/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ethane.bd}

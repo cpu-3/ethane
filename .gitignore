@@ -4,3 +4,4 @@ vivado_project/*
 *pid*.str
 *.coe
 vivado.log
+*.btree
