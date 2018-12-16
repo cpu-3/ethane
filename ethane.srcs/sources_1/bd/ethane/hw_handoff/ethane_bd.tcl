@@ -176,7 +176,7 @@ proc create_root_design { parentCell } {
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0 ]
   set_property -dict [ list \
    CONFIG.Byte_Size {8} \
-   CONFIG.Coe_File {../../../../../../../../../ダウンロード/stall.coe} \
+   CONFIG.Coe_File {../../../../../../../../../ダウンロード/fib.coe} \
    CONFIG.EN_SAFETY_CKT {false} \
    CONFIG.Enable_32bit_Address {true} \
    CONFIG.Load_Init_File {true} \

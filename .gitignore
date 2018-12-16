@@ -2,4 +2,5 @@ vivado_project/*
 *backup.jou
 *backup.log
 *pid*.str
+*.coe
 vivado.log

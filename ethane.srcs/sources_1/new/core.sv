@@ -75,10 +75,19 @@ typedef struct packed{
 } instif;
 
 typedef struct packed{
+    logic branch;
+    logic jalr;
+    logic jal;
+} branch_type;
+
+typedef struct packed{
     logic alu;
     logic reg_write;
     logic mem_read;
     logic [3:0] mem_write; // write enable
+    logic branched;
+    branch_type btype;
+    logic [4:0] rd;
     /*
     TODO: make hazard/stall more precise 
     logic use_rs1;
@@ -119,7 +128,6 @@ endmodule
 
 module decoder
  (
-     output wire [4:0] rd,
      output wire [4:0] rs1,
      output wire [4:0] rs2,
      output wire [31:0] imm,
@@ -152,7 +160,7 @@ module decoder
     assign u_type = ((inst_code[6:5] == 2'b01) || (inst_code[6:5] == 2'b00)) && (inst_code[4:2] == 3'b101);
     wire j_type;
     assign j_type = ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b011));
-    assign rd = (r_type | i_type | u_type | j_type) ? inst_code[11:7] : 5'd0;
+    assign ctrl.rd = (r_type | i_type | u_type | j_type) ? inst_code[11:7] : 5'd0;
 
     assign rs1 = (r_type | i_type | s_type | b_type) ? inst_code[19:15] : 5'd0;
     assign rs2 = (r_type | s_type | b_type) ? inst_code[24:20] : 5'd0;
@@ -241,32 +249,46 @@ module decoder
                             | inst.lhu | inst.lbu;
     
     assign ctrl.reg_write =  r_type | i_type | u_type | j_type;
+    
+    assign ctrl.btype.branch = b_type;
+    assign ctrl.btype.jal = inst.jal;
+    assign ctrl.btype.jalr = inst.jalr;
+    assign ctrl.branched = 1'b0;
 
 endmodule
 
+parameter NOP_CONST = 32'h13;
 
 module fetch_stage(
     input clk,
     input rstn,
     input wire [31:0] pc,
     input wire stall,
+    input wire flush,
     input wire [31:0]mem_instr,
+    input wire [31:0]branch_pc,
+    input wire branch_control,
     output wire [31:0]instr,
     output wire [31:0] pc_next
     );
     // whether cmd 1 clk before has been stalled
     reg stalled;
+    reg flushed;
     reg [31:0] stalled_instr;
     
-    assign instr = stalled ? stalled_instr : mem_instr;
-    assign pc_next = stall ? pc : pc + 32'd4;
+    assign instr = flushed ? NOP_CONST : stalled ? stalled_instr : mem_instr;
+    assign pc_next = branch_control ? branch_pc :
+                     stall ? pc : 
+                     pc + 32'd4;
     
     always @(posedge clk) begin
         if (~rstn) begin
             stalled <= 1'b0;
+            flushed <= 1'b0;
             stalled_instr <= 32'b0;
         end begin
             stalled <= stall;
+            flushed <= flush;
             stalled_instr <= mem_instr;
         end
     end
@@ -276,23 +298,17 @@ module decode_stage(
     input wire [31:0] inst,
     input wire [31:0] pc,
     output instif ist,
-    output wire [4:0] rd,
     output wire [4:0] rs1,
     output wire [4:0] rs2,
     output wire [31:0] imm,
-    output wire [31:0] branch_pc,
-    output wire branch_control,
-    input wire [31:0] src1,
-    input wire [31:0] src2,
     input wire stall,
+    input wire flush,
     output controlif ctrl
     );
     
     controlif decoded_ctrl;
-    wire [4:0] decoded_rd;
     
     decoder D(
-        .rd(decoded_rd),
         .rs1,
         .rs2,
         .imm,
@@ -300,29 +316,38 @@ module decode_stage(
         .inst_code(inst),
         .ctrl(decoded_ctrl)
     );
+    controlif branch_ctrl;
     
-    assign ctrl = stall ? 0 : decoded_ctrl;
-    assign rd = stall ? 5'd0: decoded_rd;
+    assign branch_ctrl.alu = decoded_ctrl.alu;
+    assign branch_ctrl.reg_write = decoded_ctrl.reg_write;
+    assign branch_ctrl.mem_read = decoded_ctrl.mem_read;
+    assign branch_ctrl.mem_write = decoded_ctrl.mem_write;
+    assign branch_ctrl.branched = 1'b0;
+    assign branch_ctrl.btype = decoded_ctrl.btype;
+    assign branch_ctrl.rd = decoded_ctrl.rd;
     
-    wire eq = src1 == src2;
-    wire ne = src1 != src2;
-    wire lt = $signed(src1) < $signed(src2);
-    wire ge = $signed(src1) >= $signed(src2);
-    wire ltu = src1 < src2;
-    wire geu = src1 >= src2;
+    assign ctrl = flush | stall ? 0 : branch_ctrl;
     
-    wire branch = (ist.beq & eq) | 
-            (ist.bne & ne) | 
-            (ist.blt & lt) |
-            (ist.bge & ge) | 
-            (ist.bltu & ltu) |
-            (ist.bgeu & geu);
-    // handle branch instructions
-    assign branch_pc = 
-        ist.jal  ? src1 + imm :
-        ist.jalr ? pc + imm :
-        branch ? pc + imm : pc; 
-    assign branch_control = ist.jal | ist.jalr | branch;
+endmodule
+
+module branch_unit(
+        input wire [31:0] alu_result,
+        input wire [31:0] pc,
+        input wire [31:0] imm,
+        input controlif ctrl,
+        output wire [31:0] next_pc,
+        output wire flush
+    );
+    wire[31:0] pc_imm = pc + imm;
+    wire[31:0] do_branch = ctrl.btype.branch & (alu_result == 32'd0);
+    assign next_pc = do_branch ? pc_imm :
+                     ctrl.btype.jalr ? alu_result :
+                     ctrl.btype.jal ? pc_imm :
+                     pc;
+    assign flush = (do_branch & (~ctrl.branched)) |
+                   ((~do_branch) & (ctrl.branched)) |   
+                   (ctrl.btype.jalr & (~ctrl.branched)) |
+                   (ctrl.btype.jal & (~ctrl.branched));
     
 endmodule
 
@@ -335,9 +360,11 @@ module exec_stage(
     input wire [31:0] int_src2,
     input controlif ctrl,
     input wire [1:0] forwarded_src1_ctrl,
-    input wire [1:0] forwarded_src2_ctrl,    
+    input wire [1:0] forwarded_src2_ctrl,   
+    input wire flush, 
     output wire [31:0] alu_result,
-    output wire [31:0] store_data
+    output wire [31:0] store_data,
+    output controlif executed_ctrl
     );
     
     wire [31:0] src1;
@@ -362,6 +389,8 @@ module exec_stage(
     );
     // TODO: is int / float?
     assign store_data = _src2;
+    
+    assign executed_ctrl = flush ? 0 : ctrl;
 endmodule
 
 module forwarding_unit(
@@ -369,24 +398,22 @@ module forwarding_unit(
     input controlif mem_wb_ctrl,
     input wire [4:0]id_ex_reg_rs1,
     input wire [4:0]id_ex_reg_rs2,
-    input wire [4:0]ex_mem_reg_rd,
-    input wire [4:0]mem_wb_reg_rd,
     output wire [1:0]forwarded_src1_ctrl,
     output wire [1:0]forwarded_src2_ctrl
     );
     /* TODO divide assignment of 1 bit/ 0bit */
     assign forwarded_src1_ctrl = ex_mem_ctrl.reg_write &
-                                 (ex_mem_reg_rd != 5'd0) &
-                                 (ex_mem_reg_rd == id_ex_reg_rs1) ? 2'b10 :
+                                 (ex_mem_ctrl.rd != 5'd0) &
+                                 (ex_mem_ctrl.rd == id_ex_reg_rs1) ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
-                                 (mem_wb_reg_rd != 5'd0) &
-                                 (mem_wb_reg_rd == id_ex_reg_rs1) ? 2'b01 : 2'b00;
+                                 (mem_wb_ctrl.rd != 5'd0) &
+                                 (mem_wb_ctrl.rd == id_ex_reg_rs1) ? 2'b01 : 2'b00;
     assign forwarded_src2_ctrl = ex_mem_ctrl.reg_write &
-                                 (ex_mem_reg_rd != 5'd0) &
-                                 (ex_mem_reg_rd == id_ex_reg_rs2) ? 2'b10 :
+                                 (ex_mem_ctrl.rd != 5'd0) &
+                                 (ex_mem_ctrl.rd == id_ex_reg_rs2) ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
-                                 (mem_wb_reg_rd != 5'd0) &
-                                 (mem_wb_reg_rd == id_ex_reg_rs2) ? 2'b01 : 2'b00;
+                                 (mem_wb_ctrl.rd != 5'd0) &
+                                 (mem_wb_ctrl.rd == id_ex_reg_rs2) ? 2'b01 : 2'b00;
 endmodule
 
 module hazard_unit(
@@ -397,19 +424,17 @@ module hazard_unit(
     output wire stall
     );
     assign stall = id_ex_ctrl.mem_read & 
-                   ((id_ex_reg_rd == decoded_rs1) |
-                    (id_ex_reg_rd == decoded_rs2)); 
+                   ((id_ex_ctrl.rd == decoded_rs1) |
+                    (id_ex_ctrl.rd == decoded_rs2)); 
 endmodule
 
 module memory_stage(
     input controlif ctrl,
     input wire [31:0] data,
-    input wire [31:0] addr,
-    input wire [31:0] alu_result,
-    input wire [4:0] rd,
-    output wire [31:0] load_result
+    output wire [31:0] load_result,
+    output wire [31:0] branched_pc
     );
-    //nop
+    
 endmodule
 
 module write_stage(
@@ -446,7 +471,8 @@ module core(
                                       _port_data_mem_dout[15:8],
                                       _port_data_mem_dout[23:16],
                                       _port_data_mem_dout[31:24]};
-
+    // FE/ID registers
+    reg [31:0] fe_id_pc;
     // ID/EX registers
     instif id_ex_inst;
     controlif id_ex_ctrl;
@@ -458,27 +484,30 @@ module core(
     assign id_ex_mem_read = id_ex_inst.lb | id_ex_inst.lh | id_ex_inst.lw | id_ex_inst.flw;
     reg [4:0]id_ex_register_rs2; // id_ex_register_rt[6] -> is float or int register?
     reg [4:0]id_ex_register_rs1;
-    reg [4:0]id_ex_register_rd;
     reg [31:0] id_ex_immediate;
+    reg [31:0] id_ex_pc;
     
     // EX/MEM registers
     controlif ex_mem_ctrl;
-    reg [4:0] ex_mem_register_rd;
     reg [31:0] ex_mem_alu_result;
     reg [31:0] ex_mem_store_data;
 
 
     // MEM/WB registers
     controlif mem_wb_ctrl;
-    reg [4:0] mem_wb_register_rd;
     reg [31:0] mem_wb_load_result;
     reg [31:0] mem_wb_alu_result;
     
+    wire flush;
+
     // fetch stage components
     reg [31:0]pc;
     assign fetch_pc = pc;
     wire [31:0]pc_next;
     wire [31:0]instr;
+    
+    wire branch_control;
+    wire [31:0]branch_pc;
     fetch_stage FS(
                 .clk,
                 .rstn,
@@ -486,11 +515,13 @@ module core(
                 .pc_next,
                 .stall,
                 .mem_instr,
-                .instr
+                .instr,
+                .branch_control,
+                .branch_pc,
+                .flush
                 );
                 
     // decode stage components   
-    wire [4:0] decoded_rd;
     wire [4:0] decoded_rs1;
     wire [4:0] decoded_rs2;
     wire [31:0] decoded_immediate;
@@ -501,8 +532,6 @@ module core(
     wire [31:0] decode_stage_float_src1;
     wire [31:0] decode_stage_float_src2;
     
-    wire [31:0] branch_pc;
-    wire branch_control;
     wire [31:0] write_int_result; 
     wire stall;
 
@@ -510,16 +539,12 @@ module core(
         .pc, 
         .inst(instr),
         .ist(decoded_inst),
-        .rd(decoded_rd),
         .rs1(decoded_rs1),
         .rs2(decoded_rs2),
         .ctrl(decoded_ctrl),
-        .src1(decode_stage_int_src1),
-        .src2(decode_stage_int_src2),
         .imm(decoded_immediate),
         .stall,
-        .branch_pc,
-        .branch_control
+        .flush
     );
     wire write_back_enable;
     wire [4:0]write_back_rd;
@@ -550,7 +575,6 @@ module core(
         .id_ex_ctrl,
         .decoded_rs1,
         .decoded_rs2,
-        .id_ex_reg_rd(id_ex_register_rd),
         .stall
     );
     
@@ -562,8 +586,6 @@ module core(
         .mem_wb_ctrl,
         .id_ex_reg_rs1(id_ex_register_rs1),
         .id_ex_reg_rs2(id_ex_register_rs2),
-        .ex_mem_reg_rd(ex_mem_register_rd),
-        .mem_wb_reg_rd(mem_wb_register_rd),
         .forwarded_src1_ctrl,
         .forwarded_src2_ctrl
     );
@@ -571,6 +593,7 @@ module core(
     // exec stage
     wire [31:0] ex_alu_result;
     wire [31:0] ex_store_data;
+    controlif executed_ctrl;
     exec_stage ES(
         .inst(id_ex_inst),
         .int_src1(id_ex_int_src1),
@@ -582,8 +605,22 @@ module core(
         .alu_result(ex_alu_result),
         .store_data(ex_store_data),
         .forwarded_src1_ctrl,
-        .forwarded_src2_ctrl
+        .forwarded_src2_ctrl,
+        .flush,
+        .executed_ctrl
     );
+    
+    wire [31:0] ex_next_pc;
+    branch_unit BU(
+        .alu_result(ex_alu_result),
+        .pc(id_ex_pc),
+        .imm(id_ex_immediate),
+        .ctrl(id_ex_ctrl),
+        .next_pc(ex_next_pc),
+        .flush(flush));
+    
+    assign branch_control = flush;
+    assign branch_pc = ex_next_pc;
     
     // memory stage
     wire [31:0] mem_load_result;
@@ -600,13 +637,14 @@ module core(
         .int_result(write_int_result),
         .reg_write(write_back_enable)
     );
-    assign write_back_rd = mem_wb_register_rd;
+    assign write_back_rd = mem_wb_ctrl.rd;
     
     always @(posedge clk) begin
         if (~rstn) begin
             // flush registers
             pc <= 32'd0;
-            id_ex_register_rd <= 32'd0;
+            fe_id_pc <= 32'd0;
+            
             id_ex_register_rs1 <= 32'd0;
             id_ex_register_rs2 <= 32'd0;
             id_ex_int_src1 <= 32'd0;
@@ -616,16 +654,15 @@ module core(
             id_ex_inst <= 32'd0;
             id_ex_ctrl <= 32'd0; 
             id_ex_immediate <= 32'd0;
+            id_ex_pc <= 32'd0;
             
             // exec stage
             ex_mem_alu_result <= 32'd0;
             ex_mem_store_data <= 32'd0;
-            ex_mem_register_rd <= 5'd0;
             
             // memory stage
             mem_wb_load_result <= 32'd0;
             mem_wb_alu_result <= 32'd0;
-            mem_wb_register_rd <= 5'd0;
             
             id_ex_ctrl <= 0;
             ex_mem_ctrl <= 0;
@@ -633,9 +670,9 @@ module core(
         end else begin
             // fetch stage
             pc <= pc_next;
+            fe_id_pc <= pc;
             
             // decode stage
-            id_ex_register_rd <= decoded_rd;
             id_ex_register_rs1 <= decoded_rs1;
             id_ex_register_rs2 <= decoded_rs2;
             id_ex_int_src1 <= decode_stage_int_src1;
@@ -645,17 +682,16 @@ module core(
             id_ex_inst <= decoded_inst;
             id_ex_ctrl <= decoded_ctrl; 
             id_ex_immediate <= decoded_immediate;
+            id_ex_pc <= fe_id_pc;
             
             // exec stage
             ex_mem_alu_result <= ex_alu_result;
             ex_mem_store_data <= ex_store_data;
-            ex_mem_register_rd <= id_ex_register_rd;
-            ex_mem_ctrl <= id_ex_ctrl;
+            ex_mem_ctrl <= executed_ctrl;
             
             // memory stage
             mem_wb_load_result <= mem_load_result;
             mem_wb_alu_result <= ex_mem_alu_result;
-            mem_wb_register_rd <= ex_mem_register_rd;
             mem_wb_ctrl <= ex_mem_ctrl;
         end
     end 
