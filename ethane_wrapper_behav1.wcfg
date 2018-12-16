@@ -16,15 +16,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="89523044fs"></ZoomStartTime>
-      <ZoomEndTime time="180095392fs"></ZoomEndTime>
-      <Cursor1Time time="165000000fs"></Cursor1Time>
+      <ZoomStartTime time="19930471758fs"></ZoomStartTime>
+      <ZoomEndTime time="20013905649fs"></ZoomEndTime>
+      <Cursor1Time time="19955100000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="256"></NameColumnWidth>
-      <ValueColumnWidth column_width="63"></ValueColumnWidth>
+      <NameColumnWidth column_width="252"></NameColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="39" />
+   <WVObjectSize size="45" />
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -56,6 +56,7 @@
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_inst">
       <obj_property name="ElementShortName">decoded_inst</obj_property>
       <obj_property name="ObjectShortName">decoded_inst</obj_property>
+      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_ctrl">
       <obj_property name="ElementShortName">decoded_ctrl</obj_property>
@@ -182,5 +183,30 @@
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/flush">
       <obj_property name="ElementShortName">flush</obj_property>
       <obj_property name="ObjectShortName">flush</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/WS/branch_result">
+      <obj_property name="ElementShortName">branch_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/write_int_result">
+      <obj_property name="ElementShortName">write_int_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">write_int_result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/WS/branch_result">
+      <obj_property name="ElementShortName">branch_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/WS/ctrl">
+      <obj_property name="ElementShortName">ctrl</obj_property>
+      <obj_property name="ObjectShortName">ctrl</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/WS/alu_result">
+      <obj_property name="ElementShortName">alu_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">alu_result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/WS/reg_write">
+      <obj_property name="ElementShortName">reg_write</obj_property>
+      <obj_property name="ObjectShortName">reg_write</obj_property>
    </wvobject>
 </wave_config>
