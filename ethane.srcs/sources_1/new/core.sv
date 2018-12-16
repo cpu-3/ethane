@@ -246,11 +246,30 @@ endmodule
 
 
 module fetch_stage(
+    input clk,
+    input rstn,
     input wire [31:0] pc,
     input wire stall,
+    input wire [31:0]mem_instr,
+    output wire [31:0]instr,
     output wire [31:0] pc_next
     );
+    // whether cmd 1 clk before has been stalled
+    reg stalled;
+    reg [31:0] stalled_instr;
+    
+    assign instr = stalled ? stalled_instr : mem_instr;
     assign pc_next = stall ? pc : pc + 32'd4;
+    
+    always @(posedge clk) begin
+        if (~rstn) begin
+            stalled <= 1'b0;
+            stalled_instr <= 32'b0;
+        end begin
+            stalled <= stall;
+            stalled_instr <= mem_instr;
+        end
+    end
 endmodule
 
 module decode_stage(
@@ -270,9 +289,10 @@ module decode_stage(
     );
     
     controlif decoded_ctrl;
+    wire [4:0] decoded_rd;
     
     decoder D(
-        .rd,
+        .rd(decoded_rd),
         .rs1,
         .rs2,
         .imm,
@@ -282,6 +302,7 @@ module decode_stage(
     );
     
     assign ctrl = stall ? 0 : decoded_ctrl;
+    assign rd = stall ? 5'd0: decoded_rd;
     
     wire eq = src1 == src2;
     wire ne = src1 != src2;
@@ -415,7 +436,7 @@ module core(
     output wire [3:0]  port_data_mem_data_we
     );
     
-    wire [31:0] instr = {_instr[7:0], _instr[15:8], _instr[23:16], _instr[31:24]};
+    wire [31:0] mem_instr = {_instr[7:0], _instr[15:8], _instr[23:16], _instr[31:24]};
     wire [31:0] port_data_mem_din;
     assign _port_data_mem_din = {port_data_mem_din[7:0],
                                  port_data_mem_din[15:8],
@@ -457,10 +478,15 @@ module core(
     reg [31:0]pc;
     assign fetch_pc = pc;
     wire [31:0]pc_next;
+    wire [31:0]instr;
     fetch_stage FS(
+                .clk,
+                .rstn,
                 .pc, 
                 .pc_next,
-                .stall
+                .stall,
+                .mem_instr,
+                .instr
                 );
                 
     // decode stage components   
