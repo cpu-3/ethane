@@ -61,9 +61,9 @@ Compiling module xil_defaultlib.fregister
 Compiling module xil_defaultlib.hazard_unit
 Compiling module xil_defaultlib.forwarding_unit
 Compiling module xil_defaultlib.alu
+Compiling module xil_defaultlib.exec_stage_result_mux
 Compiling module xil_defaultlib.exec_stage
 Compiling module xil_defaultlib.branch_unit
-Compiling module xil_defaultlib.memory_stage
 Compiling module xil_defaultlib.write_stage
 Compiling module xil_defaultlib.core
 Compiling module xil_defaultlib.core_wrapper
