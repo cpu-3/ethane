@@ -2,3 +2,6 @@ Running: xsim.dir/ethane_wrapper_behav/xsimk -simmode gui -wdb ethane_wrapper_be
 Design successfully loaded
 Design Loading Memory Usage: 56700 KB (Peak: 56700 KB)
 Design Loading CPU Usage: 40 ms
+Simulation completed
+Simulation Memory Usage: 147184 KB (Peak: 203972 KB)
+Simulation CPU Usage: 430 ms

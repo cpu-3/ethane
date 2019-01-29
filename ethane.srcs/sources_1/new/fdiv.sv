@@ -47,4 +47,16 @@ module mem_inv(
 	end
 endmodule
 
+module fdiv(
+    wire [31:0] x,
+    wire [31:0] y,
+    wire [31:0] z,
+    wire ovf
+);
+  wire [31:0] yinv;
+  finv u1(y,yinv);
+  fmul u2(x,yinv,z, ovf);
+endmodule
+
+
 `default_nettype wire

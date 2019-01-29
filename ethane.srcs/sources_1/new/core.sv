@@ -477,6 +477,8 @@ module exec_stage_result_mux(
 endmodule
 
 module exec_stage(
+    input wire clk,
+    input wire rstn,
     input instif inst,
     input wire [31:0] int_src1,
     input wire [31:0] mem_forwarded,
@@ -486,7 +488,12 @@ module exec_stage(
     input wire [31:0] pc,
     input controlif ctrl,
     input wire [1:0] forwarded_src1_ctrl,
-    input wire [1:0] forwarded_src2_ctrl,   
+    input wire [1:0] forwarded_src2_ctrl,
+    
+    input wire [31:0] fsrc1,
+    input wire [31:0] fsrc2,
+    output wire [31:0] fresult,
+       
     output wire [31:0] exec_result,
     output wire [31:0] branch_addr,
     output wire [31:0] store_data,
@@ -513,6 +520,18 @@ module exec_stage(
         .result(alu_result),
         .inst
     );
+    
+    wire fovf;
+    fpu FPU(
+        clk,
+        rstn,
+        fsrc1,
+        fsrc2,
+        fresult,
+        fovf,
+        inst
+    );
+    
     assign branch_addr = alu_result;
     exec_stage_result_mux MUX(
         .alu_result,
