@@ -88,7 +88,7 @@ typedef struct packed{
     logic branched;
     branch_type btype;
     logic [4:0] rd;
-    logic inval;
+    logic [2:0] wait_cycle;
     /*
     TODO: make hazard/stall more precise 
     logic use_rs1;
@@ -125,6 +125,68 @@ module alu
          (inst.bgeu) ? src1 >= src2:
          32'd0;
 endmodule
+
+module fpu(
+    input wire clk,
+    input wire rstn,
+    input wire [31:0] src1,
+    input wire [31:0] src2,
+    output wire [31:0] result,
+    output wire ovf,
+    input instif inst
+    );
+    wire [31:0]fadd_result;
+    wire fadd_ovf;
+    wire [31:0]fsub_result;
+    wire fsub_ovf;
+    wire [31:0]fmul_result;
+    wire fmul_ovf;
+    wire [31:0]fdiv_result;
+    wire fdiv_ovf;
+    wire [31:0]fsqrt_result;
+    wire fsqrt_ovf;
+    wire [31:0]fsgnj_result;
+    wire [31:0]fsgnjn_result;
+    
+    wire [31:0]itof_result;
+    wire [31:0]ftoi_result;
+    
+    wire feq_result;
+    wire flt_result;
+    wire fle_result;
+    
+    fadd FADD(src1, src2, fadd_result, fadd_ovf);
+    fsub FSUB(src1, src2, fsub_result, fsub_ovf);
+    fmul FMUL(src1, src2, fmul_result, fmul_ovf);
+    fdiv FDIV(src1, src2, fdiv_result, fdiv_ovf);
+    fsqrt FSQRT(src1, src2, fsqrt_result, fsqrt_ovf);
+    
+    feq FEQ(src1, src2, feq_result);
+    flt FLT(src1, src2, flt_result);
+    fle FLE(src1, fle_result);
+    
+    fsgnj FSGNJ(src1, src2, fsgnj_result);
+    fsgnjn FSGNJN(src1, src2, fsgnjn_result);
+    
+    assign result = inst.fadd ? fadd_result :
+                    inst.fsub ? fsub_result :
+                    inst.fmul ? fmul_result :
+                    inst.fdiv ? fdiv_result :
+                    inst.fsqrt ? fsqrt_result :
+                    inst.fsgnj ? fsgnj_result :
+                    inst.fsgnjn ? fsgnjn_result :
+                    inst.feq ? {31'b0, feq_result} :
+                    inst.flt ? {31'b0, flt_result} :
+                    inst.fle ? {31'b0, fle_result} :
+                    32'd0;
+    assign ovf = inst.fadd ? fadd_ovf :
+                 inst.fsub ? fsub_ovf :
+                 inst.fmul ? fmul_ovf :
+                 inst.fdiv ? fdiv_ovf :
+                 1'b0;
+
+endmodule
+  
 
 
 module decoder
@@ -216,10 +278,11 @@ module decoder
     assign inst.or_  = (opcode == 7'b0110011) && (funct3 == 3'b110);
     assign inst.and_ = (opcode == 7'b0110011) && (funct3 == 3'b111);
     
-    assign inst.fadd = (opcode == 7'b1010011) && (funct7 == 7'b0000000);
-    assign inst.fsub = (opcode == 7'b1010011) && (funct7 == 7'b0000100);
-    assign inst.fmul = (opcode == 7'b1010011) && (funct7 == 7'b0001000);
-    assign inst.fdiv = (opcode == 7'b1010011) && (funct7 == 7'b0001100);
+    assign inst.fadd  = (opcode == 7'b1010011) && (funct7 == 7'b0000000);
+    assign inst.fsub  = (opcode == 7'b1010011) && (funct7 == 7'b0000100);
+    assign inst.fmul  = (opcode == 7'b1010011) && (funct7 == 7'b0001000);
+    assign inst.fdiv  = (opcode == 7'b1010011) && (funct7 == 7'b0001100);
+    assign inst.fsqrt = (opcode == 7'b1010011) && (funct7 == 7'b01011100);
     assign inst.feq  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b010);
     assign inst.flt  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b001);
     assign inst.fle  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b000);
@@ -261,6 +324,10 @@ module decoder
     assign ctrl.btype.jal = inst.jal;
     assign ctrl.btype.jalr = inst.jalr;
     assign ctrl.branched = 1'b0;
+    
+    assign ctrl.wait_cycle = inst.fadd | inst.fsub | inst.fmul ? 3'd2 :
+                             inst.fdiv ? 3'd4 :
+                             3'd0;
     
     assign ctrl.inval = ~(inst.lui | inst.auipc | inst.jal | inst.jalr | inst.beq | inst.bne | inst.blt | inst.bge | inst.bltu | inst.bgeu | inst.lb |
             inst.lh | inst.lw | inst.lbu | inst.lhu | inst.sb | inst.sh | inst.sw | inst.addi | inst.slti | inst.sltiu | inst.xori | inst.ori | 
@@ -422,7 +489,8 @@ module exec_stage(
     input wire [1:0] forwarded_src2_ctrl,   
     output wire [31:0] exec_result,
     output wire [31:0] branch_addr,
-    output wire [31:0] store_data
+    output wire [31:0] store_data,
+    output wire multi_cycle_freeze
     );
     
     wire [31:0] src1;
@@ -565,8 +633,8 @@ module core(
     wire stall;
     wire freeze; // stall already used... freeze means all stage must stop.
     wire memory_freeze = memory_stall; // UART
-    wire float_freeze = 1'b0; // FPU TODO: remove 0
-    assign freeze = memory_freeze | float_freeze;
+    wire multi_cycle_freeze; // FPU TODO: remove 0
+    assign freeze = memory_freeze | multi_cycle_freeze;
     assign is_load_instr = (ex_mem_ctrl.mem_read) & (~freeze);
 
     // fetch stage components
@@ -680,7 +748,8 @@ module core(
         .store_data(ex_store_data),
         .pc(id_ex_pc),
         .forwarded_src1_ctrl,
-        .forwarded_src2_ctrl
+        .forwarded_src2_ctrl,
+        .multi_cycle_freeze
     );
     
     wire [31:0] ex_next_pc;
