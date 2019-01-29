@@ -110,3 +110,4 @@ launch_simulation
 open_wave_config /home/tansei/pro/vivado/ethane/ethane_wrapper_behav1.wcfg
 source ethane_wrapper.tcl
 run 10000 ns
+open_bd_design {/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ethane.bd}

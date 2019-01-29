@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2019 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -72,7 +72,7 @@ module ethane_map_wrapper_0_0 (
   c_addr,
   c_write_enable,
   c_dout,
-  done,
+  stall,
   load
 );
 
@@ -98,7 +98,7 @@ input wire [31 : 0] c_din;
 input wire [31 : 0] c_addr;
 input wire [3 : 0] c_write_enable;
 output wire [31 : 0] c_dout;
-output wire done;
+output wire stall;
 input wire load;
 
   map_wrapper inst (
@@ -120,7 +120,7 @@ input wire load;
     .c_addr(c_addr),
     .c_write_enable(c_write_enable),
     .c_dout(c_dout),
-    .done(done),
+    .stall(stall),
     .load(load)
   );
 endmodule

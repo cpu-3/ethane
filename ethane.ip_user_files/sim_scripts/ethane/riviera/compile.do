@@ -2,6 +2,7 @@ vlib work
 vlib riviera
 
 vlib riviera/xil_defaultlib
+vlib riviera/xpm
 vlib riviera/blk_mem_gen_v8_4_1
 vlib riviera/axi_lite_ipif_v3_0_4
 vlib riviera/lib_pkg_v1_0_2
@@ -10,12 +11,20 @@ vlib riviera/lib_cdc_v1_0_2
 vlib riviera/axi_uartlite_v2_0_19
 
 vmap xil_defaultlib riviera/xil_defaultlib
+vmap xpm riviera/xpm
 vmap blk_mem_gen_v8_4_1 riviera/blk_mem_gen_v8_4_1
 vmap axi_lite_ipif_v3_0_4 riviera/axi_lite_ipif_v3_0_4
 vmap lib_pkg_v1_0_2 riviera/lib_pkg_v1_0_2
 vmap lib_srl_fifo_v1_0_2 riviera/lib_srl_fifo_v1_0_2
 vmap lib_cdc_v1_0_2 riviera/lib_cdc_v1_0_2
 vmap axi_uartlite_v2_0_19 riviera/axi_uartlite_v2_0_19
+
+vlog -work xil_defaultlib  -sv2k12 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+vcom -work xpm -93 \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_VCOMP.vhd" \
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_core_wrapper_0_0/sim/ethane_core_wrapper_0_0.v" \

@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
-//Date        : Mon Dec 17 19:13:05 2018
+//Date        : Tue Jan 29 17:39:15 2019
 //Host        : ispc2016 running 64-bit Ubuntu 16.04.4 LTS
 //Command     : generate_target ethane.bd
 //Design      : ethane
@@ -23,6 +23,7 @@ module ethane
   wire [31:0]blk_mem_gen_0_douta;
   wire [31:0]blk_mem_gen_1_douta;
   wire [31:0]core_wrapper_0_fetch_pc;
+  wire core_wrapper_0_is_load_instr;
   wire [31:0]core_wrapper_0_port_data_mem_addr;
   wire [3:0]core_wrapper_0_port_data_mem_data_we;
   wire [31:0]core_wrapper_0_port_data_mem_din;
@@ -31,6 +32,7 @@ module ethane
   wire [31:0]map_wrapper_0_din;
   wire [7:0]map_wrapper_0_led;
   wire map_wrapper_0_r_valid;
+  wire map_wrapper_0_stall;
   wire [7:0]map_wrapper_0_t_data;
   wire map_wrapper_0_t_valid;
   wire [3:0]map_wrapper_0_write_enable;
@@ -101,6 +103,8 @@ module ethane
         ._port_data_mem_dout(map_wrapper_0_c_dout),
         .clk(sim_clk_gen_0_clk),
         .fetch_pc(core_wrapper_0_fetch_pc),
+        .is_load_instr(core_wrapper_0_is_load_instr),
+        .memory_stall(map_wrapper_0_stall),
         .port_data_mem_addr(core_wrapper_0_port_data_mem_addr),
         .port_data_mem_data_we(core_wrapper_0_port_data_mem_data_we),
         .rstn(sim_clk_gen_0_sync_rst));
@@ -114,12 +118,13 @@ module ethane
         .din(map_wrapper_0_din),
         .dout(blk_mem_gen_1_douta),
         .led(map_wrapper_0_led),
-        .load(1'b0),
+        .load(core_wrapper_0_is_load_instr),
         .r_data(uart_wrapper_0_r_data),
         .r_valid(map_wrapper_0_r_valid),
         .ready(uart_wrapper_0_u_ready),
         .rstn(sim_clk_gen_0_sync_rst),
         .rx_done(uart_wrapper_0_rx_done),
+        .stall(map_wrapper_0_stall),
         .t_data(map_wrapper_0_t_data),
         .t_valid(map_wrapper_0_t_valid),
         .tx_done(uart_wrapper_0_tx_done),

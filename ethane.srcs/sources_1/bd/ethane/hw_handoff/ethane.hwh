@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Mon Dec 17 19:13:06 2018" VIVADOVERSION="2017.4">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Jan 29 17:39:15 2019" VIVADOVERSION="2017.4">
 
   <SYSTEMINFO ARCH="kintexu" BOARD="xilinx.com:kcu105:part0:1.3" DEVICE="xcku040" NAME="ethane" PACKAGE="ffva1156" SPEEDGRADE="-2"/>
 
@@ -334,7 +334,7 @@
         <PARAMETER NAME="register_portb_output_of_softecc" VALUE="false"/>
         <PARAMETER NAME="Pipeline_Stages" VALUE="0"/>
         <PARAMETER NAME="Load_Init_File" VALUE="true"/>
-        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/fib.coe"/>
+        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/fib2.coe"/>
         <PARAMETER NAME="Fill_Remaining_Memory_Locations" VALUE="false"/>
         <PARAMETER NAME="Remaining_Memory_Locations" VALUE="0"/>
         <PARAMETER NAME="Use_RSTA_Pin" VALUE="false"/>
@@ -647,6 +647,16 @@
             <CONNECTION INSTANCE="map_wrapper_0" PORT="c_write_enable"/>
           </CONNECTIONS>
         </PORT>
+        <PORT DIR="O" NAME="is_load_instr" SIGIS="undef" SIGNAME="core_wrapper_0_is_load_instr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="map_wrapper_0" PORT="load"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="memory_stall" SIGIS="undef" SIGNAME="map_wrapper_0_stall">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="map_wrapper_0" PORT="stall"/>
+          </CONNECTIONS>
+        </PORT>
       </PORTS>
       <BUSINTERFACES/>
     </MODULE>
@@ -747,8 +757,16 @@
             <CONNECTION INSTANCE="core_wrapper_0" PORT="_port_data_mem_dout"/>
           </CONNECTIONS>
         </PORT>
-        <PORT DIR="O" NAME="done" SIGIS="undef"/>
-        <PORT DIR="I" NAME="load" SIGIS="undef"/>
+        <PORT DIR="O" NAME="stall" SIGIS="undef" SIGNAME="map_wrapper_0_stall">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="core_wrapper_0" PORT="memory_stall"/>
+          </CONNECTIONS>
+        </PORT>
+        <PORT DIR="I" NAME="load" SIGIS="undef" SIGNAME="core_wrapper_0_is_load_instr">
+          <CONNECTIONS>
+            <CONNECTION INSTANCE="core_wrapper_0" PORT="is_load_instr"/>
+          </CONNECTIONS>
+        </PORT>
       </PORTS>
       <BUSINTERFACES/>
     </MODULE>
@@ -769,20 +787,20 @@
         <PORT CLKFREQUENCY="100000000" DIR="O" NAME="clk" SIGIS="clk" SIGNAME="sim_clk_gen_0_clk">
           <CONNECTIONS>
             <CONNECTION INSTANCE="blk_mem_gen_0" PORT="clka"/>
-            <CONNECTION INSTANCE="map_wrapper_0" PORT="clk"/>
-            <CONNECTION INSTANCE="uart_wrapper_0" PORT="clk"/>
             <CONNECTION INSTANCE="axi_uartlite_0" PORT="s_axi_aclk"/>
             <CONNECTION INSTANCE="blk_mem_gen_1" PORT="clka"/>
+            <CONNECTION INSTANCE="uart_wrapper_0" PORT="clk"/>
+            <CONNECTION INSTANCE="map_wrapper_0" PORT="clk"/>
             <CONNECTION INSTANCE="core_wrapper_0" PORT="clk"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" NAME="sync_rst" SIGIS="rst" SIGNAME="sim_clk_gen_0_sync_rst">
           <CONNECTIONS>
-            <CONNECTION INSTANCE="map_wrapper_0" PORT="rstn"/>
-            <CONNECTION INSTANCE="uart_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="axi_uartlite_0" PORT="s_axi_aresetn"/>
             <CONNECTION INSTANCE="blk_mem_gen_0" PORT="ena"/>
             <CONNECTION INSTANCE="blk_mem_gen_1" PORT="ena"/>
+            <CONNECTION INSTANCE="uart_wrapper_0" PORT="rstn"/>
+            <CONNECTION INSTANCE="map_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="core_wrapper_0" PORT="rstn"/>
           </CONNECTIONS>
         </PORT>

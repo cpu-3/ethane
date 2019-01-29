@@ -2,6 +2,7 @@ vlib work
 vlib activehdl
 
 vlib activehdl/xil_defaultlib
+vlib activehdl/xpm
 vlib activehdl/blk_mem_gen_v8_4_1
 vlib activehdl/axi_lite_ipif_v3_0_4
 vlib activehdl/lib_pkg_v1_0_2
@@ -10,12 +11,20 @@ vlib activehdl/lib_cdc_v1_0_2
 vlib activehdl/axi_uartlite_v2_0_19
 
 vmap xil_defaultlib activehdl/xil_defaultlib
+vmap xpm activehdl/xpm
 vmap blk_mem_gen_v8_4_1 activehdl/blk_mem_gen_v8_4_1
 vmap axi_lite_ipif_v3_0_4 activehdl/axi_lite_ipif_v3_0_4
 vmap lib_pkg_v1_0_2 activehdl/lib_pkg_v1_0_2
 vmap lib_srl_fifo_v1_0_2 activehdl/lib_srl_fifo_v1_0_2
 vmap lib_cdc_v1_0_2 activehdl/lib_cdc_v1_0_2
 vmap axi_uartlite_v2_0_19 activehdl/axi_uartlite_v2_0_19
+
+vlog -work xil_defaultlib  -sv2k12 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_cdc/hdl/xpm_cdc.sv" \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_memory/hdl/xpm_memory.sv" \
+
+vcom -work xpm -93 \
+"/opt/Xilinx/Vivado/2017.4/data/ip/xpm/xpm_VCOMP.vhd" \
 
 vlog -work xil_defaultlib  -v2k5 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_core_wrapper_0_0/sim/ethane_core_wrapper_0_0.v" \

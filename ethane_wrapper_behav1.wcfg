@@ -16,15 +16,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="515929925fs"></ZoomStartTime>
-      <ZoomEndTime time="562154926fs"></ZoomEndTime>
-      <Cursor1Time time="526191000fs"></Cursor1Time>
+      <ZoomStartTime time="19822356364fs"></ZoomStartTime>
+      <ZoomEndTime time="20035528728fs"></ZoomEndTime>
+      <Cursor1Time time="20000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="252"></NameColumnWidth>
-      <ValueColumnWidth column_width="76"></ValueColumnWidth>
+      <NameColumnWidth column_width="245"></NameColumnWidth>
+      <ValueColumnWidth column_width="81"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="42" />
+   <WVObjectSize size="56" />
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/clk">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -36,6 +36,54 @@
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/instr">
       <obj_property name="ElementShortName">instr[31:0]</obj_property>
       <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/inval">
+      <obj_property name="ElementShortName">inval</obj_property>
+      <obj_property name="ObjectShortName">inval</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/moving">
+      <obj_property name="ElementShortName">moving</obj_property>
+      <obj_property name="ObjectShortName">moving</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/t_data">
+      <obj_property name="ElementShortName">t_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">t_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/din">
+      <obj_property name="ElementShortName">din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">din[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/c_din">
+      <obj_property name="ElementShortName">c_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">c_din[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/t_data">
+      <obj_property name="ElementShortName">t_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">t_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/b_data">
+      <obj_property name="ElementShortName">b_data[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b_data[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/dout">
+      <obj_property name="ElementShortName">dout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">dout[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/c_write_enable">
+      <obj_property name="ElementShortName">c_write_enable[3:0]</obj_property>
+      <obj_property name="ObjectShortName">c_write_enable[3:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/DS/freezed">
+      <obj_property name="ElementShortName">freezed</obj_property>
+      <obj_property name="ObjectShortName">freezed</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/is_load_instr">
+      <obj_property name="ElementShortName">is_load_instr</obj_property>
+      <obj_property name="ObjectShortName">is_load_instr</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs">
+      <obj_property name="ElementShortName">iregs[0:31][31:0]</obj_property>
+      <obj_property name="ObjectShortName">iregs[0:31][31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/port_data_mem_din">
       <obj_property name="ElementShortName">port_data_mem_din[31:0]</obj_property>
@@ -53,10 +101,13 @@
       <obj_property name="ElementShortName">port_data_mem_data_we[3:0]</obj_property>
       <obj_property name="ObjectShortName">port_data_mem_data_we[3:0]</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/freeze">
+      <obj_property name="ElementShortName">freeze</obj_property>
+      <obj_property name="ObjectShortName">freeze</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_inst">
       <obj_property name="ElementShortName">decoded_inst</obj_property>
       <obj_property name="ObjectShortName">decoded_inst</obj_property>
-      <obj_property name="isExpanded"></obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_ctrl">
       <obj_property name="ElementShortName">decoded_ctrl</obj_property>
@@ -94,10 +145,6 @@
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/rd_enable">
       <obj_property name="ElementShortName">rd_enable</obj_property>
       <obj_property name="ObjectShortName">rd_enable</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs">
-      <obj_property name="ElementShortName">iregs[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">iregs[0:31][31:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/int_src1">
       <obj_property name="ElementShortName">int_src1[31:0]</obj_property>
@@ -171,6 +218,10 @@
       <obj_property name="ElementShortName">flush</obj_property>
       <obj_property name="ObjectShortName">flush</obj_property>
    </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/freeze">
+      <obj_property name="ElementShortName">freeze</obj_property>
+      <obj_property name="ObjectShortName">freeze</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/MUX/alu_result">
       <obj_property name="ElementShortName">alu_result[31:0]</obj_property>
       <obj_property name="ObjectShortName">alu_result[31:0]</obj_property>
@@ -194,5 +245,9 @@
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/MUX/result">
       <obj_property name="ElementShortName">result[31:0]</obj_property>
       <obj_property name="ObjectShortName">result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/uart_wrapper_0/inst/u/status">
+      <obj_property name="ElementShortName">status[2:0]</obj_property>
+      <obj_property name="ObjectShortName">status[2:0]</obj_property>
    </wvobject>
 </wave_config>

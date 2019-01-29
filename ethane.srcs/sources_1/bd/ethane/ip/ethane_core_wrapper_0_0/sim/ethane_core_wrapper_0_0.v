@@ -1,4 +1,4 @@
-// (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
+// (c) Copyright 1995-2019 Xilinx, Inc. All rights reserved.
 // 
 // This file contains confidential and proprietary information
 // of Xilinx, Inc. and is protected under U.S. and
@@ -61,7 +61,9 @@ module ethane_core_wrapper_0_0 (
   _port_data_mem_din,
   port_data_mem_addr,
   _port_data_mem_dout,
-  port_data_mem_data_we
+  port_data_mem_data_we,
+  is_load_instr,
+  memory_stall
 );
 
 (* X_INTERFACE_PARAMETER = "XIL_INTERFACENAME clk, ASSOCIATED_RESET rstn, FREQ_HZ 100000000, PHASE 0.000, CLK_DOMAIN ethane_sim_clk_gen_0_0_clk" *)
@@ -76,6 +78,8 @@ output wire [31 : 0] _port_data_mem_din;
 output wire [31 : 0] port_data_mem_addr;
 input wire [31 : 0] _port_data_mem_dout;
 output wire [3 : 0] port_data_mem_data_we;
+output wire is_load_instr;
+input wire memory_stall;
 
   core_wrapper inst (
     .clk(clk),
@@ -85,6 +89,8 @@ output wire [3 : 0] port_data_mem_data_we;
     ._port_data_mem_din(_port_data_mem_din),
     .port_data_mem_addr(port_data_mem_addr),
     ._port_data_mem_dout(_port_data_mem_dout),
-    .port_data_mem_data_we(port_data_mem_data_we)
+    .port_data_mem_data_we(port_data_mem_data_we),
+    .is_load_instr(is_load_instr),
+    .memory_stall(memory_stall)
   );
 endmodule

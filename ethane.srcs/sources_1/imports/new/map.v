@@ -46,7 +46,7 @@ module map_wrapper(
     input wire [31:0] c_addr,
     input wire [3:0] c_write_enable,
     output wire [31:0] c_dout,
-    output wire done,
+    output wire stall,
     input wire load
 
     );
@@ -62,7 +62,7 @@ module map_wrapper(
         .c_write_enable(c_write_enable),
         .c_dout(c_dout),
         .c_addr(c_addr),
-        .done(done),
+        .stall(stall),
         .ready(ready),
         .r_data(r_data),
         .t_data(t_data),

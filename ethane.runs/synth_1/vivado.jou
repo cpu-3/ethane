@@ -2,11 +2,11 @@
 # Vivado v2017.4 (64-bit)
 # SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
 # IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Fri Dec 14 21:28:47 2018
-# Process ID: 28459
+# Start of session at: Tue Jan 29 19:18:26 2019
+# Process ID: 11679
 # Current directory: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1
-# Command line: vivado -log core_wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source core_wrapper.tcl
-# Log file: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1/core_wrapper.vds
+# Command line: vivado -log design_1_wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_wrapper.tcl
+# Log file: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1/design_1_wrapper.vds
 # Journal file: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1/vivado.jou
 #-----------------------------------------------------------
-source core_wrapper.tcl -notrace
+source design_1_wrapper.tcl -notrace

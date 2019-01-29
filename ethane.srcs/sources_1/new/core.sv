@@ -88,6 +88,7 @@ typedef struct packed{
     logic branched;
     branch_type btype;
     logic [4:0] rd;
+    logic inval;
     /*
     TODO: make hazard/stall more precise 
     logic use_rs1;
@@ -260,6 +261,12 @@ module decoder
     assign ctrl.btype.jal = inst.jal;
     assign ctrl.btype.jalr = inst.jalr;
     assign ctrl.branched = 1'b0;
+    
+    assign ctrl.inval = ~(inst.lui | inst.auipc | inst.jal | inst.jalr | inst.beq | inst.bne | inst.blt | inst.bge | inst.bltu | inst.bgeu | inst.lb |
+            inst.lh | inst.lw | inst.lbu | inst.lhu | inst.sb | inst.sh | inst.sw | inst.addi | inst.slti | inst.sltiu | inst.xori | inst.ori | 
+            inst.andi | inst.slli | inst.srli | inst.srai | inst.add | inst.sub | inst.sll | inst.slt | inst.sltu | inst.xor_ | inst.srl |
+            inst.sra | inst.or_ | inst.and_ | inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsw | inst.flw | inst.feq | inst.flt | inst.fle |
+            inst.fsgnj | inst.fsgnjn); 
 
 endmodule
 
@@ -270,6 +277,7 @@ module fetch_stage(
     input rstn,
     input wire [31:0] pc,
     input wire stall,
+    input wire freeze,
     input wire flush,
     input wire [31:0]mem_instr,
     input wire [31:0]branch_pc,
@@ -282,7 +290,14 @@ module fetch_stage(
     reg flushed;
     reg [31:0] stalled_instr;
     
-    assign instr = flushed ? NOP_CONST : stalled ? stalled_instr : mem_instr;
+    reg old_freeze;
+    reg [31:0]old_instr;
+    
+    wire [31:0] tmp;
+    
+    assign tmp = flushed ? NOP_CONST : stalled ? stalled_instr : mem_instr;
+    assign instr = old_freeze ? old_instr : tmp;
+    
     assign pc_next = branch_control ? branch_pc :
                      stall ? pc : 
                      pc + 32'd4;
@@ -292,25 +307,46 @@ module fetch_stage(
             stalled <= 1'b0;
             flushed <= 1'b0;
             stalled_instr <= 32'b0;
+            old_freeze <= 1'b0;
+            old_instr <= 32'd0;
         end begin
             stalled <= stall;
             flushed <= flush;
             stalled_instr <= mem_instr;
+            if (~old_freeze) begin
+                old_instr <= mem_instr;
+            end
+            old_freeze <= freeze;
         end
     end
 endmodule
 
 module decode_stage(
+    input clk,
+    input rstn,
     input wire [31:0] inst,
     input wire [31:0] pc,
     output instif ist,
     output wire [4:0] rs1,
     output wire [4:0] rs2,
     output wire [31:0] imm,
-    input wire stall,
-    input wire flush,
+    (* mark_debug = "true" *) input wire stall,
+    (* mark_debug = "true" *) input wire flush,
+    (* mark_debug = "true" *) input wire freeze,
     output controlif ctrl
     );
+    reg flushed;
+    reg freezed;
+
+    always @(posedge clk) begin
+        if (~rstn) begin
+            flushed <= 1'b0;
+            freezed <= 1'b0;
+        end else begin
+            freezed <= freeze;
+            flushed <= freezed | freeze ? flushed : flush;
+        end
+    end
     
     controlif decoded_ctrl;
     
@@ -331,9 +367,11 @@ module decode_stage(
     assign branch_ctrl.branched = 1'b0;
     assign branch_ctrl.btype = decoded_ctrl.btype;
     assign branch_ctrl.rd = decoded_ctrl.rd;
+    assign branch_ctrl.inval = decoded_ctrl.inval;
     
-    assign ctrl = flush | stall ? 0 : branch_ctrl;
-    
+    assign ctrl = ((freezed | freeze) & flushed) | flush | stall ? 0 : branch_ctrl;
+
+
 endmodule
 
 module branch_unit(
@@ -345,7 +383,7 @@ module branch_unit(
         output wire flush
     );
     wire[31:0] pc_imm = pc + imm;
-    wire[31:0] do_branch = ctrl.btype.branch & (alu_result == 32'd1);
+    wire do_branch = ctrl.btype.branch & (alu_result == 32'd1);
     assign next_pc = do_branch ? pc_imm :
                      ctrl.btype.jalr ? alu_result :
                      ctrl.btype.jal ? pc_imm :
@@ -479,7 +517,10 @@ module core(
     output wire [31:0] _port_data_mem_din,
     output wire [31:0] port_data_mem_addr,
     input  wire [31:0] _port_data_mem_dout,
-    output wire [3:0]  port_data_mem_data_we
+    output wire [3:0]  port_data_mem_data_we,
+    
+    output wire is_load_instr,
+    input wire memory_stall /* for uart */
     );
     
     wire [31:0] mem_instr = {_instr[7:0], _instr[15:8], _instr[23:16], _instr[31:24]};
@@ -521,6 +562,12 @@ module core(
     reg [31:0] mem_wb_branch_result;
     
     wire flush;
+    wire stall;
+    wire freeze; // stall already used... freeze means all stage must stop.
+    wire memory_freeze = memory_stall; // UART
+    wire float_freeze = 1'b0; // FPU TODO: remove 0
+    assign freeze = memory_freeze | float_freeze;
+    assign is_load_instr = (ex_mem_ctrl.mem_read) & (~freeze);
 
     // fetch stage components
     reg [31:0]pc;
@@ -530,12 +577,14 @@ module core(
     
     wire branch_control;
     wire [31:0]branch_pc;
+    wire fetch_stage_stall = stall | freeze;
     fetch_stage FS(
                 .clk,
                 .rstn,
                 .pc, 
                 .pc_next,
                 .stall,
+                .freeze,
                 .mem_instr,
                 .instr,
                 .branch_control,
@@ -555,9 +604,10 @@ module core(
     wire [31:0] decode_stage_float_src2;
     
     wire [31:0] write_int_result; 
-    wire stall;
 
     decode_stage DS(
+        .clk,
+        .rstn,
         .pc, 
         .inst(instr),
         .ist(decoded_inst),
@@ -566,6 +616,7 @@ module core(
         .ctrl(decoded_ctrl),
         .imm(decoded_immediate),
         .stall,
+        .freeze,
         .flush
     );
     wire write_back_enable;
@@ -644,10 +695,11 @@ module core(
     assign branch_control = flush;
     assign branch_pc = ex_next_pc;
     
+
     // memory stage
     wire [31:0] mem_load_result;
     assign port_data_mem_addr = ex_mem_exec_result;
-    assign port_data_mem_data_we = ex_mem_ctrl.mem_write;
+    assign port_data_mem_data_we = freeze ? 4'd0 : ex_mem_ctrl.mem_write;
     assign port_data_mem_din = ex_mem_store_data;
     assign mem_load_result = port_data_mem_dout;
     
@@ -660,6 +712,10 @@ module core(
         .reg_write(write_back_enable)
     );
     assign write_back_rd = mem_wb_ctrl.rd;
+    
+    reg moving;
+    
+    wire inval = mem_wb_ctrl.inval && (pc > 16);
     
     always @(posedge clk) begin
         if (~rstn) begin
@@ -691,7 +747,9 @@ module core(
             id_ex_ctrl <= 0;
             ex_mem_ctrl <= 0;
             mem_wb_ctrl <= 0;
-        end else begin
+            moving <= 1'b1;
+        // when freeze is true, registers are not updated.
+        end else if (~freeze && moving) begin
             // fetch stage
             pc <= pc_next;
             fe_id_pc <= pc;
@@ -717,6 +775,8 @@ module core(
             // memory stage
             mem_wb_exec_result <= ex_mem_exec_result;
             mem_wb_ctrl <= ex_mem_ctrl;
+            
+            moving <= ~inval;
         end
     end 
     

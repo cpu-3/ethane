@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0x80C7F25280C7F252" bd:device="xcku040-ffva1156-2-e" bd:isValidated="true" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.4" bd:top="ethane" bd:version="1.00.a">
+<bd:repository xmlns:bd="http://www.xilinx.com/bd" bd:BoundaryCRC="0x80C7F25280C7F252" bd:device="xcku040-ffva1156-2-e" bd:synthFlowMode="Hierarchical" bd:tool_version="2017.4" bd:top="ethane" bd:version="1.00.a">
 
   <spirit:component xmlns:spirit="http://www.spiritconsortium.org/XMLSchema/SPIRIT/1685-2009">
     <spirit:vendor>xilinx.com</spirit:vendor>
@@ -30,17 +30,7 @@
             </spirit:physicalPort>
           </spirit:portMap>
         </spirit:portMaps>
-        <spirit:parameters>
-          <spirit:parameter>
-            <spirit:name>LAYERED_METADATA</spirit:name>
-            <spirit:value>undef</spirit:value>
-            <spirit:vendorExtensions>
-              <bd:configElementInfos>
-                <bd:configElementInfo bd:valueSource="default"/>
-              </bd:configElementInfos>
-            </spirit:vendorExtensions>
-          </spirit:parameter>
-        </spirit:parameters>
+        <spirit:parameters/>
       </spirit:busInterface>
       <spirit:busInterface>
         <spirit:name>DATA.USB_UART_RX</spirit:name>
@@ -59,17 +49,7 @@
             </spirit:physicalPort>
           </spirit:portMap>
         </spirit:portMaps>
-        <spirit:parameters>
-          <spirit:parameter>
-            <spirit:name>LAYERED_METADATA</spirit:name>
-            <spirit:value>undef</spirit:value>
-            <spirit:vendorExtensions>
-              <bd:configElementInfos>
-                <bd:configElementInfo bd:valueSource="default"/>
-              </bd:configElementInfos>
-            </spirit:vendorExtensions>
-          </spirit:parameter>
-        </spirit:parameters>
+        <spirit:parameters/>
       </spirit:busInterface>
     </spirit:busInterfaces>
     <spirit:model>
@@ -139,32 +119,10 @@
           <spirit:configurableElementValue spirit:referenceId="Write_Depth_A">262144</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Register_PortA_Output_of_Memory_Primitives">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Load_Init_File">true</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../../../../ダウンロード/fib.coe</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="Coe_File">../../../../../../../../../ダウンロード/fib2.coe</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Use_RSTA_Pin">false</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="Port_A_Write_Rate">0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="use_bram_block">Stand_Alone</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
-        <spirit:instanceName>map_wrapper_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="module_ref" spirit:name="map_wrapper" spirit:vendor="xilinx.com" spirit:version="1.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_map_wrapper_0_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">map_wrapper</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
-        </spirit:configurableElementValues>
-      </spirit:componentInstance>
-      <spirit:componentInstance>
-        <spirit:instanceName>uart_wrapper_0</spirit:instanceName>
-        <spirit:componentRef spirit:library="module_ref" spirit:name="uart_wrapper" spirit:vendor="xilinx.com" spirit:version="1.0"/>
-        <spirit:configurableElementValues>
-          <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_uart_wrapper_0_0</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">uart_wrapper</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
-          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
@@ -187,11 +145,33 @@
         </spirit:configurableElementValues>
       </spirit:componentInstance>
       <spirit:componentInstance>
+        <spirit:instanceName>uart_wrapper_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="uart_wrapper" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_uart_wrapper_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">uart_wrapper</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
         <spirit:instanceName>core_wrapper_0</spirit:instanceName>
         <spirit:componentRef spirit:library="module_ref" spirit:name="core_wrapper" spirit:vendor="xilinx.com" spirit:version="1.0"/>
         <spirit:configurableElementValues>
           <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_core_wrapper_0_0</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:referenceName">core_wrapper</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
+        </spirit:configurableElementValues>
+      </spirit:componentInstance>
+      <spirit:componentInstance>
+        <spirit:instanceName>map_wrapper_0</spirit:instanceName>
+        <spirit:componentRef spirit:library="module_ref" spirit:name="map_wrapper" spirit:vendor="xilinx.com" spirit:version="1.0"/>
+        <spirit:configurableElementValues>
+          <spirit:configurableElementValue spirit:referenceId="bd:xciName">ethane_map_wrapper_0_0</spirit:configurableElementValue>
+          <spirit:configurableElementValue spirit:referenceId="bd:referenceName">map_wrapper</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:subInstancePath"></spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:referenceType">hdl</spirit:configurableElementValue>
           <spirit:configurableElementValue spirit:referenceId="bd:BoundaryCRC">0x0</spirit:configurableElementValue>
@@ -210,21 +190,21 @@
         <spirit:name>sim_clk_gen_0_clk</spirit:name>
         <spirit:internalPortReference spirit:componentRef="sim_clk_gen_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="clka"/>
-        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="clk"/>
-        <spirit:internalPortReference spirit:componentRef="uart_wrapper_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="s_axi_aclk"/>
         <spirit:internalPortReference spirit:componentRef="blk_mem_gen_1" spirit:portRef="clka"/>
+        <spirit:internalPortReference spirit:componentRef="uart_wrapper_0" spirit:portRef="clk"/>
         <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="clk"/>
+        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="clk"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>sim_clk_gen_0_sync_rst</spirit:name>
         <spirit:internalPortReference spirit:componentRef="sim_clk_gen_0" spirit:portRef="sync_rst"/>
-        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="rstn"/>
-        <spirit:internalPortReference spirit:componentRef="uart_wrapper_0" spirit:portRef="rstn"/>
         <spirit:internalPortReference spirit:componentRef="axi_uartlite_0" spirit:portRef="s_axi_aresetn"/>
         <spirit:internalPortReference spirit:componentRef="blk_mem_gen_0" spirit:portRef="ena"/>
         <spirit:internalPortReference spirit:componentRef="blk_mem_gen_1" spirit:portRef="ena"/>
+        <spirit:internalPortReference spirit:componentRef="uart_wrapper_0" spirit:portRef="rstn"/>
         <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="rstn"/>
+        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="rstn"/>
       </spirit:adHocConnection>
       <spirit:adHocConnection>
         <spirit:name>core_wrapper_0_fetch_pc</spirit:name>
@@ -325,6 +305,16 @@
         <spirit:name>core_wrapper_0_port_data_mem_data_we</spirit:name>
         <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="port_data_mem_data_we"/>
         <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="c_write_enable"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>map_wrapper_0_stall</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="stall"/>
+        <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="memory_stall"/>
+      </spirit:adHocConnection>
+      <spirit:adHocConnection>
+        <spirit:name>core_wrapper_0_is_load_instr</spirit:name>
+        <spirit:internalPortReference spirit:componentRef="core_wrapper_0" spirit:portRef="is_load_instr"/>
+        <spirit:internalPortReference spirit:componentRef="map_wrapper_0" spirit:portRef="load"/>
       </spirit:adHocConnection>
     </spirit:adHocConnections>
   </spirit:design>
