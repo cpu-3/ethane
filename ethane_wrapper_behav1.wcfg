@@ -16,13 +16,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="394984865fs"></ZoomStartTime>
-      <ZoomEndTime time="695075678fs"></ZoomEndTime>
-      <Cursor1Time time="445000000fs"></Cursor1Time>
+      <ZoomStartTime time="190152385fs"></ZoomStartTime>
+      <ZoomEndTime time="483969523fs"></ZoomEndTime>
+      <Cursor1Time time="435000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="243"></NameColumnWidth>
-      <ValueColumnWidth column_width="92"></ValueColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="11" />
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/clk">
