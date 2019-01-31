@@ -63,15 +63,17 @@ typedef struct packed{
   logic fsub;
   logic fmul;
   logic fdiv;
+  logic fsqrt;
   logic fsw;
   logic flw;
   logic feq;
   logic flt;
   logic fle;
   
-  
   logic fsgnj;
   logic fsgnjn;
+  logic fcvt_s_w;
+  logic fcvt_w_s;
 } instif;
 
 typedef struct packed{
@@ -89,6 +91,9 @@ typedef struct packed{
     branch_type btype;
     logic [4:0] rd;
     logic [2:0] wait_cycle;
+    logic frd;
+    logic frs;
+    logic inval;
     /*
     TODO: make hazard/stall more precise 
     logic use_rs1;
@@ -159,7 +164,7 @@ module fpu(
     fsub FSUB(src1, src2, fsub_result, fsub_ovf);
     fmul FMUL(src1, src2, fmul_result, fmul_ovf);
     fdiv FDIV(src1, src2, fdiv_result, fdiv_ovf);
-    fsqrt FSQRT(src1, src2, fsqrt_result, fsqrt_ovf);
+    fsqrt FSQRT(src1, fsqrt_result, fsqrt_ovf);
     
     feq FEQ(src1, src2, feq_result);
     flt FLT(src1, src2, flt_result);
@@ -215,14 +220,11 @@ module decoder
                          (inst_code[4:2] == 3'b100) ||
                          (inst_code[4:2] == 3'b001)))||
                     ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b001));
-    wire s_type;
-    assign s_type = (inst_code[6:5] == 2'b01) && ((inst_code[4:2] == 3'b000) || (inst_code[4:2] == 3'b001));
-    wire b_type;
-    assign b_type = (inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b000);
-    wire u_type;
-    assign u_type = ((inst_code[6:5] == 2'b01) || (inst_code[6:5] == 2'b00)) && (inst_code[4:2] == 3'b101);
-    wire j_type;
-    assign j_type = ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b011));
+    wire s_type = (inst_code[6:5] == 2'b01) && ((inst_code[4:2] == 3'b000) || (inst_code[4:2] == 3'b001));
+    wire b_type = (inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b000);
+    wire u_type = ((inst_code[6:5] == 2'b01) || (inst_code[6:5] == 2'b00)) && (inst_code[4:2] == 3'b101);
+    wire j_type = ((inst_code[6:5] == 2'b11) && (inst_code[4:2] == 3'b011));
+    
     assign ctrl.rd = (r_type | i_type | u_type | j_type) ? inst_code[11:7] : 5'd0;
 
     assign rs1 = (r_type | i_type | s_type | b_type) ? inst_code[19:15] : 5'd0;
@@ -288,6 +290,8 @@ module decoder
     assign inst.fle  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b000);
     assign inst.fsgnj  = (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b000);
     assign inst.fsgnjn = (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b001);
+    assign inst.fcvt_s_w = (opcode == 7'b1010011) && (funct7 == 7'b1101000);
+    assign inst.fcvt_w_s = (opcode == 7'b1010011) && (funct7 == 7'b1100000);
     
     assign inst.fsw = opcode == 7'b0100111;
     assign inst.flw = opcode == 7'b0000111;
@@ -332,9 +336,12 @@ module decoder
     assign ctrl.inval = ~(inst.lui | inst.auipc | inst.jal | inst.jalr | inst.beq | inst.bne | inst.blt | inst.bge | inst.bltu | inst.bgeu | inst.lb |
             inst.lh | inst.lw | inst.lbu | inst.lhu | inst.sb | inst.sh | inst.sw | inst.addi | inst.slti | inst.sltiu | inst.xori | inst.ori | 
             inst.andi | inst.slli | inst.srli | inst.srai | inst.add | inst.sub | inst.sll | inst.slt | inst.sltu | inst.xor_ | inst.srl |
-            inst.sra | inst.or_ | inst.and_ | inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsw | inst.flw | inst.feq | inst.flt | inst.fle |
-            inst.fsgnj | inst.fsgnjn); 
-
+            inst.sra | inst.or_ | inst.and_ | inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw | inst.flw | inst.feq | inst.flt | inst.fle |
+            inst.fsgnj | inst.fsgnjn);
+             
+    // TODO: check
+    assign ctrl.frd = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fcvt_s_w;
+    assign ctrl.frs = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s;
 endmodule
 
 parameter NOP_CONST = 32'h13;
@@ -490,8 +497,8 @@ module exec_stage(
     input wire [1:0] forwarded_src1_ctrl,
     input wire [1:0] forwarded_src2_ctrl,
     
-    input wire [31:0] fsrc1,
-    input wire [31:0] fsrc2,
+    input wire [31:0] float_src1,
+    input wire [31:0] float_src2,
     output wire [31:0] fresult,
        
     output wire [31:0] exec_result,
@@ -502,11 +509,18 @@ module exec_stage(
     
     wire [31:0] src1;
     wire [31:0] src2;
+    wire [31:0] fsrc1;
+    wire [31:0] fsrc2;
     
     assign src1 = forwarded_src1_ctrl == 2'b00 ? int_src1 :
                   forwarded_src1_ctrl == 2'b10 ? mem_forwarded :
                   write_forwarded;
     
+    // floating point forwarding    
+    assign fsrc1 =  float_src1;
+    wire [31:0] _fsrc2 = float_src2;
+    assign fsrc2 = _fsrc2;
+     
     wire [31:0] _src2 = 
         forwarded_src2_ctrl == 2'b00 ? int_src2 :
         forwarded_src2_ctrl == 2'b10 ? mem_forwarded :
@@ -542,8 +556,33 @@ module exec_stage(
         .result(exec_result)
     );
     // TODO: is int / float?
-    assign store_data = _src2;
-    
+    assign store_data = inst.fsw | inst.flw ? _fsrc2 : _src2;
+
+    reg stall;
+    reg [2:0] wait_cycle;
+    assign multi_cycle_freeze = 
+        (stall == 1'b0) && (wait_cycle != 3'b0) ? 1'b1 :
+        ctrl.wait_cycle != 3'b0 ? 1'b1 :
+        1'b0;
+        
+    always @(posedge clk) begin
+        if (~rstn) begin
+            stall <= 1'b0;
+            wait_cycle <= 3'b0;
+        end else begin
+            if (stall) begin 
+                if (wait_cycle != 3'b0) begin
+                    wait_cycle <= wait_cycle - 3'b1;
+                end else begin
+                    stall <= 1'b0;
+                end
+            end else if (ctrl.wait_cycle != 0) begin
+                wait_cycle <= ctrl.wait_cycle - 3'b1;
+                stall <= 1'b1;
+            end
+        end
+    end
+
 endmodule
 
 
@@ -586,12 +625,18 @@ module write_stage(
     input controlif ctrl,
     input wire [31:0] load_result,
     input wire [31:0] alu_result,
+    input wire [31:0] fpu_result,
     output wire [31:0] int_result,
-    output wire reg_write
+    output wire [31:0] float_result,
+    output wire reg_write,
+    output wire freg_write
     );
     assign int_result = ctrl.mem_read ? load_result :
-                        alu_result; 
-    assign reg_write = ctrl.reg_write;
+                        alu_result;
+    assign float_result = ctrl.mem_read ? load_result :
+                        fpu_result;
+    assign reg_write = ctrl.reg_write & (ctrl.frd == 1'b0);
+    assign freg_write = ctrl.reg_write & ctrl.frd;
 endmodule
 
 module core(
@@ -639,6 +684,7 @@ module core(
     // EX/MEM registers
     controlif ex_mem_ctrl;
     reg [31:0] ex_mem_exec_result;
+    reg [31:0] ex_mem_float_exec_result;
     reg [31:0] ex_mem_store_data;
     reg [31:0] ex_mem_pc;
 
@@ -647,6 +693,7 @@ module core(
     reg [31:0] mem_wb_load_result;
     reg [31:0] mem_wb_exec_result;
     reg [31:0] mem_wb_branch_result;
+    reg [31:0] mem_wb_float_exec_result;
     
     wire flush;
     wire stall;
@@ -719,12 +766,13 @@ module core(
         .rs1(decode_stage_int_src1), 
         .rs2(decode_stage_int_src2)
     );
+    wire float_write_back_enable;
     wire [31:0] write_float_result; 
     fregister FREGISTER(
         .clk(clk),
         .rstn(rstn),
         .rd_idx(write_back_rd),
-        .rd_enable(write_back_enable),
+        .rd_enable(float_write_back_enable),
         .data(write_float_result),
         .rs1_idx(decoded_rs1),
         .rs2_idx(decoded_rs2), 
@@ -752,6 +800,7 @@ module core(
      
     // exec stage
     wire [31:0] ex_exec_result;
+    wire [31:0] ex_float_exec_result;
     wire [31:0] ex_branch_addr;
     wire [31:0] ex_store_data;
     exec_stage ES(
@@ -768,6 +817,9 @@ module core(
         .pc(id_ex_pc),
         .forwarded_src1_ctrl,
         .forwarded_src2_ctrl,
+        .float_src1(id_ex_float_src1),
+        .float_src2(id_ex_float_src2),
+        .fresult(ex_float_exec_result),
         .multi_cycle_freeze
     );
     
@@ -796,8 +848,11 @@ module core(
         .ctrl(mem_wb_ctrl),
         .load_result(mem_load_result),
         .alu_result(mem_wb_exec_result),
+        .fpu_result(mem_wb_float_exec_result),
         .int_result(write_int_result),
-        .reg_write(write_back_enable)
+        .float_result(write_float_result),
+        .reg_write(write_back_enable),
+        .freg_write(float_write_back_enable)
     );
     assign write_back_rd = mem_wb_ctrl.rd;
     
@@ -859,10 +914,12 @@ module core(
             ex_mem_store_data <= ex_store_data;
             ex_mem_ctrl <= id_ex_ctrl;
             ex_mem_pc <= id_ex_pc;
+            ex_mem_float_exec_result <= ex_float_exec_result;
             
             // memory stage
             mem_wb_exec_result <= ex_mem_exec_result;
             mem_wb_ctrl <= ex_mem_ctrl;
+            mem_wb_float_exec_result <= ex_mem_float_exec_result;
             
             moving <= ~inval;
         end
