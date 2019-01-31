@@ -90,7 +90,7 @@ module fregister
                     fregs[i] <= 32'd0;
                 end else begin 
                     if (rd_enable && i == rd_idx) begin
-                        fregs[i] <=  data;
+                        fregs[i] <= data;
                     end
                 end
             end

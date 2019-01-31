@@ -131,13 +131,24 @@ module alu
          32'd0;
 endmodule
 
+module translator(
+    input wire clk,
+    input wire rstn,
+    input wire [31:0] int_src,
+    input wire [31:0] float_src,
+    output wire [31:0] float_result,
+    output wire [31:0] int_result
+    );
+    itof ITOF(int_src, float_result);
+    ftoi FTOI(float_src, int_result);
+endmodule
+
 module fpu(
     input wire clk,
     input wire rstn,
     input wire [31:0] src1,
     input wire [31:0] src2,
     output wire [31:0] result,
-    output wire ovf,
     input instif inst
     );
     wire [31:0]fadd_result;
@@ -160,15 +171,15 @@ module fpu(
     wire flt_result;
     wire fle_result;
     
-    fadd FADD(src1, src2, fadd_result, fadd_ovf);
-    fsub FSUB(src1, src2, fsub_result, fsub_ovf);
-    fmul FMUL(src1, src2, fmul_result, fmul_ovf);
-    fdiv FDIV(src1, src2, fdiv_result, fdiv_ovf);
-    fsqrt FSQRT(src1, fsqrt_result, fsqrt_ovf);
+    fadd FADD(src1, src2, fadd_result);
+    fsub FSUB(clk, src1, src2, fsub_result);
+    fmul FMUL(clk, src1, src2, fmul_result);
+    fdiv FDIV(clk, src1, src2, fdiv_result);
+    fsqrt FSQRT(clk, src1, fsqrt_result);
     
     feq FEQ(src1, src2, feq_result);
     flt FLT(src1, src2, flt_result);
-    fle FLE(src1, fle_result);
+    fle FLE(src1, src2, fle_result);
     
     fsgnj FSGNJ(src1, src2, fsgnj_result);
     fsgnjn FSGNJN(src1, src2, fsgnjn_result);
@@ -183,13 +194,9 @@ module fpu(
                     inst.feq ? {31'b0, feq_result} :
                     inst.flt ? {31'b0, flt_result} :
                     inst.fle ? {31'b0, fle_result} :
+                    inst.fcvt_s_w ? itof_result :
+                    inst.fcvt_w_s ? ftoi_result :
                     32'd0;
-    assign ovf = inst.fadd ? fadd_ovf :
-                 inst.fsub ? fsub_ovf :
-                 inst.fmul ? fmul_ovf :
-                 inst.fdiv ? fdiv_ovf :
-                 1'b0;
-
 endmodule
   
 
@@ -284,7 +291,7 @@ module decoder
     assign inst.fsub  = (opcode == 7'b1010011) && (funct7 == 7'b0000100);
     assign inst.fmul  = (opcode == 7'b1010011) && (funct7 == 7'b0001000);
     assign inst.fdiv  = (opcode == 7'b1010011) && (funct7 == 7'b0001100);
-    assign inst.fsqrt = (opcode == 7'b1010011) && (funct7 == 7'b01011100);
+    assign inst.fsqrt = (opcode == 7'b1010011) && (funct7 == 7'b0101100);
     assign inst.feq  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b010);
     assign inst.flt  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b001);
     assign inst.fle  = (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b000);
@@ -329,7 +336,7 @@ module decoder
     assign ctrl.btype.jalr = inst.jalr;
     assign ctrl.branched = 1'b0;
     
-    assign ctrl.wait_cycle = inst.fadd | inst.fsub | inst.fmul ? 3'd2 :
+    assign ctrl.wait_cycle = inst.fsub | inst.fmul ? 3'd2 :
                              inst.fdiv ? 3'd4 :
                              3'd0;
     
@@ -442,6 +449,9 @@ module decode_stage(
     assign branch_ctrl.btype = decoded_ctrl.btype;
     assign branch_ctrl.rd = decoded_ctrl.rd;
     assign branch_ctrl.inval = decoded_ctrl.inval;
+    assign branch_ctrl.wait_cycle = decoded_ctrl.wait_cycle;
+    assign branch_ctrl.frd = decoded_ctrl.frd;
+    assign branch_ctrl.frs = decoded_ctrl.frs;
     
     assign ctrl = ((freezed | freeze) & flushed) | flush | stall ? 0 : branch_ctrl;
 
@@ -474,12 +484,14 @@ module exec_stage_result_mux(
     input wire [31:0] imm_result,
     input wire [31:0] branch_result,
     input wire [31:0] auipc_result,
+    input wire [31:0] ftoi_result,
     input instif inst,
     output wire [31:0] result
     );
     assign result = inst.lui ? imm_result :
                     inst.auipc ? auipc_result :
                     inst.jal | inst.jalr ? branch_result :
+                    inst.fcvt_w_s ? ftoi_result :
                     alu_result;
 endmodule
 
@@ -535,16 +547,28 @@ module exec_stage(
         .inst
     );
     
-    wire fovf;
+    wire [31:0]fpu_result;
     fpu FPU(
         clk,
         rstn,
         fsrc1,
         fsrc2,
-        fresult,
-        fovf,
+        fpu_result,
         inst
     );
+
+    wire [31:0]itof_result;
+    wire [31:0]ftoi_result;
+    translator TRANSLATOR(
+        clk,
+        rstn,
+        src1,
+        fsrc1,
+        itof_result,
+        ftoi_result
+    );
+
+    assign fresult = inst.fcvt_s_w ? itof_result : fpu_result;
     
     assign branch_addr = alu_result;
     exec_stage_result_mux MUX(
@@ -553,16 +577,16 @@ module exec_stage(
         .branch_result(pc + 32'd4),
         .auipc_result(pc + immediate),
         .inst,
+        .ftoi_result,
         .result(exec_result)
     );
-    // TODO: is int / float?
     assign store_data = inst.fsw | inst.flw ? _fsrc2 : _src2;
 
     reg stall;
     reg [2:0] wait_cycle;
     assign multi_cycle_freeze = 
-        (stall == 1'b0) && (wait_cycle != 3'b0) ? 1'b1 :
-        ctrl.wait_cycle != 3'b0 ? 1'b1 :
+        (stall == 1'b0) && (ctrl.wait_cycle != 3'b0) ? 1'b1 :
+        wait_cycle != 3'b0 ? 1'b1 :
         1'b0;
         
     always @(posedge clk) begin
@@ -804,6 +828,8 @@ module core(
     wire [31:0] ex_branch_addr;
     wire [31:0] ex_store_data;
     exec_stage ES(
+        .clk,
+        .rstn,
         .inst(id_ex_inst),
         .int_src1(id_ex_int_src1),
         .int_src2(id_ex_int_src2),

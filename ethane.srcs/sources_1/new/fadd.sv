@@ -1,7 +1,6 @@
 `default_nettype none
 
 module fadd(
-		input wire clk,
 		input wire [31:0] x1,
 		input wire [31:0] x2,
 		output reg [31:0] y);

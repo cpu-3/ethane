@@ -48,14 +48,14 @@ module mem_inv(
 endmodule
 
 module fdiv(
-    wire [31:0] x,
-    wire [31:0] y,
-    wire [31:0] z,
-    wire ovf
+    input wire clk,
+    input wire [31:0] x,
+    input wire [31:0] y,
+    output wire [31:0] z
 );
   wire [31:0] yinv;
-  finv u1(y,yinv);
-  fmul u2(x,yinv,z, ovf);
+  finv u1(clk, y,yinv);
+  fmul u2(clk, x,yinv,z);
 endmodule
 
 

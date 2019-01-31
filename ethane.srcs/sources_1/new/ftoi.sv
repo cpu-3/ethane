@@ -1,7 +1,7 @@
 `default_nettype none
 
 module ftoi(
-		input wire clk,
+//		input wire clk,
 		input wire [31:0] x,
 		output reg [31:0] y);
 
@@ -22,11 +22,14 @@ module ftoi(
 	assign mabs = ma >> shift[4:0];
 	assign my = (s)? (~mabs) + 1: mabs;
 	assign nonzero = e > 126;
-	
+
+    assign y = (nonzero)? my: 31'b0;
+    /*
 	always@(posedge clk) begin
 	//stage 1
 		y <= (nonzero)? my: 31'b0;
 	end
+    */
 
 endmodule
 
