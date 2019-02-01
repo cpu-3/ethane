@@ -24,7 +24,8 @@ module register
     ( 
         input wire clk,
         input wire rstn,
-        
+        input wire freeze,
+       
         input wire [4:0] rd_idx,
         input wire rd_enable,
         input wire [31:0] data,
@@ -50,7 +51,7 @@ module register
             always @(posedge clk) begin
                 if (~rstn) begin
                     iregs[i] <= 32'd0;
-                end else begin 
+                end else if (~freeze) begin 
                     if (rd_enable && i == rd_idx) begin
                         iregs[i] <= data;
                     end
@@ -65,6 +66,7 @@ module fregister
     (
         input wire clk,
         input wire rstn,
+        input wire freeze,
         
         input wire [4:0] rd_idx,
         input wire rd_enable,
@@ -88,7 +90,7 @@ module fregister
             always @(posedge clk) begin
                 if (~rstn) begin
                     fregs[i] <= 32'd0;
-                end else begin 
+                end else if (~freeze) begin 
                     if (rd_enable && i == rd_idx) begin
                         fregs[i] <= data;
                     end
