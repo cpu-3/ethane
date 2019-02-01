@@ -92,7 +92,8 @@ typedef struct packed{
     logic [4:0] rd;
     logic [2:0] wait_cycle;
     logic frd;
-    logic frs;
+    logic frs1;
+    logic frs2;
     logic inval;
     /*
     TODO: make hazard/stall more precise 
@@ -205,7 +206,8 @@ module decoder
  (
      output wire [4:0] rs1,
      output wire [4:0] rs2,
-     output wire frs,
+     output wire frs1,
+     output wire frs2,
      output wire [31:0] imm,
 
      instif inst,
@@ -239,7 +241,8 @@ module decoder
     assign rs1 = (r_type | i_type | s_type | b_type) ? inst_code[19:15] : 5'd0;
     assign rs2 = (r_type | s_type | b_type) ? inst_code[24:20] : 5'd0;
     // TODO: check whether this is true..
-    assign frs = (opcode[6:4] == 3'b101) && (funct7 != 7'b1100000);
+    assign frs1 = (opcode[6:4] == 3'b101) && (funct7 != 7'b1101000);
+    assign frs2 = ((opcode[6:4] == 3'b101) && (funct7 != 7'b1101000)) || (opcode == 7'b0100111);
 
     assign imm = i_type ? {{21{inst_code[31]}}, inst_code[30:20]} :
          s_type ? {{21{inst_code[31]}}, inst_code[30:25], inst_code[11:7]} :
@@ -352,7 +355,8 @@ module decoder
              
     // TODO: check
     assign ctrl.frd = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fcvt_s_w;
-    assign ctrl.frs = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw | inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s;
+    assign ctrl.frs1 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | /*inst.fsw |*/ inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s;
+    assign ctrl.frs2 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw |     inst.fsgnj | inst.fsgnjn;
 
     // TODO: ctrl.frs == frs??
 endmodule
@@ -416,7 +420,8 @@ module decode_stage(
     output instif ist,
     output wire [4:0] rs1,
     output wire [4:0] rs2,
-    output wire frs,
+    output wire frs1,
+    output wire frs2,
     output wire [31:0] imm,
     (* mark_debug = "true" *) input wire stall,
     (* mark_debug = "true" *) input wire flush,
@@ -441,7 +446,8 @@ module decode_stage(
     decoder D(
         .rs1,
         .rs2,
-        .frs,
+        .frs1,
+        .frs2,
         .imm,
         .inst(ist),
         .inst_code(inst),
@@ -459,7 +465,8 @@ module decode_stage(
     assign branch_ctrl.inval = decoded_ctrl.inval;
     assign branch_ctrl.wait_cycle = decoded_ctrl.wait_cycle;
     assign branch_ctrl.frd = decoded_ctrl.frd;
-    assign branch_ctrl.frs = decoded_ctrl.frs;
+    assign branch_ctrl.frs1 = decoded_ctrl.frs1;
+    assign branch_ctrl.frs2 = decoded_ctrl.frs2;
     
     assign ctrl = ((freezed | freeze) & flushed) | flush | stall ? 0 : branch_ctrl;
 
@@ -634,7 +641,8 @@ module forwarding_unit(
     input controlif mem_wb_ctrl,
     input wire [4:0]id_ex_reg_rs1,
     input wire [4:0]id_ex_reg_rs2,
-    input wire id_ex_reg_frs,
+    input wire id_ex_reg_frs1,
+    input wire id_ex_reg_frs2,
     output wire [1:0]forwarded_src1_ctrl,
     output wire [1:0]forwarded_src2_ctrl,
     output wire [1:0]forwarded_fsrc1_ctrl,
@@ -646,8 +654,10 @@ module forwarding_unit(
     wire mem_wb_int_rd   = mem_wb_ctrl.frd == 1'b0;
     wire mem_wb_float_rd = mem_wb_ctrl.frd;
 
-    wire int_rs = id_ex_reg_frs == 1'b0;
-    wire float_rs = id_ex_reg_frs;
+    wire int_rs1 = id_ex_reg_frs1 == 1'b0;
+    wire float_rs1 = id_ex_reg_frs1;
+    wire int_rs2 = id_ex_reg_frs2 == 1'b0;
+    wire float_rs2 = id_ex_reg_frs2;
 
 
     /* TODO divide assignment of 1 bit/ 0bit */
@@ -655,41 +665,41 @@ module forwarding_unit(
                                  (ex_mem_ctrl.rd != 5'd0) &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs1) &
                                  ex_mem_int_rd &
-                                 int_rs ? 2'b10 :
+                                 int_rs1 ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd != 5'd0) &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs1) &
                                  mem_wb_int_rd &
-                                 int_rs ? 2'b01 : 2'b00;
+                                 int_rs1 ? 2'b01 : 2'b00;
 
     assign forwarded_src2_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd != 5'd0) &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs2) &
                                  ex_mem_int_rd &
-                                 int_rs ? 2'b10 :
+                                 int_rs2 ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd != 5'd0) &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs2) &
                                  mem_wb_int_rd &
-                                 int_rs ? 2'b01 : 2'b00;
+                                 int_rs2 ? 2'b01 : 2'b00;
 
     assign forwarded_fsrc1_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs1) &
                                  ex_mem_float_rd &
-                                 float_rs ? 2'b10 :
+                                 float_rs1 ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs1) &
                                  mem_wb_float_rd &
-                                 float_rs ? 2'b01 : 2'b00;
+                                 float_rs1 ? 2'b01 : 2'b00;
 
     assign forwarded_fsrc2_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs2) &
                                  ex_mem_float_rd &
-                                 float_rs ? 2'b10 :
+                                 float_rs2 ? 2'b10 :
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs2) &
                                  mem_wb_float_rd &
-                                 float_rs ? 2'b01 : 2'b00;
+                                 float_rs2 ? 2'b01 : 2'b00;
 
 endmodule
 
@@ -698,13 +708,14 @@ module hazard_unit(
     //input wire [4:0]id_ex_reg_rd,
     input wire [4:0]decoded_rs1,
     input wire [4:0]decoded_rs2,
-    input wire decoded_frs,
+    input wire decoded_frs1,
+    input wire decoded_frs2,
     output wire stall
     );
     assign stall = id_ex_ctrl.mem_read & 
-                   ((id_ex_ctrl.rd == decoded_rs1)  |
-                    (id_ex_ctrl.rd == decoded_rs2)) & 
-                    (id_ex_ctrl.frd == decoded_frs); 
+                   (((id_ex_ctrl.rd == decoded_rs1) & (id_ex_ctrl.frd == decoded_frs1))
+                     |
+                   ((id_ex_ctrl.rd == decoded_rs2) & (id_ex_ctrl.frd == decoded_frs2)));
 endmodule
 
 module write_stage(
@@ -764,7 +775,8 @@ module core(
     assign id_ex_mem_read = id_ex_inst.lb | id_ex_inst.lh | id_ex_inst.lw | id_ex_inst.flw;
     reg [4:0]id_ex_register_rs2; // id_ex_register_rt[6] -> is float or int register?
     reg [4:0]id_ex_register_rs1;
-    reg id_ex_register_frs;
+    reg id_ex_register_frs1;
+    reg id_ex_register_frs2;
     reg [31:0] id_ex_immediate;
     reg [31:0] id_ex_pc;
     
@@ -816,7 +828,8 @@ module core(
     // decode stage components   
     wire [4:0] decoded_rs1;
     wire [4:0] decoded_rs2;
-    wire decoded_frs;
+    wire decoded_frs1;
+    wire decoded_frs2;
     wire [31:0] decoded_immediate;
     instif decoded_inst;
     controlif decoded_ctrl;
@@ -835,7 +848,8 @@ module core(
         .ist(decoded_inst),
         .rs1(decoded_rs1),
         .rs2(decoded_rs2),
-        .frs(decoded_frs),
+        .frs1(decoded_frs1),
+        .frs2(decoded_frs2),
         .ctrl(decoded_ctrl),
         .imm(decoded_immediate),
         .stall,
@@ -874,7 +888,8 @@ module core(
         .id_ex_ctrl,
         .decoded_rs1,
         .decoded_rs2,
-        .decoded_frs,
+        .decoded_frs1,
+        .decoded_frs2,
         .stall
     );
     
@@ -888,7 +903,8 @@ module core(
         .mem_wb_ctrl,
         .id_ex_reg_rs1(id_ex_register_rs1),
         .id_ex_reg_rs2(id_ex_register_rs2),
-        .id_ex_reg_frs(id_ex_register_frs),
+        .id_ex_reg_frs1(id_ex_register_frs1),
+        .id_ex_reg_frs2(id_ex_register_frs2),
         .forwarded_src1_ctrl,
         .forwarded_src2_ctrl,
         .forwarded_fsrc1_ctrl,
@@ -1003,7 +1019,8 @@ module core(
             // decode stage
             id_ex_register_rs1 <= decoded_rs1;
             id_ex_register_rs2 <= decoded_rs2;
-            id_ex_register_frs <= decoded_frs;
+            id_ex_register_frs1 <= decoded_frs1;
+            id_ex_register_frs2 <= decoded_frs2;
             id_ex_int_src1 <= decode_stage_int_src1;
             id_ex_int_src2 <= decode_stage_int_src2;
             id_ex_float_src1 <= decode_stage_float_src1;
