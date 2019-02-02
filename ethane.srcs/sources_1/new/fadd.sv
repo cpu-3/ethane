@@ -4,7 +4,6 @@ module fadd(
 		input wire [31:0] x1,
 		input wire [31:0] x2,
 		output reg [31:0] y);
-
 	wire s1;
 	wire s2;
 	wire [7:0] e1;
@@ -94,7 +93,8 @@ module fadd(
 	wire signed [8:0] ey;
 	assign ey = {1'b0,es} - {4'b0,ketaoti} + 1 + &(my[25:2]);
 
-	assign y = {ss,ey[7:0],my[25:3]+my[2]}; //round: 4 sya 5 nyu
+	assign y = (|x1 == 0) & (|x2 == 0) ? 32'd0 :
+	           {ss,ey[7:0],my[25:3]+my[2]}; //round: 4 sya 5 nyu
 
 endmodule
 

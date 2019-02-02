@@ -144,6 +144,30 @@ module translator(
     ftoi FTOI(float_src, int_result);
 endmodule
 
+module comparator (
+    input wire clk,
+    input wire rstn,
+    input wire [31:0] float_src1,
+    input wire [31:0] float_src2,
+    input instif inst,
+    output wire [31:0] comp_result
+    );
+    wire feq_result;
+    wire flt_result;
+    wire fle_result;
+   
+    feq FEQ(float_src1, float_src2, feq_result);
+    flt FLT(float_src1, float_src2, flt_result);
+    fle FLE(float_src1, float_src2, fle_result);
+    
+    assign comp_result =
+        inst.feq ? {31'b0, feq_result} :
+        inst.flt ? {31'b0, flt_result} :
+        inst.fle ? {31'b0, fle_result} : 32'd0;
+
+endmodule
+
+
 module fpu(
     input wire clk,
     input wire rstn,
@@ -168,19 +192,13 @@ module fpu(
     wire [31:0]itof_result;
     wire [31:0]ftoi_result;
     
-    wire feq_result;
-    wire flt_result;
-    wire fle_result;
     
     fadd FADD(src1, src2, fadd_result);
     fsub FSUB(clk, src1, src2, fsub_result);
     fmul FMUL(clk, src1, src2, fmul_result);
     fdiv FDIV(clk, src1, src2, fdiv_result);
     fsqrt FSQRT(clk, src1, fsqrt_result);
-    
-    feq FEQ(src1, src2, feq_result);
-    flt FLT(src1, src2, flt_result);
-    fle FLE(src1, src2, fle_result);
+
     
     fsgnj FSGNJ(src1, src2, fsgnj_result);
     fsgnjn FSGNJN(src1, src2, fsgnjn_result);
@@ -192,9 +210,6 @@ module fpu(
                     inst.fsqrt ? fsqrt_result :
                     inst.fsgnj ? fsgnj_result :
                     inst.fsgnjn ? fsgnjn_result :
-                    inst.feq ? {31'b0, feq_result} :
-                    inst.flt ? {31'b0, flt_result} :
-                    inst.fle ? {31'b0, fle_result} :
                     inst.fcvt_s_w ? itof_result :
                     inst.fcvt_w_s ? ftoi_result :
                     32'd0;
@@ -355,8 +370,10 @@ module decoder
              
     // TODO: check
     assign ctrl.frd = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fcvt_s_w;
-    assign ctrl.frs1 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | /*inst.fsw |*/ inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s;
-    assign ctrl.frs2 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw |     inst.fsgnj | inst.fsgnjn;
+    assign ctrl.frs1 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | /*inst.fsw |*/ inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s |
+                     inst.feq | inst.flt | inst.fle;
+    assign ctrl.frs2 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw |     inst.fsgnj | inst.fsgnjn |
+                     inst.feq | inst.flt | inst.fle;
 
     // TODO: ctrl.frs == frs??
 endmodule
@@ -373,6 +390,8 @@ module fetch_stage(
     input wire [31:0]mem_instr,
     input wire [31:0]branch_pc,
     input wire branch_control,
+    input wire [33:0] inst_count,
+    input wire [33:0] inst_count_next,
     output wire [31:0]instr,
     output wire [31:0] pc_next
     );
@@ -392,7 +411,12 @@ module fetch_stage(
     assign pc_next = branch_control ? branch_pc :
                      stall ? pc : 
                      pc + 32'd4;
-    
+                     
+    assign inst_count_next = 
+        branch_control ? inst_count - 34'd1 :
+        stall | freeze ? inst_count :
+        inst_count + 34'd1;
+   
     always @(posedge clk) begin
         if (~rstn) begin
             stalled <= 1'b0;
@@ -423,9 +447,9 @@ module decode_stage(
     output wire frs1,
     output wire frs2,
     output wire [31:0] imm,
-    (* mark_debug = "true" *) input wire stall,
-    (* mark_debug = "true" *) input wire flush,
-    (* mark_debug = "true" *) input wire freeze,
+    input wire stall,
+    input wire flush,
+    input wire freeze,
     output controlif ctrl
     );
     reg flushed;
@@ -476,12 +500,14 @@ endmodule
 module branch_unit(
         input wire [31:0] alu_result,
         input wire [31:0] pc,
+        input wire stall,
         input wire [31:0] imm,
         input controlif ctrl,
         output wire [31:0] next_pc,
         output wire flush
     );
     wire[31:0] pc_imm = pc + imm;
+    // TODO 
     wire do_branch = ctrl.btype.branch & (alu_result == 32'd1);
     assign next_pc = do_branch ? pc_imm :
                      ctrl.btype.jalr ? alu_result :
@@ -500,6 +526,7 @@ module exec_stage_result_mux(
     input wire [31:0] branch_result,
     input wire [31:0] auipc_result,
     input wire [31:0] ftoi_result,
+    input wire [31:0] comp_result,
     input instif inst,
     output wire [31:0] result
     );
@@ -507,6 +534,7 @@ module exec_stage_result_mux(
                     inst.auipc ? auipc_result :
                     inst.jal | inst.jalr ? branch_result :
                     inst.fcvt_w_s ? ftoi_result :
+                    inst.fle | inst.feq | inst.flt ? comp_result :
                     alu_result;
 endmodule
 
@@ -593,6 +621,15 @@ module exec_stage(
         itof_result,
         ftoi_result
     );
+    wire [31:0] comp_result;
+    comparator COMPARATOR(
+        .clk,
+        .rstn,
+        .inst,
+        .float_src1(fsrc1),
+        .float_src2(fsrc2),
+        .comp_result
+    );
 
     assign fresult = inst.fcvt_s_w ? itof_result : fpu_result;
     
@@ -604,6 +641,7 @@ module exec_stage(
         .auipc_result(pc + immediate),
         .inst,
         .ftoi_result,
+        .comp_result,
         .result(exec_result)
     );
     assign store_data = inst.fsw ? _fsrc2 : _src2;
@@ -735,6 +773,37 @@ module write_stage(
     assign reg_write = ctrl.reg_write & (ctrl.frd == 1'b0);
     assign freg_write = ctrl.reg_write & ctrl.frd;
 endmodule
+module memory(
+    input wire clk,
+    input wire rstn,
+    input wire freeze,
+    
+    output wire [31:0] port_data_mem_addr,
+    output wire [3:0] port_data_mem_data_we,
+    output wire [31:0] port_data_mem_din,
+    input wire [31:0] port_data_mem_dout,
+    
+    input wire [31:0] ex_mem_exec_result,
+    input controlif ex_mem_ctrl,
+    input wire [31:0] ex_mem_store_data,
+    output wire [31:0] mem_load_result
+    );
+    reg [31:0] bef_addr;
+
+    assign port_data_mem_addr = freeze ? bef_addr : ex_mem_exec_result;
+    assign port_data_mem_data_we = freeze ? 4'd0 : ex_mem_ctrl.mem_write;
+    assign port_data_mem_din = ex_mem_store_data;
+    assign mem_load_result = port_data_mem_dout;
+    
+
+    always @(posedge clk) begin
+        if (~rstn) begin
+            bef_addr <= 32'd0;
+        end else begin
+            bef_addr <= port_data_mem_addr;
+        end
+    end
+endmodule
 
 module core(
     input wire clk,
@@ -811,6 +880,8 @@ module core(
     wire branch_control;
     wire [31:0]branch_pc;
     wire fetch_stage_stall = stall | freeze;
+    wire [34:0] inst_count_next;
+
     fetch_stage FS(
                 .clk,
                 .rstn,
@@ -819,6 +890,8 @@ module core(
                 .stall,
                 .freeze,
                 .mem_instr,
+                .inst_count,
+                .inst_count_next,
                 .instr,
                 .branch_control,
                 .branch_pc,
@@ -957,10 +1030,21 @@ module core(
 
     // memory stage
     wire [31:0] mem_load_result;
-    assign port_data_mem_addr = ex_mem_exec_result;
-    assign port_data_mem_data_we = freeze ? 4'd0 : ex_mem_ctrl.mem_write;
-    assign port_data_mem_din = ex_mem_store_data;
-    assign mem_load_result = port_data_mem_dout;
+    memory Memory(
+        .clk,
+        .rstn,
+        .freeze,
+        
+        .port_data_mem_addr,
+        .port_data_mem_data_we,
+        .port_data_mem_din,
+        .port_data_mem_dout,
+        
+        .ex_mem_exec_result,
+        .ex_mem_ctrl,
+        .ex_mem_store_data,
+        .mem_load_result
+    );
     
     // write stage
     write_stage WS(
@@ -978,6 +1062,8 @@ module core(
     reg moving;
     
     wire inval = mem_wb_ctrl.inval && (pc > 16);
+    
+    reg [33:0] inst_count;
     
     always @(posedge clk) begin
         if (~rstn) begin
@@ -1010,6 +1096,8 @@ module core(
             ex_mem_ctrl <= 0;
             mem_wb_ctrl <= 0;
             moving <= 1'b1;
+            
+            inst_count <= 34'd0;
         // when freeze is true, registers are not updated.
         end else if (~freeze && moving) begin
             // fetch stage
@@ -1043,6 +1131,8 @@ module core(
             mem_wb_float_exec_result <= ex_mem_float_exec_result;
             
             moving <= ~inval;
+            
+            inst_count <= inst_count_next;
         end
     end 
     

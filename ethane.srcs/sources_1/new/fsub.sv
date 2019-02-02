@@ -5,7 +5,7 @@ module fsub(
 		input wire [31:0] x1,
 		input wire [31:0] x2,
 		output reg [31:0] y);
-
+    reg zero;
 //stage 0
 	wire s1;
 	wire s2;
@@ -15,6 +15,7 @@ module fsub(
 	wire [22:0] m2;
 	assign {s1,e1,m1} = x1;
 	assign {s2,e2,m2} = x2;
+	
 
 //stage 1
 	wire [8:0] ediff;
@@ -84,6 +85,8 @@ module fsub(
 	assign ey = {1'b0,es} - {4'b0,ketaoti} + 1 + &(my[25:2]);
 
 	always@(posedge clk) begin
+	  zero <= (|x1 == 0) & (|x2 == 0);
+
 	//stage 1
 		if (beq) begin
 			ms <= (|e1)? {2'b01,m1}: {2'b00,m1};
@@ -100,7 +103,7 @@ module fsub(
 			mia <= (|e1)? {2'b01,m1,2'b0} >> shift: {2'b0,m2,2'b0} >> shift;
 		end
 	//stage 2
-		y <= {ss,ey[7:0],my[25:3]+my[2]}; //round: 4 sya 5 nyu
+		y <= zero ? 32'd0 : {ss,ey[7:0],my[25:3]+my[2]}; //round: 4 sya 5 nyu
 	end
 
 endmodule
