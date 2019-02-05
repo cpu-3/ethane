@@ -193,7 +193,7 @@ module fpu(
     wire [31:0]ftoi_result;
     
     
-    fadd FADD(src1, src2, fadd_result);
+    fadd FADD(clk, src1, src2, fadd_result);
     fsub FSUB(clk, src1, src2, fsub_result);
     fmul FMUL(clk, src1, src2, fmul_result);
     fdiv FDIV(clk, src1, src2, fdiv_result);
@@ -358,7 +358,8 @@ module decoder
     assign ctrl.btype.jalr = inst.jalr;
     assign ctrl.branched = 1'b0;
     
-    assign ctrl.wait_cycle = inst.fsub | inst.fmul | inst.fsqrt ? 3'd2 :
+    assign ctrl.wait_cycle = inst.fadd ? 3'd1 :
+                             inst.fsub | inst.fmul | inst.fsqrt ? 3'd2 :
                              inst.fdiv ? 3'd4 :
                              3'd0;
     
@@ -390,8 +391,8 @@ module fetch_stage(
     input wire [31:0]mem_instr,
     input wire [31:0]branch_pc,
     input wire branch_control,
-    input wire [33:0] inst_count,
-    input wire [33:0] inst_count_next,
+    input wire [31:0] inst_count,
+    input wire [31:0] inst_count_next,
     output wire [31:0]instr,
     output wire [31:0] pc_next
     );
@@ -413,9 +414,9 @@ module fetch_stage(
                      pc + 32'd4;
                      
     assign inst_count_next = 
-        branch_control ? inst_count - 34'd1 :
+        branch_control ? inst_count - 32'd1 :
         stall | freeze ? inst_count :
-        inst_count + 34'd1;
+        inst_count + 32'd1;
    
     always @(posedge clk) begin
         if (~rstn) begin
@@ -880,7 +881,7 @@ module core(
     wire branch_control;
     wire [31:0]branch_pc;
     wire fetch_stage_stall = stall | freeze;
-    wire [34:0] inst_count_next;
+    wire [31:0] inst_count_next;
 
     fetch_stage FS(
                 .clk,
@@ -1063,7 +1064,7 @@ module core(
     
     wire inval = mem_wb_ctrl.inval && (pc > 16);
     
-    reg [33:0] inst_count;
+    (* dont_touch = "true"*) reg [31:0] inst_count;
     
     always @(posedge clk) begin
         if (~rstn) begin
@@ -1097,12 +1098,12 @@ module core(
             mem_wb_ctrl <= 0;
             moving <= 1'b1;
             
-            inst_count <= 34'd0;
+            inst_count <= 32'd0;
         // when freeze is true, registers are not updated.
         end else if (~freeze && moving) begin
             // fetch stage
             pc <= pc_next;
-            fe_id_pc <= pc;
+            fe_id_pc <= stall ? fe_id_pc : pc;
             
             // decode stage
             id_ex_register_rs1 <= decoded_rs1;

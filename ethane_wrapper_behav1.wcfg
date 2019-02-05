@@ -16,46 +16,29 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="102824349fs"></ZoomEndTime>
-      <Cursor1Time time="0fs"></Cursor1Time>
+      <ZoomStartTime time="53756693218fs"></ZoomStartTime>
+      <ZoomEndTime time="53866533915fs"></ZoomEndTime>
+      <Cursor1Time time="53775000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="232"></NameColumnWidth>
-      <ValueColumnWidth column_width="142"></ValueColumnWidth>
+      <ValueColumnWidth column_width="118"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="19" />
+   <WVObjectSize size="23" />
    <wave_markers>
-      <marker label="" time="3149187000" />
+      <marker label="" time="53775000000" />
    </wave_markers>
-   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/clk">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/rstn">
-      <obj_property name="ElementShortName">rstn</obj_property>
-      <obj_property name="ObjectShortName">rstn</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/moving">
-      <obj_property name="ElementShortName">moving</obj_property>
-      <obj_property name="ObjectShortName">moving</obj_property>
-   </wvobject>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/inst_count">
-      <obj_property name="ElementShortName">inst_count[33:0]</obj_property>
-      <obj_property name="ObjectShortName">inst_count[33:0]</obj_property>
+      <obj_property name="ElementShortName">inst_count[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_count[31:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fetch_pc">
-      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FS/instr">
-      <obj_property name="ElementShortName">instr[31:0]</obj_property>
-      <obj_property name="ObjectShortName">instr[31:0]</obj_property>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/freeze">
+      <obj_property name="ElementShortName">freeze</obj_property>
+      <obj_property name="ObjectShortName">freeze</obj_property>
    </wvobject>
    <wvobject type="group" fp_name="group860">
       <obj_property name="label">Mem</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/DS/freezed">
          <obj_property name="ElementShortName">freezed</obj_property>
          <obj_property name="ObjectShortName">freezed</obj_property>
@@ -85,13 +68,10 @@
       <obj_property name="radix_fractionWidth">24</obj_property>
       <obj_property name="radix_otherWidth">8</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ex_mem_store_data">
-      <obj_property name="ElementShortName">ex_mem_store_data[31:0]</obj_property>
-      <obj_property name="ObjectShortName">ex_mem_store_data[31:0]</obj_property>
-   </wvobject>
    <wvobject type="group" fp_name="group861">
       <obj_property name="label">DecodedAttrs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/freeze">
          <obj_property name="ElementShortName">freeze</obj_property>
          <obj_property name="ObjectShortName">freeze</obj_property>
@@ -125,10 +105,26 @@
       <obj_property name="ElementShortName">wait_cycle[2:0]</obj_property>
       <obj_property name="ObjectShortName">wait_cycle[2:0]</obj_property>
    </wvobject>
+   <wvobject type="group" fp_name="group226">
+      <obj_property name="label">ALU</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/ALU/src1">
+         <obj_property name="ElementShortName">src1[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src1[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/ALU/src2">
+         <obj_property name="ElementShortName">src2[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src2[31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/ALU/result">
+         <obj_property name="ElementShortName">result[31:0]</obj_property>
+         <obj_property name="ObjectShortName">result[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
    <wvobject type="group" fp_name="group859">
       <obj_property name="label">FPU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/FPU/src1">
          <obj_property name="ElementShortName">src1[31:0]</obj_property>
          <obj_property name="ObjectShortName">src1[31:0]</obj_property>
@@ -210,23 +206,13 @@
          <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs">
-      <obj_property name="ElementShortName">iregs[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">iregs[0:31][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs">
-      <obj_property name="ElementShortName">fregs[0:31][31:0]</obj_property>
-      <obj_property name="ObjectShortName">fregs[0:31][31:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
-   </wvobject>
    <wvobject type="group" fp_name="group224">
       <obj_property name="label">ForwardingUnit</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FORWARDING/ex_mem_ctrl">
          <obj_property name="ElementShortName">ex_mem_ctrl</obj_property>
          <obj_property name="ObjectShortName">ex_mem_ctrl</obj_property>
-         <obj_property name="isExpanded"></obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FORWARDING/mem_wb_ctrl">
          <obj_property name="ElementShortName">mem_wb_ctrl</obj_property>
@@ -273,26 +259,124 @@
          <obj_property name="ObjectShortName">mem_wb_float_rd</obj_property>
       </wvobject>
    </wvobject>
+   <wvobject type="group" fp_name="group230">
+      <obj_property name="label">Registers</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[1]">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[2]">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[3]">
+         <obj_property name="ElementShortName">[3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[4]">
+         <obj_property name="ElementShortName">[4][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[5]">
+         <obj_property name="ElementShortName">[5][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[6]">
+         <obj_property name="ElementShortName">[6][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[7]">
+         <obj_property name="ElementShortName">[7][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[8]">
+         <obj_property name="ElementShortName">[8][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[8][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[9]">
+         <obj_property name="ElementShortName">[9][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[9][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[10]">
+         <obj_property name="ElementShortName">[10][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[11]">
+         <obj_property name="ElementShortName">[11][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[11][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[12]">
+         <obj_property name="ElementShortName">[12][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[12][31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject type="group" fp_name="group243">
+      <obj_property name="label">FRegisters</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[0]">
+         <obj_property name="ElementShortName">[0][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[0][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[1]">
+         <obj_property name="ElementShortName">[1][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[1][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[2]">
+         <obj_property name="ElementShortName">[2][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[2][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[3]">
+         <obj_property name="ElementShortName">[3][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[4]">
+         <obj_property name="ElementShortName">[4][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[5]">
+         <obj_property name="ElementShortName">[5][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[6]">
+         <obj_property name="ElementShortName">[6][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[7]">
+         <obj_property name="ElementShortName">[7][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[8]">
+         <obj_property name="ElementShortName">[8][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[8][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[9]">
+         <obj_property name="ElementShortName">[9][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[9][31:0]</obj_property>
+      </wvobject>
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[10]">
+         <obj_property name="ElementShortName">[10][31:0]</obj_property>
+         <obj_property name="ObjectShortName">[10][31:0]</obj_property>
+      </wvobject>
+   </wvobject>
    <wvobject type="group" fp_name="group577">
       <obj_property name="label">ExecStage</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/float_src1">
-         <obj_property name="ElementShortName">float_src1[31:0]</obj_property>
-         <obj_property name="ObjectShortName">float_src1[31:0]</obj_property>
-         <obj_property name="Radix">REALRADIX</obj_property>
-         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
-         <obj_property name="radix_fractionWidth">24</obj_property>
-         <obj_property name="radix_otherWidth">8</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/float_src2">
-         <obj_property name="ElementShortName">float_src2[31:0]</obj_property>
-         <obj_property name="ObjectShortName">float_src2[31:0]</obj_property>
-         <obj_property name="Radix">REALRADIX</obj_property>
-         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
-         <obj_property name="radix_fractionWidth">24</obj_property>
-         <obj_property name="radix_otherWidth">8</obj_property>
-      </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/fresult">
          <obj_property name="ElementShortName">fresult[31:0]</obj_property>
          <obj_property name="ObjectShortName">fresult[31:0]</obj_property>
@@ -312,10 +396,6 @@
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/mem_forwarded">
          <obj_property name="ElementShortName">mem_forwarded[31:0]</obj_property>
          <obj_property name="ObjectShortName">mem_forwarded[31:0]</obj_property>
-         <obj_property name="Radix">REALRADIX</obj_property>
-         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
-         <obj_property name="radix_fractionWidth">24</obj_property>
-         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/inst">
          <obj_property name="ElementShortName">inst</obj_property>
@@ -323,25 +403,40 @@
          <obj_property name="isExpanded"></obj_property>
       </wvobject>
    </wvobject>
-   <wvobject type="group" fp_name="group637">
-      <obj_property name="label">HazardUnit</obj_property>
-      <obj_property name="DisplayName">label</obj_property>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/id_ex_ctrl">
-         <obj_property name="ElementShortName">id_ex_ctrl</obj_property>
-         <obj_property name="ObjectShortName">id_ex_ctrl</obj_property>
-         <obj_property name="isExpanded"></obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/decoded_rs1">
-         <obj_property name="ElementShortName">decoded_rs1[4:0]</obj_property>
-         <obj_property name="ObjectShortName">decoded_rs1[4:0]</obj_property>
-      </wvobject>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/decoded_rs2">
-         <obj_property name="ElementShortName">decoded_rs2[4:0]</obj_property>
-         <obj_property name="ObjectShortName">decoded_rs2[4:0]</obj_property>
-      </wvobject>
-      <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/stall">
-         <obj_property name="ElementShortName">stall</obj_property>
-         <obj_property name="ObjectShortName">stall</obj_property>
-      </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ES/branch_addr">
+      <obj_property name="ElementShortName">branch_addr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">branch_addr[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/ex_exec_result">
+      <obj_property name="ElementShortName">ex_exec_result[31:0]</obj_property>
+      <obj_property name="ObjectShortName">ex_exec_result[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/stall">
+      <obj_property name="ElementShortName">stall</obj_property>
+      <obj_property name="ObjectShortName">stall</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_inst">
+      <obj_property name="ElementShortName">id_ex_inst</obj_property>
+      <obj_property name="ObjectShortName">id_ex_inst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_inst">
+      <obj_property name="ElementShortName">decoded_inst</obj_property>
+      <obj_property name="ObjectShortName">decoded_inst</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_ctrl">
+      <obj_property name="ElementShortName">id_ex_ctrl</obj_property>
+      <obj_property name="ObjectShortName">id_ex_ctrl</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_pc">
+      <obj_property name="ElementShortName">id_ex_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_ex_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fe_id_pc">
+      <obj_property name="ElementShortName">fe_id_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fe_id_pc[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fetch_pc">
+      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
    </wvobject>
 </wave_config>

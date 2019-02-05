@@ -1,6 +1,7 @@
 `default_nettype none
 
 module fadd(
+        input wire clk,
 		input wire [31:0] x1,
 		input wire [31:0] x2,
 		output reg [31:0] y);
@@ -93,8 +94,11 @@ module fadd(
 	wire signed [8:0] ey;
 	assign ey = {1'b0,es} - {4'b0,ketaoti} + 1 + &(my[25:2]);
 
-	assign y = (|x1 == 0) & (|x2 == 0) ? 32'd0 :
+	wire [31:0] _y = (|x1 == 0) & (|x2 == 0) ? 32'd0 :
 	           {ss,ey[7:0],my[25:3]+my[2]}; //round: 4 sya 5 nyu
+	always@(posedge clk) begin
+	   y <= _y;
+	end
 
 endmodule
 

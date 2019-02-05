@@ -38,10 +38,12 @@ module register
     reg [31:0] iregs[32];
     
     // if write enabled and rd_idx == rs1_idx then returns the input
-    assign rs1 = rd_enable && (rd_idx == rs1_idx) ? data :
-                 rs1_idx == 5'd0 ? 32'd0 : iregs[rs1_idx];
-    assign rs2 = rd_enable && (rd_idx == rs2_idx) ? data :
-                 rs2_idx == 5'd0 ? 32'd0 : iregs[rs2_idx];
+    assign rs1 = rs1_idx == 5'd0 ? 32'd0 : 
+                 rd_enable && (rd_idx == rs1_idx) ? data :
+                 iregs[rs1_idx];
+    assign rs2 = rs2_idx == 5'd0 ? 32'd0 : 
+                 rd_enable && (rd_idx == rs2_idx) ? data :
+                 iregs[rs2_idx];
     
     assign iregs[0] = 32'd0;
     
