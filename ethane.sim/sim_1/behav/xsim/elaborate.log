@@ -64,7 +64,6 @@ Compiling module xil_defaultlib.alu
 Compiling module xil_defaultlib.fadd
 Compiling module xil_defaultlib.fsub
 Compiling module xil_defaultlib.fmul
-Compiling module xil_defaultlib.mem_inv
 Compiling module xil_defaultlib.finv
 Compiling module xil_defaultlib.fdiv
 Compiling module xil_defaultlib.fsqrt

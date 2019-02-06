@@ -2,8 +2,8 @@
 # Vivado v2017.4 (64-bit)
 # SW Build 2086221 on Fri Dec 15 20:54:30 MST 2017
 # IP Build 2085800 on Fri Dec 15 22:25:07 MST 2017
-# Start of session at: Tue Feb  5 12:30:13 2019
-# Process ID: 3056
+# Start of session at: Wed Feb  6 19:47:50 2019
+# Process ID: 23313
 # Current directory: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1
 # Command line: vivado -log design_1_wrapper.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source design_1_wrapper.tcl
 # Log file: /home/tansei/pro/vivado/ethane/ethane.runs/synth_1/design_1_wrapper.vds

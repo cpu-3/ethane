@@ -61,7 +61,7 @@ module itof(
 	wire [30:0] my;
 	assign my = ENCODER(mabs);
 	
-    assign y = (nonzero)? {s,my}: 31'b0;
+    assign y = (nonzero)? {s,my}: 32'b0;
     /*
 	always@(posedge clk) begin
 	//stage 1

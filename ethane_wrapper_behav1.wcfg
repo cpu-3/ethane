@@ -16,21 +16,25 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="53756693218fs"></ZoomStartTime>
-      <ZoomEndTime time="53866533915fs"></ZoomEndTime>
-      <Cursor1Time time="53775000000fs"></Cursor1Time>
+      <ZoomStartTime time="88250727fs"></ZoomStartTime>
+      <ZoomEndTime time="188746369fs"></ZoomEndTime>
+      <Cursor1Time time="121567000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="232"></NameColumnWidth>
-      <ValueColumnWidth column_width="118"></ValueColumnWidth>
+      <ValueColumnWidth column_width="110"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="18" />
    <wave_markers>
       <marker label="" time="53775000000" />
    </wave_markers>
    <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/inst_count">
       <obj_property name="ElementShortName">inst_count[31:0]</obj_property>
       <obj_property name="ObjectShortName">inst_count[31:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fetch_pc">
+      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
+      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
    </wvobject>
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/freeze">
       <obj_property name="ElementShortName">freeze</obj_property>
@@ -343,22 +347,42 @@
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[3]">
          <obj_property name="ElementShortName">[3][31:0]</obj_property>
          <obj_property name="ObjectShortName">[3][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[4]">
          <obj_property name="ElementShortName">[4][31:0]</obj_property>
          <obj_property name="ObjectShortName">[4][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[5]">
          <obj_property name="ElementShortName">[5][31:0]</obj_property>
          <obj_property name="ObjectShortName">[5][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[6]">
          <obj_property name="ElementShortName">[6][31:0]</obj_property>
          <obj_property name="ObjectShortName">[6][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[7]">
          <obj_property name="ElementShortName">[7][31:0]</obj_property>
          <obj_property name="ObjectShortName">[7][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[8]">
          <obj_property name="ElementShortName">[8][31:0]</obj_property>
@@ -414,29 +438,5 @@
    <wvobject type="logic" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/HAZARD/stall">
       <obj_property name="ElementShortName">stall</obj_property>
       <obj_property name="ObjectShortName">stall</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_inst">
-      <obj_property name="ElementShortName">id_ex_inst</obj_property>
-      <obj_property name="ObjectShortName">id_ex_inst</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/decoded_inst">
-      <obj_property name="ElementShortName">decoded_inst</obj_property>
-      <obj_property name="ObjectShortName">decoded_inst</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_ctrl">
-      <obj_property name="ElementShortName">id_ex_ctrl</obj_property>
-      <obj_property name="ObjectShortName">id_ex_ctrl</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/id_ex_pc">
-      <obj_property name="ElementShortName">id_ex_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">id_ex_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fe_id_pc">
-      <obj_property name="ElementShortName">fe_id_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fe_id_pc[31:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/fetch_pc">
-      <obj_property name="ElementShortName">fetch_pc[31:0]</obj_property>
-      <obj_property name="ObjectShortName">fetch_pc[31:0]</obj_property>
    </wvobject>
 </wave_config>

@@ -187,11 +187,7 @@ module fpu(
     wire [31:0]fsqrt_result;
     wire fsqrt_ovf;
     wire [31:0]fsgnj_result;
-    wire [31:0]fsgnjn_result;
-    
-    wire [31:0]itof_result;
-    wire [31:0]ftoi_result;
-    
+    wire [31:0]fsgnjn_result;    
     
     fadd FADD(clk, src1, src2, fadd_result);
     fsub FSUB(clk, src1, src2, fsub_result);
@@ -210,8 +206,6 @@ module fpu(
                     inst.fsqrt ? fsqrt_result :
                     inst.fsgnj ? fsgnj_result :
                     inst.fsgnjn ? fsgnjn_result :
-                    inst.fcvt_s_w ? itof_result :
-                    inst.fcvt_w_s ? ftoi_result :
                     32'd0;
 endmodule
   
@@ -358,8 +352,8 @@ module decoder
     assign ctrl.btype.jalr = inst.jalr;
     assign ctrl.branched = 1'b0;
     
-    assign ctrl.wait_cycle = inst.fadd ? 3'd1 :
-                             inst.fsub | inst.fmul | inst.fsqrt ? 3'd2 :
+    assign ctrl.wait_cycle = inst.fadd | inst.fsub |
+                             inst.fmul | inst.fsqrt ? 3'd2 :
                              inst.fdiv ? 3'd4 :
                              3'd0;
     

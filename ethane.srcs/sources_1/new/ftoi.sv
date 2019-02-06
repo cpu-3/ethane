@@ -23,7 +23,7 @@ module ftoi(
 	assign my = (s)? (~mabs) + 1: mabs;
 	assign nonzero = e > 126;
 
-    assign y = (nonzero)? my: 31'b0;
+    assign y = (nonzero)? my: 32'b0;
     /*
 	always@(posedge clk) begin
 	//stage 1

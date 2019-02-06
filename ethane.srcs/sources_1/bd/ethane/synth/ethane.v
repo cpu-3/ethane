@@ -1,7 +1,7 @@
 //Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.
 //--------------------------------------------------------------------------------
 //Tool Version: Vivado v.2017.4 (lin64) Build 2086221 Fri Dec 15 20:54:30 MST 2017
-//Date        : Tue Feb  5 16:09:34 2019
+//Date        : Wed Feb  6 18:20:59 2019
 //Host        : ispc2016 running 64-bit Ubuntu 16.04.4 LTS
 //Command     : generate_target ethane.bd
 //Design      : ethane
