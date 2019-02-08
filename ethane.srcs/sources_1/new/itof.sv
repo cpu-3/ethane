@@ -1,9 +1,9 @@
 `default_nettype none
 
 module itof(
-		//input wire clk,
+		input wire clk,
 		input wire [31:0] x,
-		output wire [31:0] y);
+		output reg [31:0] y);
 
 //stage 0
 	wire s;
@@ -62,12 +62,6 @@ module itof(
 	assign my = ENCODER(mabs);
 	
     assign y = (nonzero)? {s,my}: 32'b0;
-    /*
-	always@(posedge clk) begin
-	//stage 1
-		y <= (nonzero)? {s,my}: 31'b0;
-	end
-    */
 
 endmodule
 
