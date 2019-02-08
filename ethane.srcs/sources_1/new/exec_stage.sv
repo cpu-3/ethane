@@ -124,14 +124,15 @@ module exec_stage(
     input wire [31:0] float_mem_forwarded,
     input wire [31:0] write_forwarded,
     input wire [31:0] float_write_forwarded,
+    input wire [31:0] load_forwarded,
     input wire [31:0] immediate,
     input wire [31:0] int_src2,
     input wire [31:0] pc,
     input controlif ctrl,
-    input wire [1:0] forwarded_src1_ctrl,
-    input wire [1:0] forwarded_src2_ctrl,
-    input wire [1:0] forwarded_fsrc1_ctrl,
-    input wire [1:0] forwarded_fsrc2_ctrl,
+    input wire [2:0] forwarded_src1_ctrl,
+    input wire [2:0] forwarded_src2_ctrl,
+    input wire [2:0] forwarded_fsrc1_ctrl,
+    input wire [2:0] forwarded_fsrc2_ctrl,
     
     input wire [31:0] float_src1,
     input wire [31:0] float_src2,
@@ -148,25 +149,29 @@ module exec_stage(
     wire [31:0] fsrc1;
     wire [31:0] fsrc2;
     
-    assign src1 = forwarded_src1_ctrl == 2'b00 ? int_src1 :
-                  forwarded_src1_ctrl == 2'b10 ? mem_forwarded :
-                  write_forwarded;
+    assign src1 = forwarded_src1_ctrl == 3'b000 ? int_src1 :
+                  forwarded_src1_ctrl == 3'b010 ? mem_forwarded :
+                  forwarded_src1_ctrl == 3'b001 ? write_forwarded :
+                  load_forwarded;
                   
     wire [31:0] _src2 = 
-                  forwarded_src2_ctrl == 2'b00 ? int_src2 :
-                  forwarded_src2_ctrl == 2'b10 ? mem_forwarded :
-                  write_forwarded;
+                  forwarded_src2_ctrl == 3'b000 ? int_src2 :
+                  forwarded_src2_ctrl == 3'b010 ? mem_forwarded :
+                  forwarded_src2_ctrl == 3'b001 ? write_forwarded :
+                  load_forwarded;
                   
     assign src2 = ctrl.alu ? immediate : _src2;
    
     // floating point forwarding    
-    assign fsrc1 =  forwarded_fsrc1_ctrl == 2'b00 ? float_src1 :
-                    forwarded_fsrc1_ctrl == 2'b10 ? float_mem_forwarded :
-                    float_write_forwarded;
+    assign fsrc1 =  forwarded_fsrc1_ctrl == 3'b000 ? float_src1 :
+                    forwarded_fsrc1_ctrl == 3'b010 ? float_mem_forwarded :
+                    forwarded_fsrc1_ctrl == 3'b001 ? float_write_forwarded :
+                    load_forwarded;
     wire [31:0] _fsrc2 = 
-                         forwarded_fsrc2_ctrl == 2'b00 ? float_src2 :
-                         forwarded_fsrc2_ctrl == 2'b10 ? float_mem_forwarded :
-                         float_write_forwarded;
+                         forwarded_fsrc2_ctrl == 3'b000 ? float_src2 :
+                         forwarded_fsrc2_ctrl == 3'b010 ? float_mem_forwarded :
+                         forwarded_fsrc2_ctrl == 3'b001 ? float_write_forwarded :
+                         load_forwarded;
         ;
     assign fsrc2 = _fsrc2;
      

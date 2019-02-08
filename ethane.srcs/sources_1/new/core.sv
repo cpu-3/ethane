@@ -172,20 +172,24 @@ endmodule
 module forwarding_unit(
     input controlif ex_mem_ctrl,
     input controlif mem_wb_ctrl,
+    input controlif mem2_wb_ctrl,
     input wire [4:0]id_ex_reg_rs1,
     input wire [4:0]id_ex_reg_rs2,
     input wire id_ex_reg_frs1,
     input wire id_ex_reg_frs2,
-    output wire [1:0]forwarded_src1_ctrl,
-    output wire [1:0]forwarded_src2_ctrl,
-    output wire [1:0]forwarded_fsrc1_ctrl,
-    output wire [1:0]forwarded_fsrc2_ctrl
+    output wire [2:0]forwarded_src1_ctrl,
+    output wire [2:0]forwarded_src2_ctrl,
+    output wire [2:0]forwarded_fsrc1_ctrl,
+    output wire [2:0]forwarded_fsrc2_ctrl
     );
     wire ex_mem_int_rd = ex_mem_ctrl.frd == 1'b0;
     wire ex_mem_float_rd = ex_mem_ctrl.frd;
 
     wire mem_wb_int_rd   = mem_wb_ctrl.frd == 1'b0;
     wire mem_wb_float_rd = mem_wb_ctrl.frd;
+    
+    wire mem2_wb_int_rd   = mem2_wb_ctrl.frd == 1'b0;
+    wire mem2_wb_float_rd = mem2_wb_ctrl.frd;
 
     wire int_rs1 = id_ex_reg_frs1 == 1'b0;
     wire float_rs1 = id_ex_reg_frs1;
@@ -198,41 +202,73 @@ module forwarding_unit(
                                  (ex_mem_ctrl.rd != 5'd0) &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs1) &
                                  ex_mem_int_rd &
-                                 int_rs1 ? 2'b10 :
+                                 int_rs1 ? 3'b010 :
+                                 
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd != 5'd0) &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs1) &
                                  mem_wb_int_rd &
-                                 int_rs1 ? 2'b01 : 2'b00;
+                                 int_rs1 ? 3'b001 :
+                                  
+                                 mem2_wb_ctrl.reg_write &
+                                 (mem2_wb_ctrl.rd != 5'd0) &
+                                 (mem2_wb_ctrl.rd == id_ex_reg_rs1) &
+                                 mem2_wb_int_rd &
+                                 int_rs1 ? 3'b100 : 
+                                 3'b000;
 
     assign forwarded_src2_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd != 5'd0) &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs2) &
                                  ex_mem_int_rd &
-                                 int_rs2 ? 2'b10 :
+                                 int_rs2 ? 3'b010 :
+                                 
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd != 5'd0) &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs2) &
                                  mem_wb_int_rd &
-                                 int_rs2 ? 2'b01 : 2'b00;
+                                 int_rs2 ? 3'b001 :
+                                  
+                                 mem2_wb_ctrl.reg_write &
+                                 (mem2_wb_ctrl.rd != 5'd0) &
+                                 (mem2_wb_ctrl.rd == id_ex_reg_rs2) &
+                                 mem2_wb_int_rd &
+                                 int_rs2 ? 3'b100 :
+                                 3'b000;
 
     assign forwarded_fsrc1_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs1) &
                                  ex_mem_float_rd &
-                                 float_rs1 ? 2'b10 :
+                                 float_rs1 ? 3'b010 :
+                                 
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs1) &
                                  mem_wb_float_rd &
-                                 float_rs1 ? 2'b01 : 2'b00;
+                                 float_rs1 ? 3'b001 :
+                                 
+                                 mem2_wb_ctrl.reg_write &
+                                 (mem2_wb_ctrl.rd == id_ex_reg_rs1) &
+                                 mem2_wb_float_rd &
+                                 float_rs1 ? 3'b100 :
+                                 
+                                  3'b000;
 
     assign forwarded_fsrc2_ctrl = ex_mem_ctrl.reg_write &
                                  (ex_mem_ctrl.rd == id_ex_reg_rs2) &
                                  ex_mem_float_rd &
-                                 float_rs2 ? 2'b10 :
+                                 float_rs2 ? 3'b010 :
+                                 
                                  mem_wb_ctrl.reg_write &
                                  (mem_wb_ctrl.rd == id_ex_reg_rs2) &
                                  mem_wb_float_rd &
-                                 float_rs2 ? 2'b01 : 2'b00;
+                                 float_rs2 ? 3'b001 : 
+                                 
+                                 mem2_wb_ctrl.reg_write &
+                                 (mem2_wb_ctrl.rd == id_ex_reg_rs2) &
+                                 mem2_wb_float_rd &
+                                 float_rs2 ? 3'b100 : 
+                                 
+                                 3'b000;
 
 endmodule
 
@@ -463,14 +499,15 @@ module core(
         .stall
     );
     
-    wire [1:0] forwarded_src1_ctrl;
-    wire [1:0] forwarded_src2_ctrl;
-    wire [1:0] forwarded_fsrc1_ctrl;
-    wire [1:0] forwarded_fsrc2_ctrl;
+    wire [2:0] forwarded_src1_ctrl;
+    wire [2:0] forwarded_src2_ctrl;
+    wire [2:0] forwarded_fsrc1_ctrl;
+    wire [2:0] forwarded_fsrc2_ctrl;
     
     forwarding_unit FORWARDING(
         .ex_mem_ctrl,
         .mem_wb_ctrl,
+        .mem2_wb_ctrl,
         .id_ex_reg_rs1(id_ex_register_rs1),
         .id_ex_reg_rs2(id_ex_register_rs2),
         .id_ex_reg_frs1(id_ex_register_frs1),
@@ -496,6 +533,7 @@ module core(
         .float_mem_forwarded(ex_mem_float_exec_result),
         .write_forwarded(write_int_result),
         .float_write_forwarded(write_float_result),
+        .load_forwarded(mem_load_result),
         .immediate(id_ex_immediate),
         .ctrl(id_ex_ctrl),
         .branch_addr(ex_branch_addr),
