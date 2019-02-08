@@ -60,6 +60,8 @@ module map(
     reg [31:0] c_dout_reg;
     reg [7:0] led_reg;
     
+    reg [31:0] memory_buf; // wait 1 clock
+    
     map_uart state;
     
     parameter uart_rx_addr = 32'h10000;
@@ -77,7 +79,8 @@ module map(
     assign addr         = is_io ? addr_reg : c_addr;
     assign write_enable = is_io ? write_enable_reg : c_write_enable;
     assign din          = is_io ? din_reg : c_din;
-    assign c_dout       = before_io | is_io ? c_dout_reg : dout;
+    assign c_dout       = before_io | is_io ? c_dout_reg : memory_buf;
+    //assign c_dout       = before_io | is_io ? c_dout_reg : dout;
     
     always @(posedge clk) begin
         if (~rstn) begin
@@ -93,6 +96,7 @@ module map(
             state <= map_uart_wait;
             before_io <= 1'b0;
         end else begin
+            memory_buf <= dout;
             if (state == map_uart_wait) begin
                 before_io <= 1'b0;
                 led_reg <= led;

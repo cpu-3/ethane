@@ -74,7 +74,7 @@ module fetch_stage(
         end begin
             stalled <= stall;
             flushed <= flush;
-            stalled_instr <= mem_instr;
+            stalled_instr <= stalled & stall ? stalled_instr : mem_instr;
             if (~old_freeze) begin
                 old_instr <= mem_instr;
             end
@@ -238,6 +238,7 @@ endmodule
 
 module hazard_unit(
     input controlif id_ex_ctrl,
+    input controlif ex_mem_ctrl,
     //input wire [4:0]id_ex_reg_rd,
     input wire [4:0]decoded_rs1,
     input wire [4:0]decoded_rs2,
@@ -245,28 +246,39 @@ module hazard_unit(
     input wire decoded_frs2,
     output wire stall
     );
-    assign stall = id_ex_ctrl.mem_read & 
+    wire stall1 = id_ex_ctrl.mem_read & 
                    (((id_ex_ctrl.rd == decoded_rs1) & (id_ex_ctrl.frd == decoded_frs1))
                      |
-                   ((id_ex_ctrl.rd == decoded_rs2) & (id_ex_ctrl.frd == decoded_frs2)));
+                   ((id_ex_ctrl.rd == decoded_rs2) & (id_ex_ctrl.frd == decoded_frs2)))
+                   ;
+    wire stall2 = ex_mem_ctrl.mem_read & 
+                                  (((ex_mem_ctrl.rd == decoded_rs1) & (ex_mem_ctrl.frd == decoded_frs1))
+                                    |
+                                  ((ex_mem_ctrl.rd == decoded_rs2) & (ex_mem_ctrl.frd == decoded_frs2)))
+                                  ;
+    assign stall = stall1 | stall2;
+
 endmodule
 
 module write_stage(
     input controlif ctrl,
-    input wire [31:0] load_result,
+    input controlif load_ctrl,
     input wire [31:0] alu_result,
     input wire [31:0] fpu_result,
     output wire [31:0] int_result,
     output wire [31:0] float_result,
     output wire reg_write,
-    output wire freg_write
+    output wire freg_write,
+    
+    output wire load_reg_write,
+    output wire load_freg_write
     );
-    assign int_result = ctrl.mem_read ? load_result :
-                        alu_result;
-    assign float_result = ctrl.mem_read ? load_result :
-                        fpu_result;
+    assign int_result = alu_result;
+    assign float_result = fpu_result;
     assign reg_write = ctrl.reg_write & (ctrl.frd == 1'b0);
     assign freg_write = ctrl.reg_write & ctrl.frd;
+    assign load_reg_write = load_ctrl.reg_write & (load_ctrl.frd == 1'b0);
+    assign load_freg_write = load_ctrl.reg_write & load_ctrl.frd;
 endmodule
 
 module core(
@@ -322,10 +334,18 @@ module core(
 
     // MEM/WB registers
     controlif mem_wb_ctrl;
-    reg [31:0] mem_wb_load_result;
     reg [31:0] mem_wb_exec_result;
-    reg [31:0] mem_wb_branch_result;
     reg [31:0] mem_wb_float_exec_result;
+    
+    // MEM/MEM2 registers;
+    controlif mem_mem2_ctrl;
+    reg [31:0] mem_mem2_exec_result;
+    reg [31:0] mem_mem2_float_exec_result;
+    
+    // MEM2/WB registers
+    controlif mem2_wb_ctrl;
+    reg [31:0] mem2_wb_exec_result;
+    reg [31:0] mem2_wb_float_exec_result;
     
     wire flush;
     wire stall;
@@ -395,6 +415,8 @@ module core(
     );
     wire write_back_enable;
     wire [4:0]write_back_rd;
+    wire load_reg_write;
+    wire [31:0] mem_load_result;
     register REGISTER(
         .clk(clk),
         .rstn(rstn),
@@ -402,6 +424,9 @@ module core(
         .rd_idx(write_back_rd),
         .rd_enable(write_back_enable),
         .data(write_int_result),
+        .load_rd_idx(mem2_wb_ctrl.rd),
+        .load_rd_enable(load_reg_write),
+        .load_data(mem_load_result),
         .rs1_idx(decoded_rs1), 
         .rs2_idx(decoded_rs2), 
         .rs1(decode_stage_int_src1), 
@@ -409,6 +434,8 @@ module core(
     );
     wire float_write_back_enable;
     wire [31:0] write_float_result; 
+    wire load_freg_write;
+
     fregister FREGISTER(
         .clk(clk),
         .rstn(rstn),
@@ -416,6 +443,11 @@ module core(
         .rd_idx(write_back_rd),
         .rd_enable(float_write_back_enable),
         .data(write_float_result),
+        
+        .load_rd_idx(mem2_wb_ctrl.rd),
+        .load_rd_enable(load_freg_write),
+        .load_data(mem_load_result),
+        
         .rs1_idx(decoded_rs1),
         .rs2_idx(decoded_rs2), 
         .rs1(decode_stage_float_src1), 
@@ -423,6 +455,7 @@ module core(
      );
      hazard_unit HAZARD(
         .id_ex_ctrl,
+        .ex_mem_ctrl,
         .decoded_rs1,
         .decoded_rs2,
         .decoded_frs1,
@@ -493,7 +526,6 @@ module core(
     
 
     // memory stage
-    wire [31:0] mem_load_result;
     memory Memory(
         .clk,
         .rstn,
@@ -511,15 +543,18 @@ module core(
     );
     
     // write stage
+
     write_stage WS(
         .ctrl(mem_wb_ctrl),
-        .load_result(mem_load_result),
+        .load_ctrl(mem2_wb_ctrl),
         .alu_result(mem_wb_exec_result),
         .fpu_result(mem_wb_float_exec_result),
         .int_result(write_int_result),
         .float_result(write_float_result),
         .reg_write(write_back_enable),
-        .freg_write(float_write_back_enable)
+        .freg_write(float_write_back_enable),
+        .load_reg_write,
+        .load_freg_write
     );
     assign write_back_rd = mem_wb_ctrl.rd;
     
@@ -552,9 +587,7 @@ module core(
             ex_mem_pc <= 32'd0;
             
             // memory stage
-            mem_wb_load_result <= 32'd0;
             mem_wb_exec_result <= 32'd0;
-            mem_wb_branch_result <= 32'd0;
             
             id_ex_ctrl <= 0;
             ex_mem_ctrl <= 0;
@@ -591,8 +624,14 @@ module core(
             
             // memory stage
             mem_wb_exec_result <= ex_mem_exec_result;
-            mem_wb_ctrl <= ex_mem_ctrl;
+            mem_wb_ctrl <= ex_mem_ctrl.mem_read ? 0 : ex_mem_ctrl;
             mem_wb_float_exec_result <= ex_mem_float_exec_result;
+            
+            // if load instr
+            // memory stage 2
+            mem_mem2_ctrl <= ex_mem_ctrl.mem_read ? ex_mem_ctrl : 0; 
+            mem2_wb_ctrl <= mem_mem2_ctrl;
+           
             
             moving <= ~inval;
             
