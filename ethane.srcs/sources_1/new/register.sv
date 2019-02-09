@@ -97,7 +97,7 @@ module fregister
                  load_rd_enable && (load_rd_idx == rs1_idx) ? load_data :
                  fregs[rs1_idx];
     assign rs2 = rd_enable && (rd_idx == rs2_idx) ? data :
-                  load_rd_enable && (load_rd_idx == rs1_idx) ? load_data :
+                  load_rd_enable && (load_rd_idx == rs2_idx) ? load_data :
                   fregs[rs2_idx];
     
     generate

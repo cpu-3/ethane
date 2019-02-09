@@ -1,4 +1,0 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_0/sim/ethane_axi_uartlite_0_0.vhd" into library xil_defaultlib
-INFO: [VRFC 10-307] analyzing entity ethane_axi_uartlite_0_0
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/tansei/pro/vivado/ethane/ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_1/sim/ethane_axi_uartlite_0_1.vhd" into library xil_defaultlib
-INFO: [VRFC 10-307] analyzing entity ethane_axi_uartlite_0_1
