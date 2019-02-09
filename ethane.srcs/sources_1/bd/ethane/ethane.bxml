@@ -2,10 +2,10 @@
 <Root MajorVersion="0" MinorVersion="33">
   <CompositeFile CompositeFileTopName="ethane" CanBeSetAsTop="false" CanDisplayChildGraph="true">
     <Description>Composite Fileset</Description>
-    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1549605848"/>
-    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1549605848"/>
-    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1549605850"/>
-    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1549605850"/>
+    <Generation Name="SYNTHESIS" State="STALE" Timestamp="1549683997"/>
+    <Generation Name="IMPLEMENTATION" State="STALE" Timestamp="1549683997"/>
+    <Generation Name="SIMULATION" State="GENERATED" Timestamp="1549683999"/>
+    <Generation Name="HW_HANDOFF" State="GENERATED" Timestamp="1549683999"/>
     <FileCollection Name="SOURCES" Type="SOURCES">
       <File Name="ip/ethane_core_wrapper_0_0/ethane_core_wrapper_0_0.xci" Type="IP">
         <Instance HierarchyPath="core_wrapper_0"/>

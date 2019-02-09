@@ -38,18 +38,24 @@ module memory(
     output wire [31:0] mem_load_result
     );
     reg [31:0] bef_addr;
+    reg [31:0] bef_dout;
+    reg freezed;
 
     assign port_data_mem_addr = freeze ? bef_addr : ex_mem_exec_result;
     assign port_data_mem_data_we = freeze ? 4'd0 : ex_mem_ctrl.mem_write;
     assign port_data_mem_din = ex_mem_store_data;
-    assign mem_load_result = port_data_mem_dout;
+    assign mem_load_result = freezed ? bef_dout : port_data_mem_dout;
     
 
     always @(posedge clk) begin
         if (~rstn) begin
             bef_addr <= 32'd0;
+            bef_dout <= 32'd0;
+            freezed <= 1'b1;
         end else begin
             bef_addr <= port_data_mem_addr;
+            bef_dout <= freezed ? bef_dout : mem_load_result;
+            freezed <= freeze;
         end
     end
 endmodule

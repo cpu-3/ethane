@@ -29,8 +29,8 @@ module translator(
     output wire [31:0] float_result,
     output wire [31:0] int_result
     );
-    itof ITOF(int_src, float_result);
-    ftoi FTOI(float_src, int_result);
+    itof ITOF(clk, int_src, float_result);
+    ftoi FTOI(clk, float_src, int_result);
 endmodule
 
 module comparator (
