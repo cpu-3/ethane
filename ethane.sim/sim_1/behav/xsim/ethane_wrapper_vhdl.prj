@@ -1,6 +1,7 @@
 # compile vhdl design source files
 vhdl xil_defaultlib  \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_0/sim/ethane_axi_uartlite_0_0.vhd" \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_1/sim/ethane_axi_uartlite_0_1.vhd" \
 
 # Do not sort compile order
 nosort

@@ -41,6 +41,13 @@
   "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_1_0/sim/ethane_blk_mem_gen_1_0.v" \
 -endlib
 -makelib ies_lib/xil_defaultlib \
+  "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_1/sim/ethane_axi_uartlite_0_1.vhd" \
+-endlib
+-makelib ies_lib/xil_defaultlib \
+  "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_2/sim/ethane_uart_wrapper_0_2.v" \
+  "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_sender_0_0/sim/ethane_uart_sender_0_0.v" \
+-endlib
+-makelib ies_lib/xil_defaultlib \
   glbl.v
 -endlib
 

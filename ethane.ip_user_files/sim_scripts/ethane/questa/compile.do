@@ -61,6 +61,13 @@ vcom -work xil_defaultlib -64 -93 \
 vlog -work xil_defaultlib -64 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
 "../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_1_0/sim/ethane_blk_mem_gen_1_0.v" \
 
+vcom -work xil_defaultlib -64 -93 \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_1/sim/ethane_axi_uartlite_0_1.vhd" \
+
+vlog -work xil_defaultlib -64 "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" "+incdir+/opt/Xilinx/Vivado/2017.4/data/xilinx_vip/include" \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_2/sim/ethane_uart_wrapper_0_2.v" \
+"../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_sender_0_0/sim/ethane_uart_sender_0_0.v" \
+
 vlog -work xil_defaultlib \
 "glbl.v"
 

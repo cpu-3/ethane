@@ -40,7 +40,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 
 # The design that will be created by this Tcl script contains the following 
 # module references:
-# core_wrapper, map_wrapper, uart_wrapper
+# core_wrapper, map_wrapper, uart_sender, uart_wrapper, uart_wrapper
 
 # Please add the sources of those modules before sourcing this Tcl script.
 
@@ -165,12 +165,19 @@ proc create_root_design { parentCell } {
   # Create interface ports
 
   # Create ports
-  set USB_UART_RX [ create_bd_port -dir I -from 0 -to 0 -type data USB_UART_RX ]
-  set USB_UART_TX [ create_bd_port -dir O -from 0 -to 0 USB_UART_TX ]
   set led [ create_bd_port -dir O -from 7 -to 0 -type data led ]
 
   # Create instance: axi_uartlite_0, and set properties
   set axi_uartlite_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_0 ]
+  set_property -dict [ list \
+   CONFIG.C_BAUDRATE {230400} \
+ ] $axi_uartlite_0
+
+  # Create instance: axi_uartlite_1, and set properties
+  set axi_uartlite_1 [ create_bd_cell -type ip -vlnv xilinx.com:ip:axi_uartlite:2.0 axi_uartlite_1 ]
+  set_property -dict [ list \
+   CONFIG.C_BAUDRATE {230400} \
+ ] $axi_uartlite_1
 
   # Create instance: blk_mem_gen_0, and set properties
   set blk_mem_gen_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:blk_mem_gen:8.4 blk_mem_gen_0 ]
@@ -233,6 +240,17 @@ proc create_root_design { parentCell } {
    CONFIG.INITIAL_RESET_CLOCK_CYCLES {5} \
  ] $sim_clk_gen_0
 
+  # Create instance: uart_sender_0, and set properties
+  set block_name uart_sender
+  set block_cell_name uart_sender_0
+  if { [catch {set uart_sender_0 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $uart_sender_0 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
   # Create instance: uart_wrapper_0, and set properties
   set block_name uart_wrapper
   set block_cell_name uart_wrapper_0
@@ -251,12 +269,31 @@ proc create_root_design { parentCell } {
    CONFIG.MAX_BURST_LENGTH {1} \
  ] [get_bd_intf_pins /uart_wrapper_0/axi]
 
+  # Create instance: uart_wrapper_1, and set properties
+  set block_name uart_wrapper
+  set block_cell_name uart_wrapper_1
+  if { [catch {set uart_wrapper_1 [create_bd_cell -type module -reference $block_name $block_cell_name] } errmsg] } {
+     catch {common::send_msg_id "BD_TCL-105" "ERROR" "Unable to add referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   } elseif { $uart_wrapper_1 eq "" } {
+     catch {common::send_msg_id "BD_TCL-106" "ERROR" "Unable to referenced block <$block_name>. Please add the files for ${block_name}'s definition into the project."}
+     return 1
+   }
+  
+  set_property -dict [ list \
+   CONFIG.SUPPORTS_NARROW_BURST {0} \
+   CONFIG.NUM_READ_OUTSTANDING {1} \
+   CONFIG.NUM_WRITE_OUTSTANDING {1} \
+   CONFIG.MAX_BURST_LENGTH {1} \
+ ] [get_bd_intf_pins /uart_wrapper_1/axi]
+
   # Create interface connections
   connect_bd_intf_net -intf_net uart_wrapper_0_axi [get_bd_intf_pins axi_uartlite_0/S_AXI] [get_bd_intf_pins uart_wrapper_0/axi]
+  connect_bd_intf_net -intf_net uart_wrapper_0_axi1 [get_bd_intf_pins axi_uartlite_1/S_AXI] [get_bd_intf_pins uart_wrapper_1/axi]
 
   # Create port connections
-  connect_bd_net -net USB_UART_RX_1 [get_bd_ports USB_UART_RX] [get_bd_pins axi_uartlite_0/rx]
-  connect_bd_net -net axi_uartlite_0_tx [get_bd_ports USB_UART_TX] [get_bd_pins axi_uartlite_0/tx]
+  connect_bd_net -net axi_uartlite_0_tx [get_bd_pins axi_uartlite_0/tx] [get_bd_pins axi_uartlite_1/rx]
+  connect_bd_net -net axi_uartlite_1_tx [get_bd_pins axi_uartlite_0/rx] [get_bd_pins axi_uartlite_1/tx]
   connect_bd_net -net blk_mem_gen_0_douta [get_bd_pins blk_mem_gen_0/douta] [get_bd_pins core_wrapper_0/_instr]
   connect_bd_net -net blk_mem_gen_1_douta [get_bd_pins blk_mem_gen_1/douta] [get_bd_pins map_wrapper_0/dout]
   connect_bd_net -net core_wrapper_0_fetch_pc [get_bd_pins blk_mem_gen_0/addra] [get_bd_pins core_wrapper_0/fetch_pc]
@@ -273,12 +310,19 @@ proc create_root_design { parentCell } {
   connect_bd_net -net map_wrapper_0_t_data [get_bd_pins map_wrapper_0/t_data] [get_bd_pins uart_wrapper_0/t_data]
   connect_bd_net -net map_wrapper_0_t_valid [get_bd_pins map_wrapper_0/t_valid] [get_bd_pins uart_wrapper_0/t_valid]
   connect_bd_net -net map_wrapper_0_write_enable [get_bd_pins blk_mem_gen_1/wea] [get_bd_pins map_wrapper_0/write_enable]
-  connect_bd_net -net sim_clk_gen_0_clk [get_bd_pins axi_uartlite_0/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_1/clka] [get_bd_pins core_wrapper_0/clk] [get_bd_pins map_wrapper_0/clk] [get_bd_pins sim_clk_gen_0/clk] [get_bd_pins uart_wrapper_0/clk]
-  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins blk_mem_gen_1/ena] [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_wrapper_0/rstn]
+  connect_bd_net -net sim_clk_gen_0_clk [get_bd_pins axi_uartlite_0/s_axi_aclk] [get_bd_pins axi_uartlite_1/s_axi_aclk] [get_bd_pins blk_mem_gen_0/clka] [get_bd_pins blk_mem_gen_1/clka] [get_bd_pins core_wrapper_0/clk] [get_bd_pins map_wrapper_0/clk] [get_bd_pins sim_clk_gen_0/clk] [get_bd_pins uart_sender_0/clk] [get_bd_pins uart_wrapper_0/clk] [get_bd_pins uart_wrapper_1/clk]
+  connect_bd_net -net sim_clk_gen_0_sync_rst [get_bd_pins axi_uartlite_0/s_axi_aresetn] [get_bd_pins axi_uartlite_1/s_axi_aresetn] [get_bd_pins blk_mem_gen_0/ena] [get_bd_pins blk_mem_gen_1/ena] [get_bd_pins core_wrapper_0/rstn] [get_bd_pins map_wrapper_0/rstn] [get_bd_pins sim_clk_gen_0/sync_rst] [get_bd_pins uart_sender_0/rstn] [get_bd_pins uart_wrapper_0/rstn] [get_bd_pins uart_wrapper_1/rstn]
+  connect_bd_net -net uart_sender_0_r_valid [get_bd_pins uart_sender_0/r_valid] [get_bd_pins uart_wrapper_1/r_valid]
+  connect_bd_net -net uart_sender_0_t_data [get_bd_pins uart_sender_0/t_data] [get_bd_pins uart_wrapper_1/t_data]
+  connect_bd_net -net uart_sender_0_t_valid [get_bd_pins uart_sender_0/t_valid] [get_bd_pins uart_wrapper_1/t_valid]
   connect_bd_net -net uart_wrapper_0_r_data [get_bd_pins map_wrapper_0/r_data] [get_bd_pins uart_wrapper_0/r_data]
   connect_bd_net -net uart_wrapper_0_rx_done [get_bd_pins map_wrapper_0/rx_done] [get_bd_pins uart_wrapper_0/rx_done]
   connect_bd_net -net uart_wrapper_0_tx_done [get_bd_pins map_wrapper_0/tx_done] [get_bd_pins uart_wrapper_0/tx_done]
   connect_bd_net -net uart_wrapper_0_u_ready [get_bd_pins map_wrapper_0/ready] [get_bd_pins uart_wrapper_0/u_ready]
+  connect_bd_net -net uart_wrapper_1_r_data [get_bd_pins uart_sender_0/r_data] [get_bd_pins uart_wrapper_1/r_data]
+  connect_bd_net -net uart_wrapper_1_rx_done [get_bd_pins uart_sender_0/rx_done] [get_bd_pins uart_wrapper_1/rx_done]
+  connect_bd_net -net uart_wrapper_1_tx_done [get_bd_pins uart_sender_0/tx_done] [get_bd_pins uart_wrapper_1/tx_done]
+  connect_bd_net -net uart_wrapper_1_u_ready [get_bd_pins uart_sender_0/ready] [get_bd_pins uart_wrapper_1/u_ready]
 
   # Create address segments
 

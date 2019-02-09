@@ -20,7 +20,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 typedef enum reg [2:0] {
-    map_uart_wait, map_uart_receive_wait, map_uart_receive, map_uart_transmit, map_uart_transmit_wait
+    map_uart_wait, map_uart_receive_wait, map_uart_receive, map_uart_transmit, map_uart_transmit_wait, boot_transmit, map_uart_final
 } map_uart;
 
 
@@ -75,11 +75,15 @@ module map(
     
     reg [7:0]b_data;
     
+    reg [7:0]received_data;
+    
+    reg boot;
+    
     assign led          = c_write_enable && (c_addr == led_addr) ? b_data : led_reg;
     assign addr         = is_io ? addr_reg : c_addr;
     assign write_enable = is_io ? write_enable_reg : c_write_enable;
     assign din          = is_io ? din_reg : c_din;
-    assign c_dout       = before_io | is_io ? c_dout_reg : memory_buf;
+    assign c_dout       = before_io/* | is_io*/ ? c_dout_reg : memory_buf;
     //assign c_dout       = before_io | is_io ? c_dout_reg : dout;
     
     always @(posedge clk) begin
@@ -95,6 +99,8 @@ module map(
             t_data <= 8'b0;
             state <= map_uart_wait;
             before_io <= 1'b0;
+            boot <= 1'b1;
+            received_data <= 8'b0;
         end else begin
             memory_buf <= dout;
             if (state == map_uart_wait) begin
@@ -107,7 +113,13 @@ module map(
                 b_data <= c_din[31:24];
                 // uart receive
                 if ((c_addr == uart_rx_addr) && load) begin
-                    state <= map_uart_receive_wait;
+                    if (boot) begin
+                        state <= boot_transmit;
+                        t_valid <= 1'b1;
+                        t_data <= 8'haa;
+                    end else begin
+                        state <= map_uart_receive_wait;
+                    end
                     stall <= 1'b1;
                 end else if ((c_addr == uart_tx_addr) && c_write_enable[0]) begin
                     state <= map_uart_transmit_wait;
@@ -123,9 +135,8 @@ module map(
             end else if (state == map_uart_receive) begin
                 r_valid <= 1'b0;
                 if (rx_done) begin
-                    c_dout_reg <= {r_data, 24'b0};
-                    before_io <= 1'b1;
-                    state <= map_uart_wait;
+                    received_data <= r_data;
+                    state <= map_uart_final;
                     stall <= 1'b0;
                 end
             end else if (state == map_uart_transmit_wait) begin
@@ -135,13 +146,24 @@ module map(
                     t_data <= b_data;
                 end
             end else if (state == map_uart_transmit) begin 
+                    t_valid <= 1'b0;
+                    if (tx_done) begin
+                        state <= map_uart_wait;
+                        stall <= 1'b0;
+                    end
+            end else if (state == boot_transmit) begin 
                 t_valid <= 1'b0;
                 if (tx_done) begin
-                    state <= map_uart_wait;
-                    stall <= 1'b0;
+                    state <= map_uart_receive_wait;
+                    stall <= 1'b1;
+                    boot <= 1'b0;
                 end
+            end else if (state == map_uart_final) begin
+                c_dout_reg <= {received_data, 24'b0};
+                before_io <= 1'b1;
+                state <= map_uart_wait;
             end
-        end 
+        end
     end
     
 endmodule

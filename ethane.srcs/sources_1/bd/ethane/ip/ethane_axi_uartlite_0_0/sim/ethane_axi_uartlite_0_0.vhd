@@ -1,4 +1,4 @@
--- (c) Copyright 1995-2018 Xilinx, Inc. All rights reserved.
+-- (c) Copyright 1995-2019 Xilinx, Inc. All rights reserved.
 -- 
 -- This file contains confidential and proprietary information
 -- of Xilinx, Inc. and is protected under U.S. and
@@ -158,7 +158,7 @@ BEGIN
       C_S_AXI_ACLK_FREQ_HZ => 100000000,
       C_S_AXI_ADDR_WIDTH => 4,
       C_S_AXI_DATA_WIDTH => 32,
-      C_BAUDRATE => 9600,
+      C_BAUDRATE => 230400,
       C_DATA_BITS => 8,
       C_USE_PARITY => 0,
       C_ODD_PARITY => 0

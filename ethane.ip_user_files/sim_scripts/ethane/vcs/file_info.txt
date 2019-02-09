@@ -16,4 +16,7 @@ lib_cdc_v1_0_rfs.vhd,vhdl,lib_cdc_v1_0_2,../../../../ethane.srcs/sources_1/bd/et
 axi_uartlite_v2_0_vh_rfs.vhd,vhdl,axi_uartlite_v2_0_19,../../../../ethane.srcs/sources_1/bd/ethane/ipshared/c778/hdl/axi_uartlite_v2_0_vh_rfs.vhd,
 ethane_axi_uartlite_0_0.vhd,vhdl,xil_defaultlib,../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_0/sim/ethane_axi_uartlite_0_0.vhd,
 ethane_blk_mem_gen_1_0.v,verilog,xil_defaultlib,../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_blk_mem_gen_1_0/sim/ethane_blk_mem_gen_1_0.v,
+ethane_axi_uartlite_0_1.vhd,vhdl,xil_defaultlib,../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_axi_uartlite_0_1/sim/ethane_axi_uartlite_0_1.vhd,
+ethane_uart_wrapper_0_2.v,verilog,xil_defaultlib,../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_wrapper_0_2/sim/ethane_uart_wrapper_0_2.v,
+ethane_uart_sender_0_0.v,verilog,xil_defaultlib,../../../../ethane.srcs/sources_1/bd/ethane/ip/ethane_uart_sender_0_0/sim/ethane_uart_sender_0_0.v,
 glbl.v,Verilog,xil_defaultlib,glbl.v
