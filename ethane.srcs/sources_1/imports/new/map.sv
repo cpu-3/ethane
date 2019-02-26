@@ -64,12 +64,12 @@ module map(
     
     map_uart state;
     
-    parameter uart_rx_addr = 32'h10000;
-    parameter uart_tx_addr = 32'h10004;    
-    parameter led_addr = 32'h10008;
+    parameter uart_rx_addr = 32'h20000;
+    parameter uart_tx_addr = 32'h20004;    
+    parameter led_addr = 32'h20008;
     
     wire is_io;
-    assign is_io = ((c_addr >> 12) == 32'h10);
+    assign is_io = ((c_addr >> 12) == 32'h20);
     
     reg before_io; 
     

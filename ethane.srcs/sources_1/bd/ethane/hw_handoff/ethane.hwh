@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Sun Feb 10 00:33:39 2019" VIVADOVERSION="2017.4">
+<EDKSYSTEM EDWVERSION="1.2" TIMESTAMP="Tue Feb 26 19:29:35 2019" VIVADOVERSION="2017.4">
 
   <SYSTEMINFO ARCH="kintexu" BOARD="xilinx.com:kcu105:part0:1.3" DEVICE="xcku040" NAME="ethane" PACKAGE="ffva1156" SPEEDGRADE="-2"/>
 
@@ -512,7 +512,7 @@
         <PARAMETER NAME="register_portb_output_of_softecc" VALUE="false"/>
         <PARAMETER NAME="Pipeline_Stages" VALUE="0"/>
         <PARAMETER NAME="Load_Init_File" VALUE="true"/>
-        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/phase2.coe"/>
+        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/mem.coe"/>
         <PARAMETER NAME="Fill_Remaining_Memory_Locations" VALUE="false"/>
         <PARAMETER NAME="Remaining_Memory_Locations" VALUE="0"/>
         <PARAMETER NAME="Use_RSTA_Pin" VALUE="false"/>
@@ -700,7 +700,7 @@
         <PARAMETER NAME="register_portb_output_of_softecc" VALUE="false"/>
         <PARAMETER NAME="Pipeline_Stages" VALUE="0"/>
         <PARAMETER NAME="Load_Init_File" VALUE="true"/>
-        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/phase2.coe"/>
+        <PARAMETER NAME="Coe_File" VALUE="../../../../../../../../../ダウンロード/mem.coe"/>
         <PARAMETER NAME="Fill_Remaining_Memory_Locations" VALUE="false"/>
         <PARAMETER NAME="Remaining_Memory_Locations" VALUE="0"/>
         <PARAMETER NAME="Use_RSTA_Pin" VALUE="false"/>
@@ -968,11 +968,11 @@
             <CONNECTION INSTANCE="axi_uartlite_0" PORT="s_axi_aclk"/>
             <CONNECTION INSTANCE="blk_mem_gen_1" PORT="clka"/>
             <CONNECTION INSTANCE="uart_wrapper_0" PORT="clk"/>
-            <CONNECTION INSTANCE="core_wrapper_0" PORT="clk"/>
             <CONNECTION INSTANCE="axi_uartlite_1" PORT="s_axi_aclk"/>
             <CONNECTION INSTANCE="uart_wrapper_1" PORT="clk"/>
             <CONNECTION INSTANCE="uart_sender_0" PORT="clk"/>
             <CONNECTION INSTANCE="map_wrapper_0" PORT="clk"/>
+            <CONNECTION INSTANCE="core_wrapper_0" PORT="clk"/>
           </CONNECTIONS>
         </PORT>
         <PORT DIR="O" NAME="sync_rst" SIGIS="rst" SIGNAME="sim_clk_gen_0_sync_rst">
@@ -981,11 +981,11 @@
             <CONNECTION INSTANCE="blk_mem_gen_0" PORT="ena"/>
             <CONNECTION INSTANCE="blk_mem_gen_1" PORT="ena"/>
             <CONNECTION INSTANCE="uart_wrapper_0" PORT="rstn"/>
-            <CONNECTION INSTANCE="core_wrapper_0" PORT="rstn"/>
             <CONNECTION INSTANCE="axi_uartlite_1" PORT="s_axi_aresetn"/>
             <CONNECTION INSTANCE="uart_wrapper_1" PORT="rstn"/>
             <CONNECTION INSTANCE="uart_sender_0" PORT="rstn"/>
             <CONNECTION INSTANCE="map_wrapper_0" PORT="rstn"/>
+            <CONNECTION INSTANCE="core_wrapper_0" PORT="rstn"/>
           </CONNECTIONS>
         </PORT>
       </PORTS>

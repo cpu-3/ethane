@@ -35,3 +35,12 @@ module fsgnjn(
     );
     assign y = {~x2[31], x1[30:0]};
 endmodule
+
+module fsgnjx(
+    input wire [31:0] x1,
+    input wire [31:0] x2,
+    output wire [31:0] y
+    );
+    assign y = {x1[31] ^ x2[31], x1[30:0]};
+endmodule
+

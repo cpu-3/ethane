@@ -77,6 +77,7 @@ module fpu(
     wire fsqrt_ovf;
     wire [31:0]fsgnj_result;
     wire [31:0]fsgnjn_result;    
+    wire [31:0]fsgnjx_result;    
     
     fadd FADD(clk, src1, src2, fadd_result);
     fsub FSUB(clk, src1, src2, fsub_result);
@@ -87,6 +88,7 @@ module fpu(
     
     fsgnj FSGNJ(src1, src2, fsgnj_result);
     fsgnjn FSGNJN(src1, src2, fsgnjn_result);
+    fsgnjx FSGNJX(src1, src2, fsgnjx_result);
     
     assign result = inst.fadd ? fadd_result :
                     inst.fsub ? fsub_result :
@@ -95,6 +97,7 @@ module fpu(
                     inst.fsqrt ? fsqrt_result :
                     inst.fsgnj ? fsgnj_result :
                     inst.fsgnjn ? fsgnjn_result :
+                    inst.fsgnjx ? fsgnjx_result :
                     32'd0;
 endmodule
 module exec_stage_result_mux(
@@ -219,7 +222,7 @@ module exec_stage(
     exec_stage_result_mux MUX(
         .alu_result,
         .imm_result(immediate),
-        .branch_result(pc + 32'd4),
+        .branch_result(pc + 32'd1),
         .auipc_result(pc + immediate),
         .inst,
         .ftoi_result,

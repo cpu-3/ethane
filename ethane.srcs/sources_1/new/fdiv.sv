@@ -1,5 +1,7 @@
 `default_nettype none
 
+`default_nettype none
+
 module finv(
 		input wire clk,
 		input wire [31:0] x,
@@ -42,8 +44,15 @@ module fdiv(
     output wire [31:0] z
 );
   wire [31:0] yinv;
+  reg [31:0] x1;
+  reg [31:0] x2;
   finv u1(clk, y,yinv);
-  fmul u2(clk, x,yinv,z);
+  fmul u2(clk, x2,yinv,z);
+  always@(posedge clk) begin
+    x1 <= x;
+    x2 <= x1;
+  end
+
 endmodule
 
 

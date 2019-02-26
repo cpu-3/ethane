@@ -57,7 +57,7 @@ module fetch_stage(
     
     assign pc_next = branch_control ? branch_pc :
                      stall ? pc : 
-                     pc + 32'd4;
+                     pc + 32'd1;
                      
     assign inst_count_next = 
         branch_control ? inst_count - 32'd1 :
@@ -160,10 +160,11 @@ module branch_unit(
                      ctrl.btype.jalr ? alu_result :
                      ctrl.btype.jal ? pc_imm :
                      pc;
-    assign flush = (do_branch & (~ctrl.branched)) |
+    assign flush = do_branch | ctrl.btype.jalr | ctrl.btype.jal;
+                /*(do_branch & (~ctrl.branched)) |
                    ((~do_branch) & (ctrl.branched)) |   
                    (ctrl.btype.jalr & (~ctrl.branched)) |
-                   (ctrl.btype.jal & (~ctrl.branched));
+                   (ctrl.btype.jal & (~ctrl.branched));*/
     
 endmodule
 
@@ -393,7 +394,7 @@ module core(
 
     // fetch stage components
     reg [31:0]pc;
-    assign fetch_pc = pc;
+    assign fetch_pc = {pc[29:0], 2'b0};
     wire [31:0]pc_next;
     wire [31:0]instr;
     

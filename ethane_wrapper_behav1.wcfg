@@ -17,13 +17,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="63463201415000fs"></ZoomStartTime>
-      <ZoomEndTime time="63463281615001fs"></ZoomEndTime>
-      <Cursor1Time time="63463245000000fs"></Cursor1Time>
+      <ZoomStartTime time="3862165fs"></ZoomStartTime>
+      <ZoomEndTime time="310715789fs"></ZoomEndTime>
+      <Cursor1Time time="125000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="232"></NameColumnWidth>
-      <ValueColumnWidth column_width="119"></ValueColumnWidth>
+      <ValueColumnWidth column_width="103"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="28" />
    <wave_markers>
@@ -82,7 +82,7 @@
          <obj_property name="ElementShortName">dout[31:0]</obj_property>
          <obj_property name="ObjectShortName">dout[31:0]</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/port_data_mem_addr">
+      <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/Memory/port_data_mem_addr">
          <obj_property name="ElementShortName">port_data_mem_addr[31:0]</obj_property>
          <obj_property name="ObjectShortName">port_data_mem_addr[31:0]</obj_property>
       </wvobject>
@@ -425,10 +425,18 @@
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[8]">
          <obj_property name="ElementShortName">[8][31:0]</obj_property>
          <obj_property name="ObjectShortName">[8][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[9]">
          <obj_property name="ElementShortName">[9][31:0]</obj_property>
          <obj_property name="ObjectShortName">[9][31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/FREGISTER/fregs[10]">
          <obj_property name="ElementShortName">[10][31:0]</obj_property>

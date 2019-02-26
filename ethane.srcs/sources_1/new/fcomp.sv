@@ -25,7 +25,7 @@ module feq(
     wire [31:0] y,
     wire z
 );
-    assign z = x == y ? 1'b1 : 1'b0;
+    assign z = x == y ? 1'b1 : (x[30:0] == 31'b0 && y[30:0] == 31'b0) ? 1'b1 : 1'b0;
 endmodule
 
 module flt(
@@ -42,7 +42,8 @@ module flt(
     assign {s1,e1,m1} = x;
     assign {s2,e2,m2} = y;
     
-    assign z = (s1 == 1'b1) && (s2 == 1'b0) ? 1'b1 :
+    assign z = (x[30:0] == 31'b0 && y[30:0] == 31'b0) ? 1'b0 :
+               (s1 == 1'b1) && (s2 == 1'b0) ? 1'b1 :
                (s1 == 1'b0) && (s2 == 1'b1) ? 1'b0 :
                (s1 == 1'b0) && (e1 < e2) ? 1'b1 :
                (s1 == 1'b0) && (e1 == e2) && (m1 < m2) ? 1'b1 :

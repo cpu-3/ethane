@@ -45,9 +45,9 @@ module decoder
 
     assign imm = i_type ? {{21{inst_code[31]}}, inst_code[30:20]} :
          s_type ? {{21{inst_code[31]}}, inst_code[30:25], inst_code[11:7]} :
-         b_type ? {{20{inst_code[31]}}, inst_code[7], inst_code[30:25], inst_code[11:8], 1'b0} :
+         b_type ? {{20{inst_code[31]}}, inst_code[7], inst_code[30:25], inst_code[11:8]} :
          u_type ? {inst_code[31:12], 12'd0} :
-         j_type ? {{12{inst_code[31]}}, inst_code[19:12], inst_code[20], inst_code[30:21], 1'b0} : 32'd0;
+         j_type ? {{12{inst_code[31]}}, inst_code[19:12], inst_code[20], inst_code[30:21]} : 32'd0;
 
     assign inst.lui   = opcode == 7'b0110111;
     assign inst.auipc = opcode == 7'b0010111;
@@ -103,6 +103,8 @@ module decoder
     assign inst.fle  =     (opcode == 7'b1010011) && (funct7 == 7'b1010000) && (funct3 == 3'b000);
     assign inst.fsgnj  =   (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b000);
     assign inst.fsgnjn =   (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b001);
+    assign inst.fsgnjx =   (opcode == 7'b1010011) && (funct7 == 7'b0010000) && (funct3 == 3'b010);
+    
     assign inst.fcvt_s_w = (opcode == 7'b1010011) && (funct7 == 7'b1101000);
     assign inst.fcvt_w_s = (opcode == 7'b1010011) && (funct7 == 7'b1100000);
     
@@ -151,14 +153,14 @@ module decoder
             inst.lh | inst.lw | inst.lbu | inst.lhu | inst.sb | inst.sh | inst.sw | inst.addi | inst.slti | inst.sltiu | inst.xori | inst.ori | 
             inst.andi | inst.slli | inst.srli | inst.srai | inst.add | inst.sub | inst.sll | inst.slt | inst.sltu | inst.xor_ | inst.srl |
             inst.sra | inst.or_ | inst.and_ | inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw | inst.flw | inst.feq | inst.flt | inst.fle |
-            inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s | inst.fcvt_s_w);
+            inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s | inst.fcvt_s_w | inst.fsgnjx);
              
     // TODO: check
-    assign ctrl.frd = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fcvt_s_w;
+    assign ctrl.frd = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.flw | inst.fsgnj | inst.fsgnjn | inst.fsgnjx | inst.fcvt_s_w;
     assign ctrl.frs1 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | /*inst.fsw |*/ inst.fsgnj | inst.fsgnjn | inst.fcvt_w_s |
-                     inst.feq | inst.flt | inst.fle;
-    assign ctrl.frs2 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsqrt | inst.fsw |     inst.fsgnj | inst.fsgnjn |
-                     inst.feq | inst.flt | inst.fle;
+                     inst.feq | inst.flt | inst.fle | inst.fsgnjx;
+    assign ctrl.frs2 = inst.fadd | inst.fsub | inst.fmul | inst.fdiv | inst.fsw |     inst.fsgnj | inst.fsgnjn |
+                     inst.feq | inst.flt | inst.fle | inst.fsgnjx;
 
     // TODO: ctrl.frs == frs??
 endmodule

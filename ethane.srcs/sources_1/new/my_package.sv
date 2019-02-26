@@ -73,6 +73,7 @@ typedef struct packed{
   
   logic fsgnj;
   logic fsgnjn;
+  logic fsgnjx;
   logic fcvt_s_w;
   logic fcvt_w_s;
 } instif;

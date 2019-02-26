@@ -11,28 +11,47 @@ module fsqrt(
 	wire [13:0] a;
 	assign {s,e,i,a} = x;
 
-	reg [36:0] mem [0:1023];
-	initial $readmemb("sqrtinit.bin", mem);
+	wire d;
+	assign d = ~(x[23]);
 
 	reg s1;
-	reg [7:0] e1;
+	reg [6:0] e1;
 	reg [13:0] a1;
 	reg [22:0] c;
-	reg [13:0] g;
+	reg [12:0] g;
+
+	reg d1;
+
+	mem_sqrt u1(clk, i, {c, g});
 	
-	wire [6:0] em;
-	wire [36:0] calc;
-	assign em = e - {6'b0,~i[9]};
-	assign calc = {c,14'b0} + g*a1;
+	wire [7:0] ey;
+	wire [37:0] calc;
+	assign ey = {e1[6],~e1[6],e1[5:0]};
+	assign calc = (d1)? {c,15'b0} + {1'b1,g,1'b0}*a1: {c,15'b0} + {1'b1,g}*a1;
 
 	always@(posedge clk) begin
 		// stage 1
-		{c,g} <= mem[i];
 		s1 <= s;
-		e1 <= {em[6],~em[6],em[5:0]};
+		e1 <= e - (~i[9]);
 		a1 <= a;
+		d1 <= d;
 		// stage 2
-		y <= (e1 == 8'b10111111)? {s1,31'b0}: {s1,e1,calc[36:14]+calc[13]};
+		y <= (ey == 8'b10111111)? {s1,31'b0}: {s1,ey,calc[37:15]+calc[14]};
+	end
+
+endmodule
+
+module mem_sqrt(
+	input wire clk,
+	input wire [9:0] index,
+	output reg [35:0] o_data);
+
+	reg [35:0] mem [0:1023];
+
+	initial $readmemb("sqrt_v4.bin", mem);
+
+	always @ (posedge clk) begin
+		o_data <= mem[index];
 	end
 endmodule
 

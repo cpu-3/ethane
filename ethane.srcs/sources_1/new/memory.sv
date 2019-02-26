@@ -41,7 +41,8 @@ module memory(
     reg [31:0] bef_dout;
     reg freezed;
 
-    assign port_data_mem_addr = freeze ? bef_addr : ex_mem_exec_result;
+    wire [31:0]tmp = freeze ? bef_addr : ex_mem_exec_result;
+    assign port_data_mem_addr = {tmp[29:0], 2'b0};
     assign port_data_mem_data_we = freeze ? 4'd0 : ex_mem_ctrl.mem_write;
     assign port_data_mem_din = ex_mem_store_data;
     assign mem_load_result = freezed ? bef_dout : port_data_mem_dout;
