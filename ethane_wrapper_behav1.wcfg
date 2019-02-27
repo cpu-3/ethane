@@ -17,13 +17,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="3862165fs"></ZoomStartTime>
-      <ZoomEndTime time="310715789fs"></ZoomEndTime>
-      <Cursor1Time time="125000000fs"></Cursor1Time>
+      <ZoomStartTime time="68345010091667fs"></ZoomStartTime>
+      <ZoomEndTime time="68345039541668fs"></ZoomEndTime>
+      <Cursor1Time time="68345015000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="232"></NameColumnWidth>
-      <ValueColumnWidth column_width="103"></ValueColumnWidth>
+      <ValueColumnWidth column_width="99"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="28" />
    <wave_markers>
@@ -69,18 +69,34 @@
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/Memory/bef_dout">
          <obj_property name="ElementShortName">bef_dout[31:0]</obj_property>
          <obj_property name="ObjectShortName">bef_dout[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/Memory/mem_load_result">
          <obj_property name="ElementShortName">mem_load_result[31:0]</obj_property>
          <obj_property name="ObjectShortName">mem_load_result[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/port_data_mem_dout">
          <obj_property name="ElementShortName">port_data_mem_dout[31:0]</obj_property>
          <obj_property name="ObjectShortName">port_data_mem_dout[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/map_wrapper_0/inst/map/dout">
          <obj_property name="ElementShortName">dout[31:0]</obj_property>
          <obj_property name="ObjectShortName">dout[31:0]</obj_property>
+         <obj_property name="Radix">REALRADIX</obj_property>
+         <obj_property name="radix_realType">FLOATINGPOINTRADIX</obj_property>
+         <obj_property name="radix_fractionWidth">24</obj_property>
+         <obj_property name="radix_otherWidth">8</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/Memory/port_data_mem_addr">
          <obj_property name="ElementShortName">port_data_mem_addr[31:0]</obj_property>
@@ -301,6 +317,7 @@
    <wvobject type="group" fp_name="group230">
       <obj_property name="label">Registers</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject type="array" fp_name="/ethane_wrapper/ethane_i/core_wrapper_0/inst/C/REGISTER/iregs[1]">
          <obj_property name="ElementShortName">[1][31:0]</obj_property>
          <obj_property name="ObjectShortName">[1][31:0]</obj_property>

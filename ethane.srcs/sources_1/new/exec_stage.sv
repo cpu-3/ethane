@@ -83,7 +83,7 @@ module fpu(
     fsub FSUB(clk, src1, src2, fsub_result);
     fmul FMUL(clk, src1, src2, fmul_result);
     fdiv FDIV(clk, src1, src2, fdiv_result);
-    fsqrt FSQRT(clk, src1, fsqrt_result);
+    fsqrt2 FSQRT(clk, src1, fsqrt_result);
 
     
     fsgnj FSGNJ(src1, src2, fsgnj_result);

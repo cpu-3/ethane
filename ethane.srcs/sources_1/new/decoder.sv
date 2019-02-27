@@ -45,9 +45,9 @@ module decoder
 
     assign imm = i_type ? {{21{inst_code[31]}}, inst_code[30:20]} :
          s_type ? {{21{inst_code[31]}}, inst_code[30:25], inst_code[11:7]} :
-         b_type ? {{20{inst_code[31]}}, inst_code[7], inst_code[30:25], inst_code[11:8]} :
+         b_type ? {{21{inst_code[31]}}, inst_code[7], inst_code[30:25], inst_code[11:8]} :
          u_type ? {inst_code[31:12], 12'd0} :
-         j_type ? {{12{inst_code[31]}}, inst_code[19:12], inst_code[20], inst_code[30:21]} : 32'd0;
+         j_type ? {{13{inst_code[31]}}, inst_code[19:12], inst_code[20], inst_code[30:21]} : 32'd0;
 
     assign inst.lui   = opcode == 7'b0110111;
     assign inst.auipc = opcode == 7'b0010111;

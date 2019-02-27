@@ -67,8 +67,7 @@ Compiling module xil_defaultlib.fsub
 Compiling module xil_defaultlib.fmul
 Compiling module xil_defaultlib.finv
 Compiling module xil_defaultlib.fdiv
-Compiling module xil_defaultlib.mem_sqrt
-Compiling module xil_defaultlib.fsqrt
+Compiling module xil_defaultlib.fsqrt2
 Compiling module xil_defaultlib.fsgnj
 Compiling module xil_defaultlib.fsgnjn
 Compiling module xil_defaultlib.fsgnjx
