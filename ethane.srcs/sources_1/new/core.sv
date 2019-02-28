@@ -530,6 +530,7 @@ module core(
         .inst(id_ex_inst),
         .int_src1(id_ex_int_src1),
         .int_src2(id_ex_int_src2),
+        .rs2(id_ex_register_rs2),
         .mem_forwarded(ex_mem_exec_result),
         .float_mem_forwarded(ex_mem_float_exec_result),
         .write_forwarded(write_int_result),

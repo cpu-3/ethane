@@ -1,0 +1,68 @@
+{
+   ExpandedHierarchyInLayout: "",
+   guistr: "# # String gsaved with Nlview 6.6.11  2017-06-12 bk=1.3860 VDI=40 GEI=35 GUI=JA:1.6
+#  -string -flagsOSRD
+preplace port default_sysclk_300 -pg 1 -y 620 -defaultsOSRD
+preplace port reset -pg 1 -y 640 -defaultsOSRD
+preplace portBus led -pg 1 -y 80 -defaultsOSRD
+preplace portBus USB_UART_TX -pg 1 -y 330 -defaultsOSRD
+preplace portBus USB_UART_RX -pg 1 -y 310 -defaultsOSRD -right
+preplace inst uart_wrapper_0 -pg 1 -lvl 3 -y 280 -defaultsOSRD
+preplace inst clk_wiz -pg 1 -lvl 1 -y 630 -defaultsOSRD
+preplace inst core_wrapper_0 -pg 1 -lvl 2 -y 770 -defaultsOSRD
+preplace inst map_wrapper_0 -pg 1 -lvl 3 -y 710 -defaultsOSRD
+preplace inst blk_mem_gen_0 -pg 1 -lvl 3 -y 1010 -defaultsOSRD
+preplace inst blk_mem_gen_1 -pg 1 -lvl 4 -y 650 -defaultsOSRD
+preplace inst rst_clk_wiz_100M -pg 1 -lvl 2 -y 590 -defaultsOSRD
+preplace inst axi_uartlite_0 -pg 1 -lvl 4 -y 320 -defaultsOSRD
+preplace netloc uart_wrapper_0_axi_rready 1 3 1 1290
+preplace netloc axi_uartlite_0_s_axi_rresp 1 3 1 N
+preplace netloc uart_wrapper_0_axi_bready 1 3 1 N
+preplace netloc clk_wiz_locked 1 1 1 260
+preplace netloc default_sysclk_300_1 1 0 1 NJ
+preplace netloc uart_wrapper_0_tx_done 1 2 2 800 880 1220
+preplace netloc blk_mem_gen_1_douta 1 2 2 820 560 1310J
+preplace netloc axi_uartlite_0_s_axi_arready 1 3 1 1270
+preplace netloc uart_wrapper_0_axi_wdata 1 3 1 1310
+preplace netloc map_wrapper_0_t_valid 1 2 2 820 540 1200
+preplace netloc core_wrapper_0_port_data_mem_addr 1 2 1 N
+preplace netloc uart_wrapper_0_axi_wvalid 1 3 1 1300
+preplace netloc map_wrapper_0_addr 1 3 1 1260
+preplace netloc map_wrapper_0_stall 1 1 3 260 910 NJ 910 1200
+preplace netloc core_wrapper_0_is_load_instr 1 2 1 N
+preplace netloc map_wrapper_0_din 1 3 1 N
+preplace netloc uart_wrapper_0_rx_done 1 2 2 810 890 1270
+preplace netloc axi_uartlite_0_tx 1 4 1 NJ
+preplace netloc sim_clk_gen_0_clk 1 1 3 240 500 770 920 1390
+preplace netloc axi_uartlite_0_s_axi_rdata 1 3 1 1280
+preplace netloc axi_uartlite_0_s_axi_awready 1 3 1 1380
+preplace netloc uart_wrapper_0_axi_awaddr 1 3 1 1400
+preplace netloc uart_wrapper_0_r_data 1 2 2 820 860 1230
+preplace netloc map_wrapper_0_write_enable 1 3 1 1370
+preplace netloc map_wrapper_0_led 1 3 2 1340J 80 NJ
+preplace netloc blk_mem_gen_0_douta 1 1 2 240 1030 NJ
+preplace netloc uart_wrapper_0_axi_araddr 1 3 1 1320
+preplace netloc axi_uartlite_0_s_axi_wready 1 3 1 1360
+preplace netloc uart_wrapper_0_axi_wstrb 1 3 1 1260
+preplace netloc uart_wrapper_0_u_ready 1 2 2 790 870 1280
+preplace netloc map_wrapper_0_t_data 1 2 2 770 10 1240
+preplace netloc core_wrapper_0_port_data_mem_din 1 2 1 N
+preplace netloc core_wrapper_0_port_data_mem_data_we 1 2 1 N
+preplace netloc axi_uartlite_0_s_axi_bresp 1 3 1 1370
+preplace netloc uart_wrapper_0_axi_awvalid 1 3 1 1390
+preplace netloc reset_1 1 0 2 20 570 NJ
+preplace netloc map_wrapper_0_r_valid 1 2 2 780 20 1250
+preplace netloc map_wrapper_0_c_dout 1 1 3 250 900 NJ 900 1210
+preplace netloc core_wrapper_0_fetch_pc 1 2 1 760
+preplace netloc axi_uartlite_0_s_axi_rvalid 1 3 1 N
+preplace netloc uart_wrapper_0_axi_arvalid 1 3 1 1330
+preplace netloc axi_uartlite_0_s_axi_bvalid 1 3 1 1350
+preplace netloc rst_clk_wiz_100M_peripheral_aresetn 1 1 3 260 680 780 550 1400
+preplace netloc USB_UART_RX_1 1 4 1 NJ
+levelinfo -pg 1 0 130 510 1010 1540 1700 -top 0 -bot 1100
+",
+}
+{
+   da_board_cnt: "3",
+   da_clkrst_cnt: "1",
+}

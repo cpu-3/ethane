@@ -130,6 +130,7 @@ module exec_stage(
     input wire [31:0] load_forwarded,
     input wire [31:0] immediate,
     input wire [31:0] int_src2,
+    input wire [4:0] rs2, // for imm
     input wire [31:0] pc,
     input controlif ctrl,
     input wire [2:0] forwarded_src1_ctrl,
@@ -182,6 +183,7 @@ module exec_stage(
     alu ALU(
         .src1,
         .src2,
+        .rs2,
         .result(alu_result),
         .inst
     );
